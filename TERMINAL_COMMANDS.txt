@@ -1,0 +1,43 @@
+EDITORIAL OS V10 · COMANDOS
+
+INSTALAR TODO DESDE CERO
+------------------------
+cd ~/Downloads
+unzip EDITORIAL_OS_V10_FRESH.zip
+cd EDITORIAL_OS_V10_FRESH
+
+chmod +x *.sh INSTALL_FROM_ZERO.command
+./install_from_zero.sh
+
+
+SOLO PROBAR LOCALMENTE
+----------------------
+./start_local.sh
+
+Abre:
+http://localhost:8080
+
+
+SOLO CONFIGURAR SUPABASE
+------------------------
+./setup_supabase.sh
+
+
+SOLO CREAR/PUBLICAR REPO PUBLICO
+--------------------------------
+./setup_and_deploy.sh editorial-os
+
+
+PUBLICAR CAMBIOS DESPUES
+------------------------
+./publish_update.sh
+
+
+PUBLICAR OTRO HTML
+------------------
+./publish_update.sh "/ruta/al/nuevo.html" "Actualiza Editorial OS"
+
+
+PUBLICAR DESDE UN ZIP
+---------------------
+./publish_update.sh "/ruta/al/paquete.zip" "Actualiza Editorial OS"
