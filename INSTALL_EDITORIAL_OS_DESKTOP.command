@@ -14,6 +14,7 @@ LOG_FILE="$LOG_DIR/install_$STAMP.log"
 TMP_DIR="$(mktemp -d)"
 STAGE_APP="$TMP_DIR/$APP_NAME.app"
 BACKUP_APP="$SUPPORT_DIR/Editorial OS.previous.app"
+DEPLOYMENT_TARGET="13.0"
 
 mkdir -p "$APP_DIR" "$LOG_DIR" "$SUPPORT_DIR"
 exec > >(tee -a "$LOG_FILE") 2>&1
@@ -50,7 +51,13 @@ if [ "$(uname -s)" != "Darwin" ]; then
   echo "ERROR: este instalador sólo funciona en macOS."
   exit 1
 fi
-ok "macOS $(sw_vers -productVersion 2>/dev/null || true) · $(uname -m)"
+
+ARCH="$(uname -m)"
+case "$ARCH" in
+  arm64|x86_64) ;;
+  *) echo "ERROR: arquitectura no soportada: $ARCH"; exit 1 ;;
+esac
+ok "macOS $(sw_vers -productVersion 2>/dev/null || true) · $ARCH"
 
 if ! xcode-select -p >/dev/null 2>&1; then
   warn "Faltan Xcode Command Line Tools."
@@ -59,14 +66,65 @@ if ! xcode-select -p >/dev/null 2>&1; then
   echo "Completa la instalación de Apple y vuelve a ejecutar este mismo archivo."
   exit 2
 fi
-ok "Command Line Tools: $(xcode-select -p)"
+ok "Developer path activo: $(xcode-select -p)"
 
-SWIFTC="$(xcrun --find swiftc 2>/dev/null || true)"
-if [ -z "$SWIFTC" ] || [ ! -x "$SWIFTC" ]; then
-  echo "ERROR: no encuentro swiftc. Instala/actualiza Xcode Command Line Tools."
+cat > "$TMP_DIR/probe.swift" <<'SWIFT'
+import Foundation
+print("ok")
+SWIFT
+
+DEV_CANDIDATES=()
+CURRENT_DEV="$(xcode-select -p 2>/dev/null || true)"
+[ -n "$CURRENT_DEV" ] && DEV_CANDIDATES+=("$CURRENT_DEV")
+[ -d "/Applications/Xcode.app/Contents/Developer" ] && DEV_CANDIDATES+=("/Applications/Xcode.app/Contents/Developer")
+[ -d "/Library/Developer/CommandLineTools" ] && DEV_CANDIDATES+=("/Library/Developer/CommandLineTools")
+[ -d "/Applications/Xcode-beta.app/Contents/Developer" ] && DEV_CANDIDATES+=("/Applications/Xcode-beta.app/Contents/Developer")
+
+SELECTED_DEV=""
+SWIFTC=""
+SDK_PATH=""
+TARGET_TRIPLE="${ARCH}-apple-macosx${DEPLOYMENT_TARGET}"
+
+for DEV in "${DEV_CANDIDATES[@]}"; do
+  [ -d "$DEV" ] || continue
+  CANDIDATE_SWIFTC="$(DEVELOPER_DIR="$DEV" xcrun --find swiftc 2>/dev/null || true)"
+  CANDIDATE_SDK="$(DEVELOPER_DIR="$DEV" xcrun --sdk macosx --show-sdk-path 2>/dev/null || true)"
+  [ -n "$CANDIDATE_SWIFTC" ] || continue
+  [ -x "$CANDIDATE_SWIFTC" ] || continue
+  [ -n "$CANDIDATE_SDK" ] || continue
+  info "Probando toolchain: $DEV"
+  if DEVELOPER_DIR="$DEV" "$CANDIDATE_SWIFTC" \
+      "$TMP_DIR/probe.swift" \
+      -sdk "$CANDIDATE_SDK" \
+      -target "$TARGET_TRIPLE" \
+      -o "$TMP_DIR/probe" >/dev/null 2>"$TMP_DIR/probe.err"; then
+    SELECTED_DEV="$DEV"
+    SWIFTC="$CANDIDATE_SWIFTC"
+    SDK_PATH="$CANDIDATE_SDK"
+    break
+  else
+    warn "Toolchain no usable: $DEV"
+    sed -n '1,8p' "$TMP_DIR/probe.err" || true
+  fi
+done
+
+if [ -z "$SELECTED_DEV" ]; then
+  echo
+  echo "ERROR: ninguna toolchain Swift pudo compilar para $TARGET_TRIPLE."
+  echo "El problema anterior provenía de Xcode-beta intentando usar como target la versión del sistema actual."
+  echo "Este instalador ya fuerza un deployment target estable, pero no encontró una toolchain funcional."
+  echo
+  echo "Developer paths probados:"
+  printf '  %s\n' "${DEV_CANDIDATES[@]}"
+  echo
+  echo "Instala/actualiza Xcode estable o Command Line Tools y vuelve a ejecutar."
   exit 3
 fi
+
+ok "Toolchain seleccionada: $SELECTED_DEV"
 ok "Swift compiler: $SWIFTC"
+ok "SDK: $SDK_PATH"
+ok "Target: $TARGET_TRIPLE"
 
 mkdir -p "$STAGE_APP/Contents/MacOS" "$STAGE_APP/Contents/Resources"
 
@@ -83,10 +141,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         let config = WKWebViewConfiguration()
         config.websiteDataStore = .default()
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
-        config.applicationNameForUserAgent = "EditorialOSDesktop/12.11"
-        if #available(macOS 10.13, *) {
-            config.mediaTypesRequiringUserActionForPlayback = []
-        }
+        config.applicationNameForUserAgent = "EditorialOSDesktop/12.11.1"
+        config.mediaTypesRequiringUserActionForPlayback = []
 
         webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
@@ -123,7 +179,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
 
     func buildMenus() {
         let main = NSMenu()
-
         let appItem = NSMenuItem()
         main.addItem(appItem)
         let appMenu = NSMenu()
@@ -149,14 +204,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         let view = NSMenu(title: "Visualización")
         view.addItem(withTitle: "Pantalla completa", action: #selector(toggleFullScreen), keyEquivalent: "f")
         viewItem.submenu = view
-
         NSApp.mainMenu = main
     }
 
     @objc func showAbout() {
         let alert = NSAlert()
         alert.messageText = "Editorial OS Desktop"
-        alert.informativeText = "Aplicación nativa macOS que carga la versión actual de Editorial OS desde GitHub Pages."
+        alert.informativeText = "Aplicación macOS que carga la versión actual de Editorial OS desde GitHub Pages."
         alert.runModal()
     }
 
@@ -208,8 +262,10 @@ app.delegate = delegate
 app.run()
 SWIFT
 
-"$SWIFTC" \
+DEVELOPER_DIR="$SELECTED_DEV" "$SWIFTC" \
   "$TMP_DIR/main.swift" \
+  -sdk "$SDK_PATH" \
+  -target "$TARGET_TRIPLE" \
   -o "$STAGE_APP/Contents/MacOS/EditorialOS" \
   -framework Cocoa \
   -framework WebKit
@@ -229,9 +285,10 @@ cat > "$STAGE_APP/Contents/Info.plist" <<PLIST
   <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
   <key>CFBundleName</key><string>Editorial OS</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>12.11</string>
-  <key>CFBundleVersion</key><string>1211</string>
+  <key>CFBundleShortVersionString</key><string>12.11.1</string>
+  <key>CFBundleVersion</key><string>12111</string>
   <key>CFBundleIconFile</key><string>AppIcon</string>
+  <key>LSMinimumSystemVersion</key><string>13.0</string>
   <key>NSHighResolutionCapable</key><true/>
   <key>NSPrincipalClass</key><string>NSApplication</string>
 </dict>
@@ -240,7 +297,7 @@ PLIST
 
 ICON_PNG="$TMP_DIR/icon.png"
 ICONSET="$TMP_DIR/AppIcon.iconset"
-if curl -fsSL "https://lordjeferies.github.io/editorial-os/icons/icon-512.png?v=12.11" -o "$ICON_PNG"; then
+if curl -fsSL "https://lordjeferies.github.io/editorial-os/icons/icon-512.png?v=12.11.1" -o "$ICON_PNG"; then
   mkdir -p "$ICONSET"
   sips -z 16 16 "$ICON_PNG" --out "$ICONSET/icon_16x16.png" >/dev/null
   sips -z 32 32 "$ICON_PNG" --out "$ICONSET/icon_16x16@2x.png" >/dev/null
@@ -323,4 +380,3 @@ echo "Log:        $LOG_FILE"
 echo
 echo "La app no abre Safari/Chrome. Usa una ventana WKWebView propia."
 echo "Cuando GitHub Pages se actualiza, esta app carga la versión nueva."
-echo
