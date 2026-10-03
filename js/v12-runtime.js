@@ -112,7 +112,7 @@
 
   function syncBrandSubtitle(){
     const title=document.getElementById('brandTitle');if(!title)return;
-    title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.1');
+    title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.3');
     const small=title.parentElement?.querySelector('small');if(small)small.textContent='plan · producción · feeds · biblioteca';
   }
 
@@ -132,7 +132,7 @@
   }
 
   function boot(){
-    document.documentElement.dataset.editorialVersion='12.1';
+    document.documentElement.dataset.editorialVersion='12.3';
     syncBrandSubtitle();setupMoreSheet();setupCollapsibles();observeActiveView();serviceWorkerUX();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();

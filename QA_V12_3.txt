@@ -1,0 +1,41 @@
+EDITORIAL OS V12.3 · QA EJECUTADA
+
+PASS
+- node --check: v123-data.js
+- node --check: v123-sync.js
+- node --check: v123-storage.js
+- node --check: app-core.js
+- node --check: v12-runtime.js
+- node --check: v123-runtime.js
+- module syntax: v12-glass.js
+- test schema/migration V12.3
+- test revision/conflict helper
+- test Planner: mover fixed Monday -> Thursday
+- test Planner: reorder dentro del mismo día
+- manifest JSON
+- Service Worker cache V12.3
+- 187 IDs HTML únicos
+- contratos jocEditorialV9*
+- workspace editorial-os
+- cloud payload version:9
+- UI producción V12.3
+- mobile input font-size 16px
+- v123 runtime sin scrollIntoView
+- bash syntax
+- deploy pre-fetch/rebase safety
+
+UPDATER E2E
+PASS
+Se probó contra un repo Git local V12.1 cuyo origin/main avanzó con un commit independiente.
+Resultado:
+- fetch/rebase previo: OK
+- documento remoto preservado: OK
+- supabase-config.js preservado: OK
+- V12.3 copiado: OK
+- QA post-copy: OK
+- commit: OK
+- segundo fetch: OK
+- push fast-forward: OK
+
+LIMITACIÓN DEL ENTORNO DE PRUEBA
+El Chromium headless disponible en este contenedor no produjo una sesión gráfica estable (DBus/zygote timeout), por lo que la validación táctil física final debe hacerse en Safari/PWA real de iPhone. La V12.3 incluye además mover-por-menú y fallback Pointer Events para que la operación crítica no dependa exclusivamente de SortableJS.

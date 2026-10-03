@@ -1,0 +1,82 @@
+#!/bin/bash
+set -euo pipefail
+SOURCE="$(cd "$(dirname "$0")" && pwd)"
+TARGET="${1:-}"
+
+find_target(){
+  for c in "$HOME/Downloads/EDITORIAL_OS_V10_FRESH" "$HOME/Downloads/editorial-os" "$HOME/editorial-os" "$HOME/Documents/editorial-os"; do
+    [ -d "$c/.git" ] && [ -f "$c/index.html" ] && { echo "$c"; return 0; }
+  done
+  return 1
+}
+[ -n "$TARGET" ] || TARGET="$(find_target || true)"
+[ -n "$TARGET" ] || { echo "No encontré el repo. Usa: $0 /ruta/al/editorial-os"; exit 1; }
+TARGET="$(cd "$TARGET" && pwd)"
+[ -d "$TARGET/.git" ] || { echo "ERROR: $TARGET no contiene .git"; exit 1; }
+[ -f "$TARGET/supabase-config.js" ] || { echo "ERROR: falta supabase-config.js"; exit 1; }
+for cmd in git rsync python3; do command -v "$cmd" >/dev/null || { echo "ERROR: falta $cmd"; exit 1; }; done
+
+cd "$TARGET"
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "ERROR: hay cambios locales sin commit. Haz commit/stash antes de actualizar."
+  git status --short
+  exit 1
+fi
+
+echo "[1/8] Sincronizando base Git antes de tocar archivos..."
+git fetch origin
+if ! git merge-base --is-ancestor origin/main HEAD; then
+  echo "      Reaplicando commits locales sobre origin/main..."
+  git rebase origin/main
+elif git merge-base --is-ancestor HEAD origin/main && [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+  git rebase origin/main
+fi
+
+STAMP="$(date +%Y%m%d_%H%M%S)"
+BACKUP="$(dirname "$TARGET")/EDITORIAL_OS_PRE_V12_3_BACKUP_$STAMP"
+TMP_CONFIG="$(mktemp)"
+trap 'rm -f "$TMP_CONFIG"' EXIT
+cp supabase-config.js "$TMP_CONFIG"
+
+echo "[2/8] Backup completo: $BACKUP"
+mkdir -p "$BACKUP"
+rsync -a --exclude '.git/' "$TARGET/" "$BACKUP/"
+
+echo "[3/8] Instalando V12.3 y preservando configuración/documentación externa..."
+rsync -a \
+  --exclude '.git/' \
+  --exclude 'supabase-config.js' \
+  --exclude '.DS_Store' \
+  "$SOURCE/" "$TARGET/"
+cp "$TMP_CONFIG" "$TARGET/supabase-config.js"
+rm -f css/v121.css js/v121-runtime.js validate_v12_1.sh deploy_v12_1_over_existing.sh deploy_v11_over_existing.sh 2>/dev/null || true
+chmod +x ./*.sh ./*.command 2>/dev/null || true
+
+echo "[4/8] QA V12.3..."
+./validate_v12_3.sh
+cmp -s "$TMP_CONFIG" supabase-config.js || { echo "ERROR: supabase-config.js cambió"; exit 1; }
+
+echo "[5/8] Commit..."
+git add -A
+if ! git diff --cached --quiet; then
+  git commit -m "Editorial OS V12.3 - mobile stability production and sync"
+else
+  echo "      No hay cambios nuevos que commitear."
+fi
+
+echo "[6/8] Verificando que GitHub no haya avanzado mientras actualizábamos..."
+git fetch origin
+if ! git merge-base --is-ancestor origin/main HEAD; then
+  echo "      origin/main avanzó; rebase seguro..."
+  git rebase origin/main
+  ./validate_v12_3.sh
+fi
+
+echo "[7/8] Push fast-forward..."
+git push origin main
+
+echo "[8/8] LISTO"
+echo "Repo: https://github.com/LordJeferies/editorial-os"
+echo "PWA : https://lordjeferies.github.io/editorial-os/"
+echo "Backup: $BACKUP"
+open "https://lordjeferies.github.io/editorial-os/" 2>/dev/null || true

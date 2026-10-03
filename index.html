@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>JOC · Editorial OS V12.1</title>
+<title>JOC · Editorial OS V12.3</title>
 <meta name="description" content="Editorial OS multi-marca: biblioteca, calendario, emulador, feeds y sincronización.">
 <meta name="theme-color" content="#111214">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,7 +42,7 @@
 
 <link rel="stylesheet" href="./css/legacy.css">
 <link rel="stylesheet" href="./css/v12.css">
-<link rel="stylesheet" href="./css/v121.css">
+<link rel="stylesheet" href="./css/v123.css">
 </head>
 <body>
 <div id="glassRoot" data-theme="light">
@@ -52,7 +52,7 @@
     <header class="topbar glass" id="glassHeader">
     <div class="brand">
       <div class="brandmark" id="brandMark">J</div>
-      <div><b id="brandTitle">JOC · EDITORIAL OS V12.1</b><small>multi-brand · library · emulator · feeds · sync</small></div>
+      <div><b id="brandTitle">JOC · EDITORIAL OS V12.3</b><small>multi-brand · library · emulator · feeds · sync</small></div>
     </div>
     <div class="brand-switcher">
       <span class="label">Marca</span>
@@ -225,7 +225,7 @@
     <section id="calendarView" class="view">
       <div class="hero">
         <div class="hero-main glass">
-          <div class="kicker">V12.1 · Emulador libre · touch · producción editorial</div>
+          <div class="kicker">V12.3 · Mobile Core · Stability · Production</div>
           <h1>Un calendario editorial, varias redes, una sola fuente de verdad.</h1>
           <p>Una fuente de verdad para planificar, revisar y ejecutar contenido multi-red. En iPhone se prioriza el día activo; en iPad y desktop aumenta la densidad sin convertir la interfaz en una tabla comprimida.</p>
         </div>
@@ -604,7 +604,7 @@
         </div>
       </aside>
     </div>
-    <div class="footer">JOC Editorial OS V11 · patrones de Resource/Agenda/drag inspirados por ilamy Calendar y CalendarKit; LiquidGlass se usa como mejora visual progresiva.</div>
+    <div class="footer">JOC Editorial OS V12.3 · patrones de Resource/Agenda/drag inspirados por ilamy Calendar y CalendarKit; LiquidGlass se usa como mejora visual progresiva.</div>
   </main>
 
   <div id="dockGlassRoot" class="liquid-root liquid-dock-root">
@@ -624,7 +624,13 @@
       <div class="drawer-card"><h4>Destinos</h4><div id="drawerPlatforms"></div></div>
       <div class="drawer-card"><h4>Prioridad / superficie</h4><div id="drawerPriority"></div></div>
       <div class="drawer-card"><h4>Nota</h4><div id="drawerNote"></div></div>
-      <div class="drawer-card production-card"><h4>Producción</h4><div id="drawerProductionStatus">Pendiente</div><small id="drawerProductionDate"></small></div>
+      <div class="drawer-card production-card"><h4>Producción</h4><div id="drawerProductionStatus">Planificada</div><small id="drawerProductionDate"></small></div>
+      <div class="drawer-card v123-production-editor">
+        <div class="v123-field"><label for="drawerWorkflowStatus">Estado</label><select id="drawerWorkflowStatus"><option value="planned">Planificada</option><option value="production">En producción</option><option value="editing">Editando</option><option value="review">Por revisión</option><option value="changes">Cambios solicitados</option><option value="approved">Aprobada</option><option value="scheduled">Programada</option><option value="published">Publicada</option></select></div>
+        <div class="v123-production-grid"><div class="v123-field"><label for="drawerPublishTime">Hora</label><input id="drawerPublishTime" type="time"></div><div class="v123-field"><label for="drawerAssignee">Responsable</label><input id="drawerAssignee" type="text" placeholder="Nombre"></div></div>
+        <div class="v123-checklist" aria-label="Checklist de producción"><label><input type="checkbox" data-production-check="script"> Guion</label><label><input type="checkbox" data-production-check="recording"> Grabación</label><label><input type="checkbox" data-production-check="editing"> Edición</label><label><input type="checkbox" data-production-check="captions"> Subtítulos</label><label><input type="checkbox" data-production-check="copy"> Copy</label><label><input type="checkbox" data-production-check="thumbnail"> Portada</label></div>
+        <div class="v123-field"><label for="drawerAssetLink">Link de trabajo</label><input id="drawerAssetLink" type="url" placeholder="Drive, Canva, DaVinci, revisión…"></div><div class="v123-field"><label for="drawerProductionNotes">Notas de producción</label><textarea id="drawerProductionNotes" rows="3" placeholder="Bloqueos o indicaciones"></textarea></div>
+      </div>
       <div class="drawer-actions">
         <button class="btn done-toggle" id="doneBtn">✓ Marcar hecho</button>
         <button class="btn" id="movePrev">← mover día</button>
@@ -640,9 +646,12 @@
 <script src="./supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./js/v123-data.js"></script>
+<script src="./js/v123-sync.js"></script>
+<script src="./js/v123-storage.js"></script>
 <script src="./js/app-core.js"></script>
 <script src="./js/v12-runtime.js"></script>
-<script src="./js/v121-runtime.js"></script>
+<script src="./js/v123-runtime.js"></script>
 
 <script type="module" src="./js/v12-glass.js"></script>
 </body>

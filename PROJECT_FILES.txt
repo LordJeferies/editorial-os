@@ -1,4 +1,4 @@
-Editorial OS V12 · archivos principales
+Editorial OS V12.3 · archivos principales
 
 index.html
 manifest.webmanifest
@@ -7,23 +7,22 @@ supabase-config.js
 supabase_schema.sql
 DEFAULT_JOC_CATALOG.md
 README.md
-AI_MASTER_PROMPT.md
-CHANGELOG_V12.md
-SOURCES_V12.md
-TERMINAL_V12.txt
-deploy_v12_over_existing.sh
+CHANGELOG_V12_3.md
+TERMINAL_V12_3.txt
+deploy_v12_3_over_existing.sh
+validate_v12_3.sh
 css/legacy.css
 css/v12.css
+css/v123.css
+js/v123-data.js
+js/v123-sync.js
+js/v123-storage.js
 js/app-core.js
 js/v12-runtime.js
+js/v123-runtime.js
 js/v12-glass.js
-docs/AI_START_HERE.md
-docs/PRODUCT_SPEC.md
-docs/FEATURES_AND_USE_CASES.md
-docs/ARCHITECTURE.md
-docs/DATA_CONTRACTS.md
-docs/VISUAL_REFERENCE_SPEC.md
-docs/REFERENCES.md
-docs/ROADMAP.md
-docs/RELEASE_AND_QA.md
-AGENTS.md
+tests/test_v123_core.js
+icons/icon-192.png
+icons/icon-512.png
+
+EDITORIAL_OS_V12_3.html
