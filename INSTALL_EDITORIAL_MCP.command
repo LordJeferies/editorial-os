@@ -10,30 +10,49 @@ echo " EDITORIAL OS · MCP INSTALLER"
 echo "=============================================================="
 echo
 
-if ! command -v node >/dev/null 2>&1; then
-  echo "ERROR: Node.js no está instalado."
-  echo "Instala Node.js 20 o superior y vuelve a ejecutar este instalador."
-  exit 1
-fi
+ensure_node(){
+  if command -v node >/dev/null 2>&1; then
+    local major
+    major="$(node -p 'Number(process.versions.node.split(".")[0])')"
+    if [ "$major" -ge 20 ]; then
+      echo "OK    Node $(node -v)"
+      return 0
+    fi
+  fi
 
-NODE_MAJOR="$(node -p 'Number(process.versions.node.split(".")[0])')"
-if [ "$NODE_MAJOR" -lt 20 ]; then
-  echo "ERROR: Node.js 20+ requerido. Actual: $(node -v)"
-  exit 1
-fi
+  echo "INFO  Node.js 20+ no está disponible."
+  if command -v brew >/dev/null 2>&1; then
+    echo "INFO  Instalando/actualizando Node con Homebrew..."
+    brew install node || brew upgrade node || true
+  fi
 
-echo "OK    Node $(node -v)"
+  if ! command -v node >/dev/null 2>&1; then
+    echo "ERROR: no pude instalar Node automáticamente."
+    echo "Instálalo desde https://nodejs.org/ y vuelve a ejecutar este archivo."
+    exit 1
+  fi
+
+  local major
+  major="$(node -p 'Number(process.versions.node.split(".")[0])')"
+  if [ "$major" -lt 20 ]; then
+    echo "ERROR: Node.js 20+ requerido. Actual: $(node -v)"
+    exit 1
+  fi
+  echo "OK    Node $(node -v)"
+}
+
+ensure_node
 mkdir -p "$DEST"
 
 echo "INFO  Descargando servidor MCP..."
 curl -fLsS "$BASE_URL/package.json" -o "$DEST/package.json"
 curl -fLsS "$BASE_URL/server.mjs" -o "$DEST/server.mjs"
 curl -fLsS "$BASE_URL/run-mcp.sh" -o "$DEST/run-mcp.sh"
-curl -fLsS "$BASE_URL/.env.example" -o "$DEST/.env.example"
+curl -fLsS "$BASE_URL/env.example" -o "$DEST/env.example"
 chmod +x "$DEST/run-mcp.sh"
 
 if [ ! -f "$ENV_FILE" ]; then
-  cp "$DEST/.env.example" "$ENV_FILE"
+  cp "$DEST/env.example" "$ENV_FILE"
 fi
 
 echo "INFO  Instalando dependencias..."
@@ -116,14 +135,19 @@ echo
 echo "Copia este bloque en tu cliente MCP."
 echo "El lugar exacto depende del cliente que uses."
 
+mkdir -p "$HOME/Desktop"
+printf "%s\n" "$CONFIG" > "$HOME/Desktop/EDITORIAL_OS_MCP_CONFIG.json"
 if command -v pbcopy >/dev/null 2>&1; then
   printf "%s" "$CONFIG" | pbcopy
   echo
   echo "OK    Configuración copiada al portapapeles."
 fi
 
+echo "OK    Configuración guardada también en:"
+echo "      $HOME/Desktop/EDITORIAL_OS_MCP_CONFIG.json"
+
 echo
-echo "Guía:"
+echo "Guía pública paso a paso:"
 echo "https://lordjeferies.github.io/editorial-os/mcp.html"
 echo
 echo "Instalado en:"
