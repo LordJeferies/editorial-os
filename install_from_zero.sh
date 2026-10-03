@@ -6,7 +6,7 @@ cd "$ROOT"
 
 clear || true
 echo "=========================================================="
-echo " EDITORIAL OS V12 · INSTALACIÓN DESDE CERO"
+echo " EDITORIAL OS V12.1 · INSTALACIÓN DESDE CERO"
 echo "=========================================================="
 echo
 echo "Carpeta:"
@@ -74,7 +74,7 @@ echo "[5/7] Creando repo público y GitHub Pages..."
 
 echo
 echo "[6/7] Comprobación local..."
-python3 -m http.server 8080 >/tmp/editorial-os-v12-http.log 2>&1 &
+python3 -m http.server 8080 >/tmp/editorial-os-v10-http.log 2>&1 &
 SERVER_PID=$!
 sleep 1
 if kill -0 "$SERVER_PID" >/dev/null 2>&1; then
@@ -95,7 +95,7 @@ fi
 
 echo
 echo "----------------------------------------------------------"
-echo "Editorial OS V12"
+echo "Editorial OS V12.1"
 echo "Repo:  https://github.com/$OWNER/$REPO_NAME"
 echo "PWA:   $PAGE_URL"
 echo "----------------------------------------------------------"

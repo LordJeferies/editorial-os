@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>JOC · Editorial OS V12</title>
+<title>JOC · Editorial OS V12.1</title>
 <meta name="description" content="Editorial OS multi-marca: biblioteca, calendario, emulador, feeds y sincronización.">
 <meta name="theme-color" content="#111214">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -41,6 +41,7 @@
 
 
 <style>
+
 
 :root{
   --bg:#ebe9e5; --bg2:#f7f4ee; --paper:rgba(255,255,255,.55); --paper-strong:rgba(255,255,255,.76);
@@ -838,8 +839,10 @@ html,body{
   *{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}
 }
 
+
 </style>
 <style>
+
 /* ================================================================
    Editorial OS V12 — native app surface system
    Design references: iOS creator tools + 21st.dev mobile nav/sheets.
@@ -1141,6 +1144,43 @@ button:active,.btn:active,.navbtn:active,.segbtn:active,.platformbtn:active,
   .v12-sheet,.v12-toast,.v12-collapsible{transition:none!important;animation:none!important}
 }
 
+
+</style>
+<style>
+/* Editorial OS V12.1 · safe V1X ports + Planner DnD repair */
+:root{--v121-creative:#efff59;--v121-ai:#8b7cff;--v121-success:#6ee7a0;--v121-processing:#ff7738;--v121-ease:cubic-bezier(.22,1,.36,1)}
+#feedsView [class*="post"],#feedsView [class*="feed-item"],#feedsView [class*="feed-card"],#scenarioPreviewRoot [class*="post"]{content-visibility:auto;contain-intrinsic-size:auto 320px}
+#agendaRoot>*{content-visibility:auto;contain-intrinsic-size:auto 72px}
+.v121-daytabs,.v121-fab,.v121-pool-close,.v121-pool-backdrop{display:none}
+.plan-handle{cursor:grab!important;touch-action:none!important;user-select:none;-webkit-user-select:none;min-width:30px;min-height:30px;display:grid;place-items:center;border-radius:10px;background:rgba(127,127,127,.08);font-weight:900;letter-spacing:-3px}
+.plan-handle:active{cursor:grabbing}
+.plan-item[role="button"]:focus-visible{outline:3px solid color-mix(in srgb,var(--v121-ai) 70%,transparent);outline-offset:2px}
+.planner-week-grid.planner-drag-active,.planner-drag-active .planner-week-grid{scroll-snap-type:none!important;scroll-behavior:auto!important;overscroll-behavior-x:contain!important}
+.planner-drag-active .planner-day{transition:background .14s ease,box-shadow .14s ease}
+.planner-drag-active .planner-day-list{min-height:130px!important;background:color-mix(in srgb,var(--v121-ai) 6%,transparent);border-radius:14px}
+.sortable-chosen{transform:scale(1.02)!important;box-shadow:0 18px 44px rgba(0,0,0,.22)!important}
+.sortable-drag{opacity:.97!important;transform:rotate(.6deg) scale(1.025)!important}
+.sortable-ghost{opacity:.18!important}
+.v121-move-layer{position:fixed;inset:0;z-index:2600;background:rgba(0,0,0,.34);display:flex;align-items:flex-end;justify-content:center;padding:8px 8px max(8px,env(safe-area-inset-bottom));opacity:0;pointer-events:none;transition:opacity .18s ease}
+.v121-move-layer.open{opacity:1;pointer-events:auto}
+.v121-move-sheet{width:min(620px,100%);border-radius:30px 30px 24px 24px;background:color-mix(in srgb,var(--v12-surface,#fff) 94%,transparent);color:var(--v12-ink,#111);border:1px solid rgba(255,255,255,.18);box-shadow:0 24px 72px rgba(0,0,0,.30);padding:8px 12px 14px;transform:translateY(24px);transition:transform .22s var(--v121-ease);-webkit-backdrop-filter:blur(28px) saturate(145%);backdrop-filter:blur(28px) saturate(145%)}
+.v121-move-layer.open .v121-move-sheet{transform:translateY(0)}
+.v121-handle{width:40px;height:5px;border-radius:999px;background:rgba(127,127,127,.30);margin:2px auto 12px}
+.v121-move-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:0 2px 12px}.v121-move-head small{color:var(--v12-ink-2,#666);font-size:10px;font-weight:700}.v121-move-head h3{margin:2px 0 0;font-size:22px;letter-spacing:-.04em}.v121-move-head p{margin:5px 0 0;color:var(--v12-ink-2,#666);font-size:11px}.v121-move-close{width:42px;height:42px;border:0;border-radius:50%;background:rgba(127,127,127,.12);color:inherit;font-size:22px}.v121-move-days{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.v121-day-dest{min-height:70px;border:1px solid var(--v12-hairline,rgba(0,0,0,.08));border-radius:18px;background:var(--v12-surface,#fff);color:inherit;text-align:left;padding:11px}.v121-day-dest span{display:block;font-size:14px;font-weight:800}.v121-day-dest small{display:block;margin-top:5px;font-size:9px;color:var(--v12-ink-2,#666)}.v121-day-dest.current{background:color-mix(in srgb,var(--v121-ai) 12%,var(--v12-surface,#fff));border-color:color-mix(in srgb,var(--v121-ai) 34%,transparent)}
+@media(max-width:899px){
+ .v121-daytabs{display:flex;gap:6px;overflow-x:auto;padding:3px 2px 9px;scrollbar-width:none;position:sticky;top:0;z-index:3;background:color-mix(in srgb,var(--v12-bg,#f3f3ef) 94%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+ .v121-daytabs::-webkit-scrollbar{display:none}.v121-daytabs button{flex:1 0 auto;min-width:48px;min-height:44px;border-radius:999px;border:1px solid var(--v12-hairline,rgba(0,0,0,.08));background:var(--v12-surface,#fff);color:inherit;font-size:12px;font-weight:700}.v121-daytabs button.active{background:var(--v121-creative);color:#111;border-color:transparent}
+ #plannerWeekGrid{display:flex!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;-webkit-overflow-scrolling:touch!important;gap:10px!important;scrollbar-width:none!important;overscroll-behavior-x:contain!important;padding-bottom:5px!important}
+ #plannerWeekGrid::-webkit-scrollbar{display:none}.planner-day{flex:0 0 calc(100% - 4px)!important;min-width:calc(100% - 4px)!important;scroll-snap-align:center!important;min-height:52dvh!important}.planner-day-list{min-height:110px!important}
+ .v121-fab{display:inline-flex;align-items:center;position:fixed;right:16px;bottom:calc(90px + env(safe-area-inset-bottom));z-index:900;min-height:52px;padding:0 20px;border-radius:999px;border:0;background:var(--v121-creative);color:#111;font-weight:800;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+ html:not([data-active-view="emulatorView"]) .v121-fab{display:none}
+ #emulatorView .planner-pool{position:fixed!important;left:8px!important;right:8px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;z-index:1500!important;max-height:82dvh!important;overflow:auto!important;margin:0!important;border-radius:30px!important;transform:translateY(110%);transition:transform .28s var(--v121-ease);padding-bottom:calc(20px + env(safe-area-inset-bottom))!important;background:var(--v12-surface,#fff)!important;box-shadow:0 22px 70px rgba(0,0,0,.28)!important}
+ html.v121-pool-open #emulatorView .planner-pool{transform:translateY(0)}.v121-pool-close{display:block;position:sticky;top:2px;margin-left:auto;width:44px;height:44px;border-radius:50%;border:0;background:rgba(127,127,127,.12);color:inherit;font-size:22px;z-index:4}.v121-pool-backdrop{display:none}html.v121-pool-open .v121-pool-backdrop{display:block;position:fixed;inset:0;z-index:1400;background:rgba(0,0,0,.34)}
+}
+@media(min-width:761px) and (max-width:899px){.planner-day{flex-basis:48%!important;min-width:48%!important}}
+@media(max-width:430px){.v121-move-days{grid-template-columns:repeat(2,1fr)}}
+@media(prefers-reduced-motion:reduce){.v121-move-layer,.v121-move-sheet,#emulatorView .planner-pool{transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -1151,7 +1191,7 @@ button:active,.btn:active,.navbtn:active,.segbtn:active,.platformbtn:active,
     <header class="topbar glass" id="glassHeader">
     <div class="brand">
       <div class="brandmark" id="brandMark">J</div>
-      <div><b id="brandTitle">JOC · EDITORIAL OS V12</b><small>multi-brand · library · emulator · feeds · sync</small></div>
+      <div><b id="brandTitle">JOC · EDITORIAL OS V12.1</b><small>multi-brand · library · emulator · feeds · sync</small></div>
     </div>
     <div class="brand-switcher">
       <span class="label">Marca</span>
@@ -1324,7 +1364,7 @@ button:active,.btn:active,.navbtn:active,.segbtn:active,.platformbtn:active,
     <section id="calendarView" class="view">
       <div class="hero">
         <div class="hero-main glass">
-          <div class="kicker">V12 · Mobile-first · fluido · producción editorial</div>
+          <div class="kicker">V12.1 · Emulador libre · touch · producción editorial</div>
           <h1>Un calendario editorial, varias redes, una sola fuente de verdad.</h1>
           <p>Una fuente de verdad para planificar, revisar y ejecutar contenido multi-red. En iPhone se prioriza el día activo; en iPad y desktop aumenta la densidad sin convertir la interfaz en una tabla comprimida.</p>
         </div>
@@ -2812,19 +2852,22 @@ function removePlanItem(instanceId){
 function movePlanInstance(instanceId,toDow,toIndex=null){
  let found=null,from=null;
  [1,2,3,4,5,6,0].forEach(d=>{const idx=plannerDraft[d].findIndex(x=>x.instanceId===instanceId);if(idx>=0){found=plannerDraft[d][idx];from=d}});
- if(!found||found.fixed)return;
+ if(!found)return false;
+ const targetDow=Number(toDow);if(!Number.isFinite(targetDow))return false;
  checkpoint('Mover contenido');
  plannerDraft[from]=plannerDraft[from].filter(x=>x.instanceId!==instanceId);
- found={...found,dow:Number(toDow)};
- const dest=plannerDraft[Number(toDow)]||(plannerDraft[Number(toDow)]=[]);
- const fixedCount=dest.filter(x=>x.fixed).length;
- const idx=toIndex===null||toIndex===undefined?dest.length:Math.max(fixedCount,Math.min(dest.length,Number(toIndex)));
+ // En el Emulador incluso los anchors/base pueden recolocarse. Una vez movidos
+ // pasan a ser override manual para que el usuario tenga control total del escenario.
+ found={...found,dow:targetDow,fixed:false,manualOverride:true};
+ const dest=plannerDraft[targetDow]||(plannerDraft[targetDow]=[]);
+ const idx=toIndex===null||toIndex===undefined?dest.length:Math.max(0,Math.min(dest.length,Number(toIndex)));
  dest.splice(idx,0,found);
- logAction('Movió contenido',`${found.title}: ${DAY_NAMES[from]} → ${DAY_NAMES[Number(toDow)]}`);
+ logAction('Movió contenido',`${found.title}: ${DAY_NAMES[from]} → ${DAY_NAMES[targetDow]}`);
  renderPlanner();
+ return true;
 }
 function dropIndexForList(list,clientY){
- const cards=[...list.querySelectorAll('.plan-item:not(.fixed):not(.dragging)')];
+ const cards=[...list.querySelectorAll('.plan-item:not(.dragging)')];
  for(let i=0;i<cards.length;i++){const r=cards[i].getBoundingClientRect();if(clientY<r.top+r.height/2)return i}
  return cards.length;
 }
@@ -2888,29 +2931,50 @@ function initPoolSortables(root){
 }
 function initWeekSortables(root){
  destroySortables(weekSortables);if(!window.Sortable)return;
- root.querySelectorAll('.planner-day-list').forEach(list=>weekSortables.push(Sortable.create(list,{
-   group:{name:'editorial-planner',pull:true,put:true},animation:180,handle:'.plan-handle',draggable:'.plan-item:not(.fixed),.pool-card',
-   delay:160,delayOnTouchOnly:true,touchStartThreshold:4,forceFallback:true,fallbackOnBody:true,fallbackTolerance:4,swapThreshold:.65,
+ const common={
+   group:{name:'editorial-planner',pull:true,put:true},animation:185,handle:'.plan-handle',draggable:'.plan-item,.pool-card',
+   delay:150,delayOnTouchOnly:true,touchStartThreshold:3,forceFallback:true,fallbackOnBody:true,fallbackTolerance:3,
+   swapThreshold:.55,invertSwap:true,emptyInsertThreshold:24,
+   scroll:root,scrollSensitivity:72,scrollSpeed:18,bubbleScroll:true,forceAutoScrollFallback:true,
    ghostClass:'sortable-ghost',chosenClass:'sortable-chosen',dragClass:'sortable-drag',
-   onAdd(evt){const dow=Number(evt.to.closest('.planner-day')?.dataset.dow);if(!Number.isFinite(dow))return;if(evt.item.classList.contains('pool-card')){const templateId=evt.item.dataset.template;evt.item.remove();const fixed=(plannerDraft[dow]||[]).filter(x=>x.fixed).length;addTemplateToDraft(templateId,dow,fixed+(evt.newDraggableIndex??0))}},
-   onEnd(evt){if(evt.item.classList.contains('pool-card'))return;const id=evt.item.dataset.instance;if(!id)return;const dow=Number(evt.to.closest('.planner-day')?.dataset.dow);if(!Number.isFinite(dow))return;const fixed=(plannerDraft[dow]||[]).filter(x=>x.fixed).length;movePlanInstance(id,dow,fixed+(evt.newDraggableIndex??0))}
- })));
+   onStart(){root.classList.add('planner-drag-active');document.documentElement.classList.add('planner-drag-active')},
+   onAdd(evt){
+     const dow=Number(evt.to.closest('.planner-day')?.dataset.dow);if(!Number.isFinite(dow))return;
+     if(evt.item.classList.contains('pool-card')){
+       const templateId=evt.item.dataset.template;evt.item.remove();
+       const cards=[...evt.to.querySelectorAll('.plan-item')];
+       const idx=Math.max(0,Math.min(cards.length,evt.newDraggableIndex??cards.length));
+       addTemplateToDraft(templateId,dow,idx);
+     }
+   },
+   onEnd(evt){
+     root.classList.remove('planner-drag-active');document.documentElement.classList.remove('planner-drag-active');
+     if(evt.item.classList.contains('pool-card'))return;
+     const id=evt.item.dataset.instance;if(!id)return;
+     const dow=Number(evt.to.closest('.planner-day')?.dataset.dow);if(!Number.isFinite(dow))return;
+     // Derivar el índice de la posición DOM final evita off-by-one entre listas.
+     const cards=[...evt.to.querySelectorAll('.plan-item')];
+     const idx=Math.max(0,cards.findIndex(x=>x.dataset.instance===id));
+     movePlanInstance(id,dow,idx);
+   }
+ };
+ root.querySelectorAll('.planner-day-list').forEach(list=>weekSortables.push(Sortable.create(list,{...common})));
 }
 function renderPlannerWeek(){
  const root=document.getElementById('plannerWeekGrid');if(!root)return;root.innerHTML='';
  [1,2,3,4,5,6,0].forEach(dow=>{
    const day=document.createElement('section');day.className='planner-day';day.dataset.dow=String(dow);
-   const source=[...(plannerDraft[dow]||[])],items=[...source.filter(x=>x.fixed),...source.filter(x=>!x.fixed)];
+   const source=[...(plannerDraft[dow]||[])],items=[...source];
    day.innerHTML=`<div class="planner-day-head"><span>${DAY_NAMES[dow]}</span><span>${items.length}</span></div><div class="planner-day-list"></div>`;
    const list=day.querySelector('.planner-day-list');
    items.forEach(a=>{
-     const c=document.createElement('div');c.className='plan-item'+(a.fixed?' fixed':'');c.draggable=!a.fixed&&!window.Sortable;c.dataset.instance=a.instanceId;
+     const c=document.createElement('div');c.className='plan-item'+(a.fixed?' fixed':'');c.draggable=!window.Sortable;c.dataset.instance=a.instanceId;c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label',`Mover o ver ${a.title}`);
      c.style.setProperty('--typec',eventColor(a));c.style.setProperty('--lotc',LOT_COLORS[a.lot]||'#888');
-     c.innerHTML=`<button class="plan-remove" type="button" title="Quitar">×</button><div class="plan-handle">${a.fixed?'●':'⋮⋮'}</div><b>${esc(a.title)}</b><small>${esc(a.type)} · ${esc(a.surface||'Feed')}</small><span class="lot-pill" style="background:${LOT_COLORS[a.lot]||'#888'};color:#fff">${esc(a.lot)}</span><div class="plan-icons">${platformIconRow(a.platforms)}</div>`;
-     if(!window.Sortable)c.addEventListener('dragstart',e=>{if(a.fixed)return;c.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',`instance:${a.instanceId}`)});
+     c.innerHTML=`<button class="plan-remove" type="button" title="Quitar">×</button><div class="plan-handle" title="Arrastrar para mover">⋮⋮</div><b>${esc(a.title)}</b><small>${esc(a.type)} · ${esc(a.surface||'Feed')}</small><span class="lot-pill" style="background:${LOT_COLORS[a.lot]||'#888'};color:#fff">${esc(a.lot)}</span><div class="plan-icons">${platformIconRow(a.platforms)}</div>`;
+     if(!window.Sortable)c.addEventListener('dragstart',e=>{c.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',`instance:${a.instanceId}`)});
      if(!window.Sortable)c.addEventListener('dragend',()=>{c.classList.remove('dragging');document.querySelectorAll('.kanban-placeholder').forEach(x=>x.remove());document.querySelectorAll('.planner-day').forEach(x=>x.classList.remove('dragover'))});
      c.querySelector('.plan-remove').addEventListener('click',e=>{e.stopPropagation();removePlanItem(a.instanceId)});
-     c.addEventListener('click',()=>openDrawer(a));list.appendChild(c);
+     c.addEventListener('click',()=>{if(window.matchMedia('(max-width:899px)').matches&&window.openPlannerMoveSheet)window.openPlannerMoveSheet(a.instanceId);else openDrawer(a)});c.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&window.openPlannerMoveSheet){e.preventDefault();window.openPlannerMoveSheet(a.instanceId)}});list.appendChild(c);
    });
    if(!window.Sortable)day.addEventListener('dragover',e=>{
      e.preventDefault();day.classList.add('dragover');
@@ -2918,7 +2982,7 @@ function renderPlannerWeek(){
      if(!payload)return;
      document.querySelectorAll('.kanban-placeholder').forEach(x=>x.remove());
      const ph=document.createElement('div');ph.className='kanban-placeholder';
-     const movable=[...list.querySelectorAll('.plan-item:not(.fixed):not(.dragging)')];
+     const movable=[...list.querySelectorAll('.plan-item:not(.dragging)')];
      const idx=dropIndexForList(list,e.clientY);
      if(idx>=movable.length)list.appendChild(ph);else list.insertBefore(ph,movable[idx]);
    });
@@ -2927,8 +2991,8 @@ function renderPlannerWeek(){
      e.preventDefault();day.classList.remove('dragover');
      const payload=e.dataTransfer.getData('text/plain');const idx=dropIndexForList(list,e.clientY);
      document.querySelectorAll('.kanban-placeholder').forEach(x=>x.remove());
-     if(payload.startsWith('template:'))addTemplateToDraft(payload.slice(9),dow,idx+items.filter(x=>x.fixed).length);
-     if(payload.startsWith('instance:'))movePlanInstance(payload.slice(9),dow,idx+items.filter(x=>x.fixed).length);
+     if(payload.startsWith('template:'))addTemplateToDraft(payload.slice(9),dow,idx);
+     if(payload.startsWith('instance:'))movePlanInstance(payload.slice(9),dow,idx);
    });
    root.appendChild(day);
  });
@@ -2939,6 +3003,7 @@ function renderPlannerSummary(){
  r.innerHTML=`<span class="summary-chip">${c.total} piezas</span><span class="summary-chip">L1 ${c.l1}</span><span class="summary-chip">L2 ${c.l2}</span><span class="summary-chip">L3 ${c.l3}</span><span class="summary-chip">IG ${c.platforms.instagram}</span><span class="summary-chip">YT ${c.platforms.youtube}</span><span class="summary-chip">LI ${c.platforms.linkedin}</span>`;
 }
 function renderPlanner(){renderPlannerPool();renderPlannerWeek();renderPlannerSummary()}
+window.EDITORIAL_PLANNER={move:movePlanInstance,remove:removePlanItem,find:function(id){for(const d of [1,2,3,4,5,6,0]){const item=(plannerDraft[d]||[]).find(x=>x.instanceId===id);if(item)return {item,dow:d}}return null},render:renderPlanner};
 
 function currentScenarioSlots(){
  return cloneSlots(plannerDraft);
@@ -3675,7 +3740,7 @@ if(activeBrand()?.id!=='joc'&&!state.activeScenario){
  state.activeScenarioId=state.activeScenario.id;state.emulationMode=true;applyScenarioRangeControls(range);
 }
 renderAll();switchView('homeView');initCloud();
-window.EDITORIAL_OS_VERSION='12';
+window.EDITORIAL_OS_VERSION='12.1';
 window.EDITORIAL_OS_DIAGNOSTICS={clearDerivedCache:clearV12DerivedCache};
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.info('SW no registrado',err)));
 })();
@@ -3796,7 +3861,7 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.add
 
   function syncBrandSubtitle(){
     const title=document.getElementById('brandTitle');if(!title)return;
-    title.textContent=title.textContent.replace(/V\d+/i,'V12');
+    title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.1');
     const small=title.parentElement?.querySelector('small');if(small)small.textContent='plan · producción · feeds · biblioteca';
   }
 
@@ -3816,9 +3881,100 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.add
   }
 
   function boot(){
-    document.documentElement.dataset.editorialVersion='12';
+    document.documentElement.dataset.editorialVersion='12.1';
     syncBrandSubtitle();setupMoreSheet();setupCollapsibles();observeActiveView();serviceWorkerUX();
   }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+
+</script>
+<script>
+/* Editorial OS V12.1 · Planner UX + safe ports from V1X (official line) */
+(() => {
+  'use strict';
+  const compact=matchMedia('(max-width:899px)');
+  const DOWS=[1,2,3,4,5,6,0];
+  const LABELS=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  let plannerObserver=null;
+  let activeDow=Number(document.getElementById('plannerTargetDay')?.value||1);
+
+  function toast(msg){ if(window.v12Toast) return window.v12Toast(msg); console.info(msg) }
+
+  function setupPlannerTabs(){
+    const grid=document.getElementById('plannerWeekGrid'); if(!grid)return;
+    let tabs=document.getElementById('v121PlannerDayTabs');
+    if(!tabs){
+      tabs=document.createElement('div');tabs.id='v121PlannerDayTabs';tabs.className='v121-daytabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Día del emulador');
+      LABELS.forEach((label,i)=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.dow=String(DOWS[i]);b.setAttribute('role','tab');tabs.appendChild(b)});
+      grid.parentNode.insertBefore(tabs,grid);
+      tabs.addEventListener('click',e=>{const b=e.target.closest('button[data-dow]');if(!b)return;selectDow(Number(b.dataset.dow),true)});
+    }
+    const sel=document.getElementById('plannerTargetDay');
+    if(sel&&!sel.dataset.v121){sel.dataset.v121='1';sel.addEventListener('change',()=>{activeDow=Number(sel.value);selectDow(activeDow,true)})}
+    observePlannerDays();
+    requestAnimationFrame(()=>selectDow(activeDow,false));
+  }
+
+  function selectDow(dow,scroll){
+    activeDow=dow;
+    const grid=document.getElementById('plannerWeekGrid');const tabs=document.getElementById('v121PlannerDayTabs');const sel=document.getElementById('plannerTargetDay');
+    if(sel&&sel.value!==String(dow))sel.value=String(dow);
+    tabs?.querySelectorAll('button[data-dow]').forEach(b=>{const on=Number(b.dataset.dow)===dow;b.classList.toggle('active',on);b.setAttribute('aria-selected',String(on));if(on)b.scrollIntoView({block:'nearest',inline:'center'})});
+    if(scroll&&compact.matches){const day=grid?.querySelector(`.planner-day[data-dow="${dow}"]`);day?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'})}
+  }
+
+  function observePlannerDays(){
+    const grid=document.getElementById('plannerWeekGrid');if(!grid)return;
+    plannerObserver?.disconnect();
+    if(!compact.matches)return;
+    plannerObserver=new IntersectionObserver(entries=>{
+      if(document.documentElement.classList.contains('planner-drag-active'))return;
+      let best=null;for(const e of entries){if(e.isIntersecting&&(!best||e.intersectionRatio>best.intersectionRatio))best=e}
+      if(best&&best.intersectionRatio>.54){const d=Number(best.target.dataset.dow);if(Number.isFinite(d))selectDow(d,false)}
+    },{root:grid,threshold:[.55,.7,.9]});
+    grid.querySelectorAll('.planner-day').forEach(d=>plannerObserver.observe(d));
+  }
+
+  function setupPlannerMutationWatch(){
+    const grid=document.getElementById('plannerWeekGrid');if(!grid||grid.dataset.v121watch)return;grid.dataset.v121watch='1';
+    new MutationObserver(()=>{observePlannerDays();requestAnimationFrame(()=>selectDow(activeDow,false))}).observe(grid,{childList:true});
+  }
+
+  function setupPoolSheet(){
+    const view=document.getElementById('emulatorView');const pool=view?.querySelector('.planner-pool');if(!view||!pool||document.getElementById('v121CatalogFab'))return;
+    const fab=document.createElement('button');fab.id='v121CatalogFab';fab.type='button';fab.className='v121-fab';fab.textContent='＋ Catálogo';view.appendChild(fab);
+    const close=document.createElement('button');close.type='button';close.className='v121-pool-close';close.setAttribute('aria-label','Cerrar catálogo');close.textContent='×';pool.insertBefore(close,pool.firstChild);
+    const bd=document.createElement('div');bd.className='v121-pool-backdrop';document.body.appendChild(bd);
+    const set=open=>document.documentElement.classList.toggle('v121-pool-open',open);
+    fab.onclick=()=>set(true);close.onclick=()=>set(false);bd.onclick=()=>set(false);compact.addEventListener?.('change',()=>{if(!compact.matches)set(false)});
+  }
+
+  function ensureMoveSheet(){
+    let layer=document.getElementById('v121MoveLayer');if(layer)return layer;
+    layer=document.createElement('div');layer.id='v121MoveLayer';layer.className='v121-move-layer';layer.setAttribute('aria-hidden','true');
+    layer.innerHTML=`<section class="v121-move-sheet" role="dialog" aria-modal="true" aria-labelledby="v121MoveTitle"><div class="v121-handle"></div><div class="v121-move-head"><div><small>Mover ficha</small><h3 id="v121MoveTitle">Contenido</h3><p id="v121MoveFrom"></p></div><button type="button" class="v121-move-close" aria-label="Cerrar">×</button></div><div class="v121-move-days"></div></section>`;
+    document.body.appendChild(layer);
+    layer.querySelector('.v121-move-close').onclick=()=>closeMoveSheet();layer.addEventListener('pointerdown',e=>{if(e.target===layer)closeMoveSheet()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&layer.classList.contains('open'))closeMoveSheet()});
+    return layer;
+  }
+
+  function closeMoveSheet(){const l=document.getElementById('v121MoveLayer');if(!l)return;l.classList.remove('open');l.setAttribute('aria-hidden','true')}
+  window.openPlannerMoveSheet=function(instanceId){
+    const found=window.EDITORIAL_PLANNER?.find?.(instanceId);if(!found)return;
+    const layer=ensureMoveSheet();layer.dataset.instance=instanceId;
+    layer.querySelector('#v121MoveTitle').textContent=found.item.title;
+    layer.querySelector('#v121MoveFrom').textContent=`Ahora está en ${LABELS[DOWS.indexOf(found.dow)]||''}. Elige un nuevo día.`;
+    const days=layer.querySelector('.v121-move-days');days.innerHTML='';
+    DOWS.forEach((dow,i)=>{const b=document.createElement('button');b.type='button';b.className='v121-day-dest'+(dow===found.dow?' current':'');b.innerHTML=`<span>${LABELS[i]}</span><small>${dow===found.dow?'Actual':'Mover aquí'}</small>`;b.onclick=()=>{const ok=window.EDITORIAL_PLANNER?.move?.(instanceId,dow);if(ok){activeDow=dow;toast(`Movido a ${LABELS[i]}`);closeMoveSheet();requestAnimationFrame(()=>selectDow(dow,true))}};days.appendChild(b)});
+    layer.classList.add('open');layer.setAttribute('aria-hidden','false');requestAnimationFrame(()=>layer.querySelector('.v121-day-dest:not(.current)')?.focus());
+  };
+
+  function setupSWUpdate(){
+    if(!('serviceWorker' in navigator))return;navigator.serviceWorker.getRegistration().then(reg=>{if(!reg)return;reg.addEventListener('updatefound',()=>{const w=reg.installing;if(!w)return;w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)toast('Nueva actualización lista. Cierra y vuelve a abrir la app para aplicarla.')})})}).catch(()=>{});
+  }
+
+  function boot(){setupPlannerTabs();setupPlannerMutationWatch();setupPoolSheet();setupSWUpdate();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 

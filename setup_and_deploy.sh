@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_NAME="${1:-editorial-os}"
 
 echo "=================================================="
-echo " Editorial OS V12 · GitHub Pages"
+echo " Editorial OS V12.1 · GitHub Pages"
 echo " Repo público: $REPO_NAME"
 echo "=================================================="
 
@@ -48,7 +48,7 @@ fi
 git branch -M main
 git add .
 if ! git diff --cached --quiet; then
-  git commit -m "Editorial OS V12 initial release"
+  git commit -m "Editorial OS V12.1 initial release"
 fi
 
 echo "[4/6] Creando/actualizando repo público..."

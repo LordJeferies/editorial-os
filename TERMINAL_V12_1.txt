@@ -1,0 +1,13 @@
+EDITORIAL OS V12.1 · ACTUALIZACIÓN
+
+cd ~/Downloads
+unzip -o EDITORIAL_OS_V12_1_PWA.zip
+cd EDITORIAL_OS_V12_1_PWA
+chmod +x deploy_v12_1_over_existing.sh
+./deploy_v12_1_over_existing.sh
+
+Si no detecta el repo:
+./deploy_v12_1_over_existing.sh ~/Downloads/EDITORIAL_OS_V10_FRESH
+
+PWA:
+https://lordjeferies.github.io/editorial-os/

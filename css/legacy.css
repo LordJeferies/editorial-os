@@ -1,4 +1,5 @@
 
+
 :root{
   --bg:#ebe9e5; --bg2:#f7f4ee; --paper:rgba(255,255,255,.55); --paper-strong:rgba(255,255,255,.76);
   --ink:#171717; --muted:#716d67; --line:rgba(113,105,95,.18); --line-strong:rgba(83,75,67,.28);
@@ -794,3 +795,4 @@ html,body{
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}
 }
+

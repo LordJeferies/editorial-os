@@ -1,7 +1,7 @@
 {
-  "name": "Editorial OS V12",
+  "name": "Editorial OS V12.1",
   "short_name": "Editorial OS",
-  "description": "Editorial OS multi-marca V12: mobile-first, fluido y optimizado para iPhone, iPad y desktop.",
+  "description": "Editorial OS V12.1: emulador táctil libre, mobile-first y local-first.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,17 +9,7 @@
   "theme_color": "#f3f3ef",
   "orientation": "any",
   "icons": [
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }

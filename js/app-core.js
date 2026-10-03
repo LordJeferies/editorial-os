@@ -1070,19 +1070,22 @@ function removePlanItem(instanceId){
 function movePlanInstance(instanceId,toDow,toIndex=null){
  let found=null,from=null;
  [1,2,3,4,5,6,0].forEach(d=>{const idx=plannerDraft[d].findIndex(x=>x.instanceId===instanceId);if(idx>=0){found=plannerDraft[d][idx];from=d}});
- if(!found||found.fixed)return;
+ if(!found)return false;
+ const targetDow=Number(toDow);if(!Number.isFinite(targetDow))return false;
  checkpoint('Mover contenido');
  plannerDraft[from]=plannerDraft[from].filter(x=>x.instanceId!==instanceId);
- found={...found,dow:Number(toDow)};
- const dest=plannerDraft[Number(toDow)]||(plannerDraft[Number(toDow)]=[]);
- const fixedCount=dest.filter(x=>x.fixed).length;
- const idx=toIndex===null||toIndex===undefined?dest.length:Math.max(fixedCount,Math.min(dest.length,Number(toIndex)));
+ // En el Emulador incluso los anchors/base pueden recolocarse. Una vez movidos
+ // pasan a ser override manual para que el usuario tenga control total del escenario.
+ found={...found,dow:targetDow,fixed:false,manualOverride:true};
+ const dest=plannerDraft[targetDow]||(plannerDraft[targetDow]=[]);
+ const idx=toIndex===null||toIndex===undefined?dest.length:Math.max(0,Math.min(dest.length,Number(toIndex)));
  dest.splice(idx,0,found);
- logAction('Movió contenido',`${found.title}: ${DAY_NAMES[from]} → ${DAY_NAMES[Number(toDow)]}`);
+ logAction('Movió contenido',`${found.title}: ${DAY_NAMES[from]} → ${DAY_NAMES[targetDow]}`);
  renderPlanner();
+ return true;
 }
 function dropIndexForList(list,clientY){
- const cards=[...list.querySelectorAll('.plan-item:not(.fixed):not(.dragging)')];
+ const cards=[...list.querySelectorAll('.plan-item:not(.dragging)')];
  for(let i=0;i<cards.length;i++){const r=cards[i].getBoundingClientRect();if(clientY<r.top+r.height/2)return i}
  return cards.length;
 }
@@ -1146,29 +1149,50 @@ function initPoolSortables(root){
 }
 function initWeekSortables(root){
  destroySortables(weekSortables);if(!window.Sortable)return;
- root.querySelectorAll('.planner-day-list').forEach(list=>weekSortables.push(Sortable.create(list,{
-   group:{name:'editorial-planner',pull:true,put:true},animation:180,handle:'.plan-handle',draggable:'.plan-item:not(.fixed),.pool-card',
-   delay:160,delayOnTouchOnly:true,touchStartThreshold:4,forceFallback:true,fallbackOnBody:true,fallbackTolerance:4,swapThreshold:.65,
+ const common={
+   group:{name:'editorial-planner',pull:true,put:true},animation:185,handle:'.plan-handle',draggable:'.plan-item,.pool-card',
+   delay:150,delayOnTouchOnly:true,touchStartThreshold:3,forceFallback:true,fallbackOnBody:true,fallbackTolerance:3,
+   swapThreshold:.55,invertSwap:true,emptyInsertThreshold:24,
+   scroll:root,scrollSensitivity:72,scrollSpeed:18,bubbleScroll:true,forceAutoScrollFallback:true,
    ghostClass:'sortable-ghost',chosenClass:'sortable-chosen',dragClass:'sortable-drag',
-   onAdd(evt){const dow=Number(evt.to.closest('.planner-day')?.dataset.dow);if(!Number.isFinite(dow))return;if(evt.item.classList.contains('pool-card')){const templateId=evt.item.dataset.template;evt.item.remove();const fixed=(plannerDraft[dow]||[]).filter(x=>x.fixed).length;addTemplateToDraft(templateId,dow,fixed+(evt.newDraggableIndex??0))}},
-   onEnd(evt){if(evt.item.classList.contains('pool-card'))return;const id=evt.item.dataset.instance;if(!id)return;const dow=Number(evt.to.closest('.planner-day')?.dataset.dow);if(!Number.isFinite(dow))return;const fixed=(plannerDraft[dow]||[]).filter(x=>x.fixed).length;movePlanInstance(id,dow,fixed+(evt.newDraggableIndex??0))}
- })));
+   onStart(){root.classList.add('planner-drag-active');document.documentElement.classList.add('planner-drag-active')},
+   onAdd(evt){
+     const dow=Number(evt.to.closest('.planner-day')?.dataset.dow);if(!Number.isFinite(dow))return;
+     if(evt.item.classList.contains('pool-card')){
+       const templateId=evt.item.dataset.template;evt.item.remove();
+       const cards=[...evt.to.querySelectorAll('.plan-item')];
+       const idx=Math.max(0,Math.min(cards.length,evt.newDraggableIndex??cards.length));
+       addTemplateToDraft(templateId,dow,idx);
+     }
+   },
+   onEnd(evt){
+     root.classList.remove('planner-drag-active');document.documentElement.classList.remove('planner-drag-active');
+     if(evt.item.classList.contains('pool-card'))return;
+     const id=evt.item.dataset.instance;if(!id)return;
+     const dow=Number(evt.to.closest('.planner-day')?.dataset.dow);if(!Number.isFinite(dow))return;
+     // Derivar el índice de la posición DOM final evita off-by-one entre listas.
+     const cards=[...evt.to.querySelectorAll('.plan-item')];
+     const idx=Math.max(0,cards.findIndex(x=>x.dataset.instance===id));
+     movePlanInstance(id,dow,idx);
+   }
+ };
+ root.querySelectorAll('.planner-day-list').forEach(list=>weekSortables.push(Sortable.create(list,{...common})));
 }
 function renderPlannerWeek(){
  const root=document.getElementById('plannerWeekGrid');if(!root)return;root.innerHTML='';
  [1,2,3,4,5,6,0].forEach(dow=>{
    const day=document.createElement('section');day.className='planner-day';day.dataset.dow=String(dow);
-   const source=[...(plannerDraft[dow]||[])],items=[...source.filter(x=>x.fixed),...source.filter(x=>!x.fixed)];
+   const source=[...(plannerDraft[dow]||[])],items=[...source];
    day.innerHTML=`<div class="planner-day-head"><span>${DAY_NAMES[dow]}</span><span>${items.length}</span></div><div class="planner-day-list"></div>`;
    const list=day.querySelector('.planner-day-list');
    items.forEach(a=>{
-     const c=document.createElement('div');c.className='plan-item'+(a.fixed?' fixed':'');c.draggable=!a.fixed&&!window.Sortable;c.dataset.instance=a.instanceId;
+     const c=document.createElement('div');c.className='plan-item'+(a.fixed?' fixed':'');c.draggable=!window.Sortable;c.dataset.instance=a.instanceId;c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label',`Mover o ver ${a.title}`);
      c.style.setProperty('--typec',eventColor(a));c.style.setProperty('--lotc',LOT_COLORS[a.lot]||'#888');
-     c.innerHTML=`<button class="plan-remove" type="button" title="Quitar">×</button><div class="plan-handle">${a.fixed?'●':'⋮⋮'}</div><b>${esc(a.title)}</b><small>${esc(a.type)} · ${esc(a.surface||'Feed')}</small><span class="lot-pill" style="background:${LOT_COLORS[a.lot]||'#888'};color:#fff">${esc(a.lot)}</span><div class="plan-icons">${platformIconRow(a.platforms)}</div>`;
-     if(!window.Sortable)c.addEventListener('dragstart',e=>{if(a.fixed)return;c.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',`instance:${a.instanceId}`)});
+     c.innerHTML=`<button class="plan-remove" type="button" title="Quitar">×</button><div class="plan-handle" title="Arrastrar para mover">⋮⋮</div><b>${esc(a.title)}</b><small>${esc(a.type)} · ${esc(a.surface||'Feed')}</small><span class="lot-pill" style="background:${LOT_COLORS[a.lot]||'#888'};color:#fff">${esc(a.lot)}</span><div class="plan-icons">${platformIconRow(a.platforms)}</div>`;
+     if(!window.Sortable)c.addEventListener('dragstart',e=>{c.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',`instance:${a.instanceId}`)});
      if(!window.Sortable)c.addEventListener('dragend',()=>{c.classList.remove('dragging');document.querySelectorAll('.kanban-placeholder').forEach(x=>x.remove());document.querySelectorAll('.planner-day').forEach(x=>x.classList.remove('dragover'))});
      c.querySelector('.plan-remove').addEventListener('click',e=>{e.stopPropagation();removePlanItem(a.instanceId)});
-     c.addEventListener('click',()=>openDrawer(a));list.appendChild(c);
+     c.addEventListener('click',()=>{if(window.matchMedia('(max-width:899px)').matches&&window.openPlannerMoveSheet)window.openPlannerMoveSheet(a.instanceId);else openDrawer(a)});c.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&window.openPlannerMoveSheet){e.preventDefault();window.openPlannerMoveSheet(a.instanceId)}});list.appendChild(c);
    });
    if(!window.Sortable)day.addEventListener('dragover',e=>{
      e.preventDefault();day.classList.add('dragover');
@@ -1176,7 +1200,7 @@ function renderPlannerWeek(){
      if(!payload)return;
      document.querySelectorAll('.kanban-placeholder').forEach(x=>x.remove());
      const ph=document.createElement('div');ph.className='kanban-placeholder';
-     const movable=[...list.querySelectorAll('.plan-item:not(.fixed):not(.dragging)')];
+     const movable=[...list.querySelectorAll('.plan-item:not(.dragging)')];
      const idx=dropIndexForList(list,e.clientY);
      if(idx>=movable.length)list.appendChild(ph);else list.insertBefore(ph,movable[idx]);
    });
@@ -1185,8 +1209,8 @@ function renderPlannerWeek(){
      e.preventDefault();day.classList.remove('dragover');
      const payload=e.dataTransfer.getData('text/plain');const idx=dropIndexForList(list,e.clientY);
      document.querySelectorAll('.kanban-placeholder').forEach(x=>x.remove());
-     if(payload.startsWith('template:'))addTemplateToDraft(payload.slice(9),dow,idx+items.filter(x=>x.fixed).length);
-     if(payload.startsWith('instance:'))movePlanInstance(payload.slice(9),dow,idx+items.filter(x=>x.fixed).length);
+     if(payload.startsWith('template:'))addTemplateToDraft(payload.slice(9),dow,idx);
+     if(payload.startsWith('instance:'))movePlanInstance(payload.slice(9),dow,idx);
    });
    root.appendChild(day);
  });
@@ -1197,6 +1221,7 @@ function renderPlannerSummary(){
  r.innerHTML=`<span class="summary-chip">${c.total} piezas</span><span class="summary-chip">L1 ${c.l1}</span><span class="summary-chip">L2 ${c.l2}</span><span class="summary-chip">L3 ${c.l3}</span><span class="summary-chip">IG ${c.platforms.instagram}</span><span class="summary-chip">YT ${c.platforms.youtube}</span><span class="summary-chip">LI ${c.platforms.linkedin}</span>`;
 }
 function renderPlanner(){renderPlannerPool();renderPlannerWeek();renderPlannerSummary()}
+window.EDITORIAL_PLANNER={move:movePlanInstance,remove:removePlanItem,find:function(id){for(const d of [1,2,3,4,5,6,0]){const item=(plannerDraft[d]||[]).find(x=>x.instanceId===id);if(item)return {item,dow:d}}return null},render:renderPlanner};
 
 function currentScenarioSlots(){
  return cloneSlots(plannerDraft);
@@ -1933,7 +1958,7 @@ if(activeBrand()?.id!=='joc'&&!state.activeScenario){
  state.activeScenarioId=state.activeScenario.id;state.emulationMode=true;applyScenarioRangeControls(range);
 }
 renderAll();switchView('homeView');initCloud();
-window.EDITORIAL_OS_VERSION='12';
+window.EDITORIAL_OS_VERSION='12.1';
 window.EDITORIAL_OS_DIAGNOSTICS={clearDerivedCache:clearV12DerivedCache};
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.info('SW no registrado',err)));
 })();
