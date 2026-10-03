@@ -30,7 +30,7 @@ chmod +x "$HOME/Downloads/INSTALL_EDITORIAL_MCP.command"
 "$HOME/Downloads/INSTALL_EDITORIAL_MCP.command"
 ```
 
-Requiere Node.js 20 o superior.
+Requiere Node.js 22 o superior. El instalador intenta instalar/actualizar Node mediante Homebrew si hace falta.
 
 El instalador deja el servidor en:
 
@@ -45,6 +45,14 @@ y crea localmente:
 ```
 
 La contraseña vive sólo en ese archivo local con permisos `600`. No se publica en GitHub.
+
+También genera:
+
+```text
+~/Desktop/EDITORIAL_OS_MCP_CONFIG.json
+```
+
+con la configuración que debes registrar en el host MCP.
 
 ## Configuración genérica de un host MCP
 
@@ -147,5 +155,9 @@ Las herramientas de escritura devolverán error.
 ```
 
 Esto valida Node y que estén configuradas las variables requeridas. No imprime la contraseña.
+
+## Guía pública
+
+https://lordjeferies.github.io/editorial-os/mcp.html
 
 Consulta `EXAMPLES.md` para ejemplos concretos.
