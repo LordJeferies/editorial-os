@@ -12,6 +12,20 @@ function setVersion(){
   if(brand)brand.textContent=brand.textContent.replace(/V12\.(?:9|10|11|12|13|14|15|16)(?:\.\d+)?/g,`V${VERSION}`);
 }
 
+function loadVendor(src,test,key){
+  if(test())return;
+  if(document.querySelector(`script[data-editorial-vendor="${key}"]`))return;
+  const s=document.createElement('script');
+  s.src=src;s.async=true;s.dataset.editorialVendor=key;
+  s.onload=()=>window.dispatchEvent(new CustomEvent('editorial:vendor-ready',{detail:{key,ok:!!test()}}));
+  s.onerror=()=>window.dispatchEvent(new CustomEvent('editorial:vendor-ready',{detail:{key,ok:false}}));
+  document.head.appendChild(s);
+}
+function ensureVendors(){
+  loadVendor('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',()=>!!window.supabase,'supabase');
+  loadVendor('https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',()=>!!window.Sortable,'sortable');
+}
+
 function ensureBanner(){
   if($('#v1217Recovery'))return $('#v1217Recovery');
   const el=document.createElement('div');
@@ -99,6 +113,7 @@ function watchBoot(){
 
 function init(){
   setVersion();
+  ensureVendors();
   installInteractionFallback();
   watchBoot();
   window.addEventListener('pageshow',()=>setTimeout(clearStartupBlockers,50));
