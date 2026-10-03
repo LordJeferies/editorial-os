@@ -1,0 +1,20 @@
+{
+  "name": "editorial-os-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MCP server for Editorial OS shared Supabase workspace",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs",
+    "self-test": "node server.mjs --self-test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.3.0",
+    "@supabase/supabase-js": "2.117.2",
+    "zod": "4.6.5"
+  }
+}
