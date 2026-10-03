@@ -18,6 +18,7 @@
   }
 
   function fitFeedShell(){
+    if(window.EDITORIAL_V127)return;
     cancelAnimationFrame(fitRAF);
     fitRAF=requestAnimationFrame(()=>{
       const wrap=$('#feedsView .feed-sim-wrap');

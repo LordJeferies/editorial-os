@@ -1,0 +1,16 @@
+EDITORIAL OS V12.7 · ACTUALIZAR REPO EXISTENTE
+
+cd ~/Downloads
+unzip -o EDITORIAL_OS_V12_7_PWA.zip
+cd EDITORIAL_OS_V12_7_PWA
+chmod +x deploy_v12_7_over_existing.sh
+./deploy_v12_7_over_existing.sh
+
+Si no detecta el repo automáticamente:
+
+./deploy_v12_7_over_existing.sh ~/Downloads/EDITORIAL_OS_V10_FRESH
+
+Validación manual local:
+
+./validate_v12_7.sh
+./start_local.sh

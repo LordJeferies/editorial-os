@@ -1,0 +1,335 @@
+/* =====================================================================
+   Editorial OS V12.7 · Studio Responsive UI
+   ---------------------------------------------------------------------
+   Design direction:
+   - semantic tokens / card hierarchy inspired by shadcn/studio
+   - mobile-first interaction adapted to iOS safe areas and CSS points
+   - no fixed mobile canvases; compact layout targets 393 / 430 / 440 CSS px
+   - capabilities stay present, but actions are grouped by priority
+   ===================================================================== */
+
+:root{
+  --studio-bg: oklch(0.985 0 0);
+  --studio-fg: oklch(0.16 0 0);
+  --studio-card: oklch(1 0 0);
+  --studio-card-fg: oklch(0.16 0 0);
+  --studio-muted: oklch(0.965 0 0);
+  --studio-muted-fg: oklch(0.52 0 0);
+  --studio-border: oklch(0.91 0 0);
+  --studio-primary: oklch(0.20 0 0);
+  --studio-primary-fg: oklch(0.985 0 0);
+  --studio-accent: oklch(0.95 0 0);
+  --studio-ring: oklch(0.70 0 0);
+  --studio-danger: oklch(0.58 .22 27);
+  --studio-radius: 14px;
+  --studio-radius-lg: 18px;
+  --studio-radius-xl: 22px;
+  --studio-shadow: 0 1px 2px rgba(0,0,0,.045),0 8px 24px rgba(0,0,0,.035);
+  --studio-gap: 12px;
+  --studio-tap: 44px;
+  --app-inline: clamp(10px,3.05vw,16px);
+  --app-content: 100%;
+}
+[data-theme="dark"]{
+  --studio-bg: oklch(.155 0 0);
+  --studio-fg: oklch(.97 0 0);
+  --studio-card: oklch(.205 0 0);
+  --studio-card-fg: oklch(.97 0 0);
+  --studio-muted: oklch(.255 0 0);
+  --studio-muted-fg: oklch(.72 0 0);
+  --studio-border: oklch(1 0 0 / 11%);
+  --studio-primary: oklch(.94 0 0);
+  --studio-primary-fg: oklch(.18 0 0);
+  --studio-accent: oklch(.26 0 0);
+  --studio-ring: oklch(.56 0 0);
+  --studio-shadow: 0 1px 2px rgba(0,0,0,.25),0 10px 30px rgba(0,0,0,.16);
+}
+
+/* Global shrink-safety. Deliberately exclude the intentional horizontal
+   resource scroller used by Franjas. */
+html,body,#glassRoot,.shell,.view{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+html,body{overflow-x:clip!important}
+body{background:var(--studio-bg);color:var(--studio-fg)}
+*,*::before,*::after{box-sizing:border-box}
+img,video,canvas,svg{max-width:100%}
+button,input,select,textarea{font:inherit}
+button{touch-action:manipulation}
+
+@media(max-width:899px){
+  :root{--v124-tab-h:62px}
+  body{padding-inline:0!important}
+  .shell{padding-inline:var(--app-inline)!important;padding-top:72px!important;padding-bottom:calc(var(--v124-tab-h) + env(safe-area-inset-bottom) + 20px)!important;overflow-x:clip!important}
+  .view{container-type:inline-size;container-name:editorial-view;width:100%!important;max-width:100%!important;min-width:0!important;overflow:visible!important}
+
+  /* ---------------------------------------------------------------
+     Mobile chrome · compact, familiar, information-rich
+     --------------------------------------------------------------- */
+  #v124MobileTopbar{
+    left:0!important;right:0!important;top:0!important;width:100%!important;max-width:none!important;
+    min-height:calc(58px + env(safe-area-inset-top))!important;
+    padding:calc(env(safe-area-inset-top) + 8px) var(--app-inline) 8px!important;
+    border-bottom:1px solid var(--studio-border)!important;
+    background:color-mix(in srgb,var(--studio-bg) 93%,transparent)!important;
+    -webkit-backdrop-filter:blur(18px) saturate(1.4)!important;backdrop-filter:blur(18px) saturate(1.4)!important;
+    box-shadow:none!important;
+  }
+  .v124-brand-button{height:42px!important;min-width:0!important;border-radius:12px!important;padding:0 8px 0 0!important}
+  .v124-brand-avatar{width:36px!important;height:36px!important;border-radius:10px!important;font-size:13px!important;box-shadow:none!important}
+  .v124-brand-copy b{font-size:14px!important;font-weight:700!important;letter-spacing:-.015em!important}
+  .v124-brand-copy small{font-size:11px!important}
+  .v124-toolbar-actions{gap:6px!important}
+  .v124-icon-button{
+    width:var(--studio-tap)!important;height:var(--studio-tap)!important;min-width:var(--studio-tap)!important;min-height:var(--studio-tap)!important;
+    border:1px solid var(--studio-border)!important;border-radius:12px!important;background:var(--studio-card)!important;
+    color:var(--studio-fg)!important;box-shadow:0 1px 2px rgba(0,0,0,.025)!important;
+  }
+  .v124-icon-button svg{width:19px!important;height:19px!important}
+
+  /* Bottom navigation: 5 stable destinations at 393px and above. */
+  #dockGlassRoot{left:0!important;right:0!important;bottom:0!important;width:100%!important;padding:0!important;background:transparent!important}
+  #mobileDock{
+    width:100%!important;max-width:none!important;height:auto!important;min-height:calc(60px + env(safe-area-inset-bottom))!important;
+    padding:5px max(6px,var(--app-inline)) calc(5px + env(safe-area-inset-bottom))!important;
+    border-radius:0!important;border:0!important;border-top:1px solid var(--studio-border)!important;
+    background:color-mix(in srgb,var(--studio-bg) 94%,transparent)!important;
+    -webkit-backdrop-filter:blur(18px) saturate(1.4)!important;backdrop-filter:blur(18px) saturate(1.4)!important;
+    box-shadow:0 -8px 24px rgba(0,0,0,.035)!important;
+  }
+  #mobileDock .dockbtn{
+    min-width:0!important;min-height:52px!important;height:52px!important;border-radius:12px!important;padding:4px 2px!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;
+    color:var(--studio-muted-fg)!important;background:transparent!important;
+  }
+  #mobileDock .dockbtn span.v124-tab-icon{width:28px!important;height:26px!important;border-radius:8px!important;background:transparent!important}
+  #mobileDock .dockbtn span.v124-tab-icon svg{width:20px!important;height:20px!important}
+  #mobileDock .dockbtn b{display:block!important;font-size:9.5px!important;font-weight:650!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  #mobileDock .dockbtn.active{color:var(--studio-fg)!important}
+  #mobileDock .dockbtn.active .v124-tab-icon{background:var(--studio-muted)!important;color:var(--studio-fg)!important}
+
+  /* View title: shadcn-like page header with compact action cluster. */
+  .v124-view-header{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:end!important;gap:10px!important;margin:4px 0 14px!important;padding:0 1px!important}
+  .v124-view-title{min-width:0!important}
+  .v124-view-title small{font-size:11px!important;color:var(--studio-muted-fg)!important;font-weight:550!important;letter-spacing:0!important;text-transform:none!important}
+  .v124-view-title h1{margin:2px 0 0!important;font-size:clamp(25px,7vw,30px)!important;line-height:1!important;letter-spacing:-.04em!important;color:var(--studio-fg)!important}
+  .v124-view-actions{align-self:center!important;display:flex!important;gap:6px!important}
+
+  /* Shared surface language from shadcn/studio: subtle border, small shadow,
+     semantic muted areas. */
+  .view .panel,.view .card,.view .home-panel,.view .home-mini-card,.view .home-hero-card,.view .home-kpi,.view .home-quick,
+  .drawer-card,.v124-summary-group,.v123-today-list,.planner-day,.planner-pool,.calendar-panel,.agenda-row,.feed-sim-wrap{
+    border:1px solid var(--studio-border)!important;
+    box-shadow:var(--studio-shadow)!important;
+  }
+  .view .panel,.view .card,.view .home-panel,.view .home-mini-card,.view .home-kpi,.view .home-quick,.drawer-card{
+    background:var(--studio-card)!important;color:var(--studio-card-fg)!important;
+  }
+  .kicker,.label,.home-eyebrow,.home-kpi-label{color:var(--studio-muted-fg)!important}
+
+  /* ---------------------------------------------------------------
+     HOME · restore dashboard capability, reorganized not removed
+     --------------------------------------------------------------- */
+  #homeView .home-welcome{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;margin-bottom:10px!important}
+  #homeView .home-hero-card{display:block!important;min-height:0!important;padding:16px!important;border-radius:var(--studio-radius-xl)!important;background:linear-gradient(145deg,#111214,#282b31)!important;color:#fff!important;box-shadow:0 12px 36px rgba(0,0,0,.14)!important}
+  #homeView .home-hero-card:before{opacity:.35!important;width:220px!important;height:220px!important}
+  #homeView .home-hero-top{align-items:flex-start!important;gap:8px!important}
+  #homeView .home-hero-card h1{font-size:clamp(29px,8.2vw,38px)!important;line-height:.98!important;max-width:275px!important;margin:6px 0 8px!important}
+  #homeView .home-hero-card p{font-size:11.5px!important;line-height:1.45!important;max-width:290px!important}
+  #homeView .home-orbit{width:82px!important;height:82px!important;flex-basis:82px!important;transform:none!important}
+  #homeView .home-hero-bottom{margin-top:14px!important;gap:10px!important;align-items:center!important}
+  #homeView .home-progress-card{min-width:0!important;gap:8px!important}
+  #homeView .home-ring{width:52px!important;height:52px!important;min-width:52px!important;font-size:11px!important}
+  #homeView .home-hero-actions{display:grid!important;grid-template-columns:1fr!important;gap:6px!important;min-width:120px!important}
+  #homeView .home-primary,#homeView .home-secondary{min-height:40px!important;border-radius:11px!important;padding:0 11px!important;font-size:11px!important}
+
+  #homeView .home-side-stack{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:auto!important;gap:8px!important}
+  #homeView .home-mini-card{min-height:126px!important;border-radius:var(--studio-radius-lg)!important;padding:13px!important;background:var(--studio-card)!important}
+  #homeView .home-mini-card strong{font-size:18px!important;margin-top:10px!important}
+  #homeView .home-mini-card p{font-size:10px!important;line-height:1.35!important;margin:4px 0 8px!important;color:var(--studio-muted-fg)!important}
+  #homeView .home-text-btn{font-size:10px!important;color:var(--studio-fg)!important}
+
+  #homeView .home-kpis,#homeView .home-kpis-five{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin:0 0 10px!important}
+  #homeView .home-kpi{min-width:0!important;min-height:96px!important;border-radius:var(--studio-radius-lg)!important;padding:13px!important;background:var(--studio-card)!important;color:var(--studio-fg)!important}
+  #homeView .home-kpi b{font-size:27px!important;letter-spacing:-.035em!important}
+  #homeView .home-kpi-label{font-size:10px!important;letter-spacing:.01em!important;text-transform:none!important}
+  #homeView .home-kpi-dark,#homeView .home-kpi-green{background:var(--studio-card)!important;color:var(--studio-fg)!important}
+
+  #v123Today{display:block!important;margin:0 0 10px!important;padding:0!important}
+  #v123Today .v123-today-head{padding:0 2px 8px!important}
+  #v123Today .v123-today-head h2{font-size:20px!important}
+  #v123Today .v123-today-list{border-radius:var(--studio-radius-lg)!important;background:var(--studio-card)!important;overflow:hidden!important}
+  #v123Today .v123-today-item{min-height:64px!important;padding:10px 12px!important;background:transparent!important;border-bottom:1px solid var(--studio-border)!important}
+  #v123Today .v123-today-item:last-child{border-bottom:0!important}
+
+  #v124WeekSummary{display:none!important}
+  #v124WeekSummary .v124-summary-group{border-radius:var(--studio-radius-lg)!important;background:var(--studio-card)!important;overflow:hidden!important}
+  #v124WeekSummary .v124-summary-row{min-height:56px!important;padding:9px 13px!important;border-bottom:1px solid var(--studio-border)!important}
+  #v124WeekSummary .v124-home-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #v124WeekSummary .v124-home-actions button{min-height:48px!important;border-radius:12px!important;border:1px solid var(--studio-border)!important;background:var(--studio-card)!important;color:var(--studio-fg)!important;box-shadow:0 1px 2px rgba(0,0,0,.025)!important}
+
+  #homeView .home-dashboard-grid{display:grid!important;grid-template-columns:1fr!important;gap:9px!important;margin:0 0 10px!important}
+  #homeView .home-panel{display:block!important;min-height:0!important;border-radius:var(--studio-radius-lg)!important;padding:14px!important}
+  #homeView .home-panel-head{margin-bottom:10px!important}
+  #homeView .home-panel h3{font-size:16px!important}
+  #homeView .home-quick{display:flex!important;flex-direction:column!important;gap:12px!important;border-radius:var(--studio-radius-lg)!important;padding:14px!important;margin-bottom:10px!important}
+  #homeView .home-quick-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;width:100%!important}
+  #homeView .home-quick-actions button{min-width:0!important;min-height:68px!important;border-radius:13px!important;border:1px solid var(--studio-border)!important;background:var(--studio-muted)!important;color:var(--studio-fg)!important;box-shadow:none!important}
+  #homeView .home-quick-actions span{width:30px!important;height:30px!important;border-radius:9px!important}
+
+  /* ---------------------------------------------------------------
+     PLAN / EMULATOR · one day surface, cards remain information-rich
+     --------------------------------------------------------------- */
+  #emulatorView .v124-emulator-modes{border:1px solid var(--studio-border)!important;background:var(--studio-muted)!important;border-radius:12px!important;padding:3px!important;box-shadow:none!important;overflow:hidden!important}
+  #emulatorView .v124-emulator-modes button{min-height:40px!important;border-radius:9px!important;font-size:12px!important}
+  #emulatorView .v123-daytabs{top:58px!important;display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:4px!important;overflow:hidden!important;padding:5px 0 7px!important;background:color-mix(in srgb,var(--studio-bg) 94%,transparent)!important}
+  #emulatorView .v123-daytabs button{min-width:0!important;width:100%!important;min-height:44px!important;border-radius:10px!important;padding:4px 1px!important;font-size:10px!important;background:var(--studio-card)!important;border:1px solid var(--studio-border)!important}
+  #emulatorView .v123-daytabs button.active{background:var(--studio-primary)!important;color:var(--studio-primary-fg)!important;border-color:var(--studio-primary)!important}
+  #plannerWeekGrid{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important}
+  #plannerWeekGrid .planner-day{width:100%!important;max-width:100%!important;min-width:0!important;border-radius:var(--studio-radius-lg)!important;background:var(--studio-card)!important;padding:10px!important}
+  .plan-item{width:100%!important;max-width:100%!important;min-width:0!important;min-height:82px!important;border-radius:14px!important;border:1px solid var(--studio-border)!important;background:var(--studio-card)!important;padding:12px 48px 12px 46px!important;box-shadow:0 1px 2px rgba(0,0,0,.03)!important}
+  .plan-item>b{font-size:14px!important}.plan-item>small{font-size:11px!important;color:var(--studio-muted-fg)!important}
+  .plan-handle{left:5px!important;width:36px!important;min-width:36px!important;height:44px!important;border:0!important;background:transparent!important}
+  .plan-more{right:4px!important;width:40px!important;height:44px!important;min-width:40px!important;border-radius:10px!important;background:var(--studio-muted)!important;color:var(--studio-fg)!important}
+  .v126-planner-context{margin:0 1px 8px!important}
+  .v126-planner-context b{font-size:22px!important}
+
+  /* ---------------------------------------------------------------
+     FEEDS · viewport-true preview. No fixed 390px mobile canvas.
+     --------------------------------------------------------------- */
+  #feedsView{overflow-x:clip!important}
+  #feedsView .v124-feed-platforms{display:flex!important;gap:6px!important;overflow-x:auto!important;overscroll-behavior-inline:contain!important;scrollbar-width:none!important;padding:2px 0 8px!important;margin-bottom:6px!important}
+  #feedsView .v124-feed-platforms::-webkit-scrollbar{display:none}
+  #feedsView .v124-feed-platforms button{flex:0 0 auto!important;min-height:40px!important;border:1px solid var(--studio-border)!important;border-radius:999px!important;background:var(--studio-card)!important;padding:0 14px!important;color:var(--studio-muted-fg)!important}
+  #feedsView .v124-feed-platforms button.active{background:var(--studio-primary)!important;color:var(--studio-primary-fg)!important;border-color:var(--studio-primary)!important}
+  #feedMetrics{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;overflow:hidden!important}
+  #feedMetrics .metric-card{min-width:0!important;padding:8px 4px!important}
+  #feedRoot,.feed-sim-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:clip!important}
+  .feed-sim-wrap{padding:6px!important;border-radius:var(--studio-radius-lg)!important;background:var(--studio-card)!important}
+  .feed-summary{display:flex!important;overflow-x:auto!important;gap:5px!important;scrollbar-width:none!important;padding-bottom:5px!important}
+  .feed-summary::-webkit-scrollbar{display:none}
+  .feed-summary .summary-chip{flex:0 0 auto!important}
+
+  /* The mockup itself always derives from the REAL available content width.
+     Border is included via border-box. This works at 393, 430 and 440 CSS px. */
+  .feed-device-shell.device-mobile{
+    width:100%!important;max-width:100%!important;min-width:0!important;inline-size:100%!important;max-inline-size:100%!important;
+    margin:0 auto!important;border:6px solid #111!important;border-radius:26px!important;padding:0!important;overflow:hidden!important;
+    box-sizing:border-box!important;contain:layout paint!important;background:#fff!important;
+  }
+  .feed-device-shell.device-mobile:before{width:94px!important;height:18px!important;margin-bottom:-18px!important;border-radius:0 0 12px 12px!important}
+  .feed-device-shell.device-mobile>*{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+
+  .feed-device-shell.device-mobile.instagram-sim,
+  .feed-device-shell.device-mobile.instagram-sim .feed-inner-tabs,
+  .feed-device-shell.device-mobile.instagram-sim .ig-topline,
+  .feed-device-shell.device-mobile.instagram-sim .ig-profile-real,
+  .feed-device-shell.device-mobile.instagram-sim .ig-highlights,
+  .feed-device-shell.device-mobile.instagram-sim .ig-tabs,
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-grid{
+    width:100%!important;inline-size:100%!important;max-width:100%!important;max-inline-size:100%!important;min-width:0!important;min-inline-size:0!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-profile-real{grid-template-columns:56px minmax(0,1fr)!important;gap:10px!important;padding:12px 10px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-avatar-real{width:54px!important;height:54px!important;font-size:17px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-line1{display:flex!important;min-width:0!important;gap:5px!important;overflow:hidden!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-profile-btn{display:none!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-stats{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;font-size:7px!important;min-width:0!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-stats span{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-bio{font-size:8px!important;line-height:1.25!important;min-width:0!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-highlights{display:flex!important;gap:8px!important;padding:0 8px 9px!important;overflow:hidden!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-highlight{flex:0 0 48px!important;min-width:0!important}.feed-device-shell.device-mobile.instagram-sim .ig-highlight i{width:40px!important;height:40px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-highlight b{font-size:7px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-tabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;font-size:7px!important;overflow:hidden!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-tabs span{min-width:0!important;padding:9px 1px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;text-align:center!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-grid{
+    display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-columns:minmax(0,1fr)!important;grid-auto-flow:row!important;
+    gap:1px!important;padding:0!important;margin:0!important;overflow:hidden!important;contain:layout paint!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile{
+    width:100%!important;max-width:100%!important;min-width:0!important;aspect-ratio:1!important;position:relative!important;overflow:hidden!important;contain:layout paint!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile .sim-media{
+    position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;box-shadow:inset 0 0 0 2px var(--lotc,rgba(255,255,255,.4))!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile .sim-media-label{left:4px!important;right:4px!important;bottom:4px!important;padding:4px!important;max-width:calc(100% - 8px)!important;min-width:0!important;border-radius:6px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile .sim-media-label b{font-size:7.5px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile .sim-media-label small{display:none!important}
+  .feed-device-shell.device-mobile.instagram-sim .sim-lot-badge,.feed-device-shell.device-mobile.instagram-sim .sim-type-badge{font-size:5.5px!important;max-width:52%!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+
+  /* If the user explicitly chooses Desktop on a phone, the preview is scaled
+     by V12.7 runtime instead of creating horizontal page overflow. */
+  .v127-desktop-preview-stage{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important;position:relative!important}
+  .v127-desktop-preview-stage>.feed-device-shell.device-desktop{transform-origin:top left!important;margin:0!important}
+
+  /* ---------------------------------------------------------------
+     Calendar / Library / sheets
+     --------------------------------------------------------------- */
+  #calendarView .calendar-panel{border-radius:var(--studio-radius-lg)!important;background:var(--studio-card)!important}
+  .mobile-day-tabs{gap:6px!important;overflow-x:auto!important;padding-bottom:3px!important}
+  .mobile-day-tab{flex:0 0 54px!important;min-width:54px!important;min-height:58px!important;border-radius:13px!important;background:var(--studio-card)!important;border:1px solid var(--studio-border)!important;box-shadow:none!important}
+  .mobile-day-tab.active{background:var(--studio-primary)!important;color:var(--studio-primary-fg)!important;border-color:var(--studio-primary)!important}
+
+  #inventoryView>.library-toolbar{border:1px solid var(--studio-border)!important;border-radius:14px!important;background:var(--studio-muted)!important;padding:4px!important;box-shadow:none!important}
+  #inventoryView>.library-toolbar .segbtn{border-radius:10px!important;min-height:40px!important}
+
+  .v124-sheet-layer,.v124-catalog-layer{background:rgba(0,0,0,.42)!important}
+  .v124-sheet,.v124-catalog-sheet{border:1px solid var(--studio-border)!important;background:var(--studio-card)!important;color:var(--studio-card-fg)!important;box-shadow:0 -18px 55px rgba(0,0,0,.18)!important;border-radius:24px 24px 0 0!important;max-height:min(88dvh,760px)!important}
+  .v124-sheet-bar{border-bottom:1px solid var(--studio-border)!important;background:color-mix(in srgb,var(--studio-card) 96%,transparent)!important}
+  .v124-sheet-body,.v124-catalog-body{overscroll-behavior:contain!important}
+  .v124-group{border:1px solid var(--studio-border)!important;border-radius:14px!important;background:var(--studio-card)!important;overflow:hidden!important}
+  .v124-row{min-height:56px!important;border-bottom:1px solid var(--studio-border)!important;background:transparent!important;padding:9px 12px!important}
+  .v124-row:last-child{border-bottom:0!important}
+  .v124-row:active{background:var(--studio-muted)!important}
+  .v124-row-copy b{font-size:14px!important}.v124-row-copy small{font-size:11px!important;color:var(--studio-muted-fg)!important}
+
+  /* Inputs: 16px minimum prevents Safari focus zoom. */
+  input,select,textarea{font-size:16px!important;max-width:100%!important;min-width:0!important}
+  .btn,.segbtn,.platformbtn,.home-primary,.home-secondary{min-height:var(--studio-tap)!important;border-radius:11px!important}
+  button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--studio-ring)!important;outline-offset:2px!important}
+
+  /* Absolutely no touch-scale feedback. */
+  button:active,.btn:active,.navbtn:active,.dockbtn:active,.segbtn:active,.platformbtn:active,.plan-item:active,.pool-card:active,.v124-row:active{transform:none!important;scale:none!important;rotate:none!important}
+}
+
+/* iPhone 14 Pro class · 393 CSS pt wide. */
+@media(max-width:399px){
+  :root{--app-inline:10px;--studio-gap:9px}
+  .shell{padding-inline:10px!important}
+  #homeView .home-side-stack{grid-template-columns:1fr!important}
+  #homeView .home-hero-card h1{font-size:29px!important;max-width:245px!important}
+  #homeView .home-orbit{width:70px!important;height:70px!important;flex-basis:70px!important}
+  #homeView .home-kpi{min-height:90px!important;padding:11px!important}
+  #homeView .home-kpi b{font-size:24px!important}
+  #feedMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #emulatorView .v123-daytabs{gap:3px!important}
+  #emulatorView .v123-daytabs button{font-size:9px!important;border-radius:9px!important}
+  #mobileDock .dockbtn b{font-size:9px!important}
+}
+
+/* iPhone 15 Plus class · ~430 CSS pt wide. */
+@media(min-width:400px) and (max-width:432px){
+  :root{--app-inline:12px}
+  #homeView .home-side-stack{grid-template-columns:1fr 1fr!important}
+  #homeView .home-kpi{min-height:96px!important}
+}
+
+/* iPhone 16 Pro Max class · ~440 CSS pt wide. */
+@media(min-width:433px) and (max-width:480px){
+  :root{--app-inline:14px}
+  #homeView .home-side-stack{grid-template-columns:1fr 1fr!important}
+  #homeView .home-kpis-five{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #feedMetrics{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+
+/* Small iPad / wide compact: expose more without changing functionality. */
+@media(min-width:600px) and (max-width:899px){
+  :root{--app-inline:18px}
+  #homeView .home-welcome{grid-template-columns:minmax(0,1.4fr) minmax(240px,.7fr)!important}
+  #homeView .home-side-stack{grid-template-columns:1fr!important}
+  #homeView .home-kpis-five{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  #homeView .home-dashboard-grid{grid-template-columns:1fr 1fr!important}
+  #homeView .home-activity{grid-column:1/-1!important}
+  .feed-device-shell.device-mobile{max-width:440px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}

@@ -917,8 +917,9 @@ function attachFeedTabs(container,p,options){
 }
 
 function resolvedFeedDevice(){
+ const vw=Math.round(window.visualViewport?.width||document.documentElement.clientWidth||window.innerWidth||0);
  if(state.feedDevice==='mobile'||state.feedDevice==='desktop')return state.feedDevice;
- return window.innerWidth<900?'mobile':'desktop';
+ return vw<900?'mobile':'desktop';
 }
 function finalizeFeedStage(sim){
  if(!sim)return;
@@ -2019,7 +2020,7 @@ window.visualViewport?.addEventListener('resize',queueViewportSync,{passive:true
 window.addEventListener('resize',queueViewportSync,{passive:true});
 window.addEventListener('orientationchange',()=>setTimeout(()=>{syncViewportHeight();renderActiveView()},120),{passive:true});
 
-/* Public V12.6 runtime API */
+/* Public V12.7 runtime API */
 window.EDITORIAL_V123_API={
  getState:()=>({state,appData,savedScenarios,plannerDraft:cloneSlots(plannerDraft)}),
  todayItems:()=>assetsForDate(todayLocal(),'all'),
@@ -2044,7 +2045,7 @@ window.EDITORIAL_V123_API={
  acceptRemote(){if(!pendingRemotePayload)return false;return applyCloudPayload(pendingRemotePayload,{force:true})},
  async keepLocal(){if(!pendingRemotePayload)return false;cloudBaseRevision=Math.max(cloudBaseRevision,Number(pendingRemotePayload.syncMeta?.revision||0));pendingRemotePayload=null;await window.EDITORIAL_STORAGE?.clearConflict?.();cloudLocalDirty=true;persistCloudMeta();return cloudPush(false)},
  forceSync:()=>cloudPush(false),
- diagnostics:async()=>({version:'12.6',brand:activeBrand()?.name||'',scenario:state.activeScenario?.name||'',view:activeView(),sync:{dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,connected:!!cloudSession,online:navigator.onLine,conflict:!!pendingRemotePayload,deviceId:v123DeviceId},storage:await window.EDITORIAL_STORAGE?.diagnostics?.(),localStorageBytes:Object.keys(localStorage).reduce((n,k)=>n+String(localStorage.getItem(k)||'').length*2,0)})
+ diagnostics:async()=>({version:'12.7',brand:activeBrand()?.name||'',scenario:state.activeScenario?.name||'',view:activeView(),sync:{dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,connected:!!cloudSession,online:navigator.onLine,conflict:!!pendingRemotePayload,deviceId:v123DeviceId},storage:await window.EDITORIAL_STORAGE?.diagnostics?.(),localStorageBytes:Object.keys(localStorage).reduce((n,k)=>n+String(localStorage.getItem(k)||'').length*2,0)})
 };
 
 /* Start */
@@ -2060,7 +2061,7 @@ if(activeBrand()?.id!=='joc'&&!state.activeScenario){
  state.activeScenarioId=state.activeScenario.id;state.emulationMode=true;applyScenarioRangeControls(range);
 }
 persistV123Shadow();renderAll();switchView('homeView');initCloud();
-window.EDITORIAL_OS_VERSION='12.6';
+window.EDITORIAL_OS_VERSION='12.7';
 window.EDITORIAL_OS_DIAGNOSTICS={clearDerivedCache:clearV12DerivedCache,api:window.EDITORIAL_V123_API};
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.info('SW no registrado',err)));
 })();
