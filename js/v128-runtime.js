@@ -1,4 +1,4 @@
-/* Editorial OS V12.8 · iOS polish / stable detents / viewport geometry */
+/* Editorial OS V12.8.1 · iOS stability hotfix / viewport geometry */
 (() => {
   'use strict';
   const $=(s,r=document)=>r.querySelector(s);
@@ -7,6 +7,7 @@
   const isCompact=()=>Math.round(window.visualViewport?.width||window.innerWidth||0)<900;
   let geometryRAF=0;
   let lastFeedViewport=null;
+  let sheetUpgradeRAF=0;
 
   const ICON={
     back:'<svg viewBox="0 0 24 24" fill="none"><path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -21,14 +22,19 @@
     cancelAnimationFrame(geometryRAF);
     geometryRAF=requestAnimationFrame(()=>{
       const {w,h,top}=visual(),root=document.documentElement;
-      root.style.setProperty('--v128-vvh',`${h}px`);root.style.setProperty('--v128-vvw',`${w}px`);root.style.setProperty('--v128-vv-top',`${top}px`);
-      root.dataset.v128Width=String(w);root.dataset.v128Height=String(h);root.dataset.editorialVersion='12.8';
+      root.style.setProperty('--v128-vvh',`${h}px`);
+      root.style.setProperty('--v128-vvw',`${w}px`);
+      root.style.setProperty('--v128-vv-top',`${top}px`);
+      root.dataset.v128Width=String(w);
+      root.dataset.v128Height=String(h);
+      root.dataset.editorialVersion='12.8.1';
       if(!isCompact())return;
       const topbar=$('#v124MobileTopbar'),dock=$('#dockGlassRoot');
       const tr=topbar?.getBoundingClientRect(),dr=dock?.getBoundingClientRect();
       const contentTop=tr?Math.max(0,Math.ceil(tr.bottom)):Math.max(62,top+62);
       const contentBottom=dr?Math.max(64,Math.ceil(h-dr.top)):74;
-      root.style.setProperty('--v128-content-top',`${contentTop}px`);root.style.setProperty('--v128-content-bottom',`${contentBottom}px`);
+      root.style.setProperty('--v128-content-top',`${contentTop}px`);
+      root.style.setProperty('--v128-content-bottom',`${contentBottom}px`);
       const openSheet=$('.v124-sheet-layer.open .v124-sheet,.v124-catalog-layer[aria-hidden="false"] .v124-catalog-sheet,#drawerBg.open .drawer');
       if(openSheet)constrainSheet(openSheet);
       fitFeedViewport();
@@ -43,14 +49,26 @@
     const back=$('.v128-back',controls),forward=$('.v128-forward',controls);
     back.addEventListener('click',()=>{if(closeTopModal())return;history.back()});
     forward.addEventListener('click',()=>history.forward());
-    const sync=()=>{
-      // History API doesn't expose forward length. Keep forward visually available
-      // after a popstate and disable it again after a new navigation.
-      back.disabled=history.length<=1;
-    };
+    const sync=()=>{back.disabled=history.length<=1};
     window.addEventListener('popstate',()=>{forward.disabled=false;setTimeout(sync,0)});
     window.addEventListener('editorial:view',()=>{forward.disabled=true;sync()});
     forward.disabled=true;sync();
+  }
+
+  function installNavigationFallback(){
+    /* Event-delegated fallback: if an older/cached runtime misses a handler,
+       navigation still resolves through the public domain API. */
+    document.addEventListener('click',e=>{
+      const el=e.target.closest?.('.dockbtn[data-view],.navbtn[data-view],[data-home-go]');
+      if(!el)return;
+      const view=el.dataset.view||el.dataset.homeGo;
+      if(!view)return;
+      requestAnimationFrame(()=>{
+        const target=document.getElementById(view);
+        if(target?.classList.contains('active'))return;
+        try{api()?.navigate?.(view)}catch(err){console.error('Navigation fallback',err)}
+      });
+    },true);
   }
 
   function openLayers(){
@@ -147,7 +165,6 @@
       lastFeedViewport=viewport;
       viewport.addEventListener('scroll',()=>shell.classList.toggle('v128-feed-scrolled',viewport.scrollTop>18),{passive:true});
     }
-    // Defensively neutralize legacy fixed widths inside all mobile simulations.
     shell.style.setProperty('width','min(100%,430px)','important');
     shell.style.setProperty('max-width','430px','important');
     viewport.style.setProperty('width','100%','important');
@@ -162,20 +179,32 @@
     $$('.v124-icon-button,.home-primary,.v124-plan-add').forEach(x=>x.classList.add('v128-liquid-material'));
   }
 
+  function scheduleSheetUpgrade(){
+    cancelAnimationFrame(sheetUpgradeRAF);
+    sheetUpgradeRAF=requestAnimationFrame(()=>{
+      upgradeGenericSheets();prepareDrawer();decorateGlassTargets();cleanModalState();syncGeometry();
+    });
+  }
   function observeRuntimeSheets(){
-    const mo=new MutationObserver(()=>{upgradeGenericSheets();prepareDrawer();decorateGlassTargets();syncGeometry();cleanModalState()});
-    mo.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','aria-hidden']});
+    /* Only observe nodes being added. V12.8 watched every class change across the
+       entire app, which created avoidable callback storms during navigation. */
+    const mo=new MutationObserver(muts=>{
+      if(muts.some(m=>m.addedNodes?.length))scheduleSheetUpgrade();
+    });
+    mo.observe(document.body,{subtree:true,childList:true});
   }
 
   function boot(){
-    installHistoryControls();prepareDrawer();upgradeGenericSheets();decorateGlassTargets();observeRuntimeSheets();syncGeometry();fitFeedViewport();
-    document.documentElement.dataset.editorialVersion='12.8';
+    installHistoryControls();installNavigationFallback();prepareDrawer();upgradeGenericSheets();decorateGlassTargets();observeRuntimeSheets();syncGeometry();fitFeedViewport();
+    document.documentElement.dataset.editorialVersion='12.8.1';
+    document.documentElement.classList.add('editorial-interactive');
   }
 
   window.visualViewport?.addEventListener('resize',syncGeometry,{passive:true});
-  window.visualViewport?.addEventListener('scroll',syncGeometry,{passive:true});
+  /* visualViewport scroll fires continuously while Safari chrome moves; geometry
+     only needs resize/orientation updates for this shell. */
   window.addEventListener('resize',syncGeometry,{passive:true});
-  window.addEventListener('orientationchange',()=>setTimeout(syncGeometry,120),{passive:true});
+  window.addEventListener('orientationchange',()=>setTimeout(syncGeometry,160),{passive:true});
   window.addEventListener('editorial:rendered',()=>requestAnimationFrame(()=>{upgradeGenericSheets();fitFeedViewport();decorateGlassTargets();syncGeometry()}));
   window.addEventListener('editorial:view',()=>requestAnimationFrame(syncGeometry));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&closeTopModal())e.preventDefault()});
