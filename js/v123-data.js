@@ -1,7 +1,7 @@
-/* Editorial OS V12.5 · schema validation + non-destructive migrations */
+/* Editorial OS V12.6 · schema validation + non-destructive migrations */
 (() => {
   'use strict';
-  const PRODUCT_VERSION='12.5';
+  const PRODUCT_VERSION='12.6';
   const LEGACY_SCHEMA_VERSION=9;
   const DOWS=['0','1','2','3','4','5','6'];
   const isObj=v=>!!v&&typeof v==='object'&&!Array.isArray(v);

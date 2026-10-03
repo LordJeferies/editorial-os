@@ -1,0 +1,73 @@
+EDITORIAL OS V12.6 · QA REPORT
+================================
+
+RESULTADO GENERAL
+-----------------
+PASS · QA estática y contratos
+PASS · lógica LinkedIn base + L2 aditivo
+PASS · planner move/reorder tests
+PASS · updater Git end-to-end con remoto adelantado
+PASS · preservación de supabase-config.js
+PASS · preservación de documentación remota
+PASS · Service Worker/cache V12.6
+PASS · geometría Instagram protegida en CSS + runtime
+
+FRONTEND ACTIVO
+---------------
+- V12.4 visual/runtime shell recuperado.
+- V12.6 UX Recovery aplicado encima.
+- V12.5 simplification layer NO está activa.
+- css/v125.css NO se carga.
+- js/v125-runtime.js NO se carga.
+
+INSTAGRAM FEED
+--------------
+La corrección ya no depende únicamente de CSS responsive:
+1. se mide el ancho interior real de .feed-sim-wrap;
+2. el mockup móvil se limita a min(390px, espacio real);
+3. box-sizing:border-box incluye el borde del teléfono;
+4. cada capa interna usa min-width:0 / max-width:100%;
+5. el grid usa gap de 1px;
+6. v126-runtime calcula track=(grid.clientWidth - 2px)/3;
+7. se asignan exactamente 3 tracks de ese ancho;
+8. cada tile recibe exactamente el ancho del track;
+9. los medios quedan contenidos dentro de su tile;
+10. Zoom-out reutiliza la misma superficie.
+
+LINKEDIN
+--------
+PASS · La línea editorial preexistente se conserva.
+PASS · LinkedIn L2 se añade como una capa adicional.
+PASS · linkedinLayer:'base' y linkedinLayer:'l2' permanecen diferenciados.
+PASS · sourceMasterKey se conserva para las derivaciones L2.
+
+CONTRATOS PRESERVADOS
+---------------------
+- jocEditorialV9
+- jocEditorialV9AppData
+- jocEditorialV9Scenarios
+- jocEditorialV9Cloud
+- workspace_key:'editorial-os'
+- public.editorial_state
+- cloud payload compatible version:9
+
+UPDATER E2E
+-----------
+Se simuló un repositorio local atrasado respecto de origin/main.
+El updater V12.6:
+PASS · hizo fetch/rebase antes de instalar
+PASS · creó backup
+PASS · preservó supabase-config.js
+PASS · preservó una modificación documental presente sólo en remoto
+PASS · ejecutó validate_v12_6.sh
+PASS · creó commit
+PASS · hizo segundo fetch
+PASS · publicó sólo fast-forward
+
+LIMITACIÓN DEL ENTORNO
+----------------------
+No se afirma validación física en un iPhone real. El contenedor no reproduce de
+forma fiable Safari/WebKit standalone PWA, teclado virtual, safe-area física ni
+gestos táctiles reales. La geometría y lógica sí están cubiertas por validación
+estática/runtime y tests automatizados. La comprobación final del gesto físico y
+render WebKit debe hacerse en el iPhone después de desplegar V12.6.

@@ -1,4 +1,4 @@
-/* Editorial OS V12.5 · IndexedDB shadow state + durable outbox */
+/* Editorial OS V12.6 · IndexedDB shadow state + durable outbox */
 (() => {
   'use strict';
   const DB_NAME='editorial-os-v123';
@@ -27,7 +27,7 @@
   async function get(store,key){const db=await open();if(!db)return null;return new Promise(resolve=>{const tx=db.transaction(store,'readonly');const r=tx.objectStore(store).get(key);r.onsuccess=()=>resolve(r.result??null);r.onerror=()=>resolve(null)})}
   async function del(store,key){const db=await open();if(!db)return false;return new Promise(resolve=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).delete(key);tx.oncomplete=()=>resolve(true);tx.onerror=()=>resolve(false)})}
   async function clear(){const db=await open();if(!db)return;for(const store of ['snapshots','outbox','meta'])await new Promise(resolve=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).clear();tx.oncomplete=resolve;tx.onerror=resolve})}
-  async function persistSnapshot(snapshot){return put('snapshots','latest',{...snapshot,productVersion:'12.5',savedAt:new Date().toISOString()})}
+  async function persistSnapshot(snapshot){return put('snapshots','latest',{...snapshot,productVersion:'12.6',savedAt:new Date().toISOString()})}
   async function latestSnapshot(){return get('snapshots','latest')}
   async function queueOutbox(payload){return put('outbox','latest',{payload,queuedAt:new Date().toISOString()})}
   async function pendingOutbox(){return get('outbox','latest')}

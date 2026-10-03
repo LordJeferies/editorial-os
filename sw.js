@@ -1,10 +1,9 @@
-const CACHE='editorial-os-v12-5';
+const CACHE='editorial-os-v12-6';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
-  './css/legacy.css','./css/v12.css','./css/v123.css','./css/v124.css','./css/v125.css',
+  './css/legacy.css','./css/v12.css','./css/v123.css','./css/v124.css','./css/v126.css',
   './js/v123-data.js','./js/v123-sync.js','./js/v123-storage.js',
-  './js/app-core.js','./js/v12-runtime.js','./js/v123-runtime.js','./js/v124-store.js','./js/v125-runtime.js','./js/v12-glass.js',
-  './icons/icon-192.png','./icons/icon-512.png'
+  './js/app-core.js','./js/v12-runtime.js','./js/v123-runtime.js','./js/v124-store.js','./js/v124-runtime.js','./js/v126-runtime.js','./js/v12-glass.js','./icons/icon-192.png','./icons/icon-512.png'
 ];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));

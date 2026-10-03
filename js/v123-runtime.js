@@ -1,4 +1,4 @@
-/* Editorial OS V12.5 · mobile-first operating shell */
+/* Editorial OS V12.6 · mobile-first operating shell */
 (() => {
   'use strict';
   const compact=matchMedia('(max-width:899px)');
@@ -92,7 +92,7 @@
   async function openDiagnostics(){
     const layer=makeLayer('v123DiagLayer','Diagnóstico','Estado real del PWA, storage y sincronización.');const body=layer.querySelector('.v123-sheet-body');body.innerHTML='<div class="callout">Leyendo diagnóstico…</div>';openLayer(layer);
     const d=await api()?.diagnostics?.()||{},reg=await navigator.serviceWorker?.getRegistration?.().catch(()=>null),cacheNames=await window.caches?.keys?.().catch(()=>[]),vv=window.visualViewport;
-    const entries={Versión:d.version||'12.5',Vista:d.view||'',Marca:d.brand||'',Escenario:d.scenario||'Plan automático','Viewport':`${innerWidth}×${innerHeight}`,'Visual viewport':vv?`${Math.round(vv.width)}×${Math.round(vv.height)}`:'n/a',DPR:devicePixelRatio,'Modo':matchMedia('(display-mode: standalone)').matches?'PWA standalone':'Safari/browser','Online':navigator.onLine?'Sí':'No','Service Worker':reg?.active?.state||'No activo','Caches':cacheNames.join(', ')||'ninguno','Sync':d.sync?.conflict?'Conflicto':(d.sync?.dirty?'Cambios pendientes':(d.sync?.connected?'Conectado':'Local')),'Revision':`${d.sync?.revision||0} / base ${d.sync?.baseRevision||0}`,'Device ID':d.storage?.deviceId||d.sync?.deviceId||'',IndexedDB:d.storage?.db?'OK':'No disponible','Outbox':d.storage?.pending?'Pendiente':'Vacío','LocalStorage':formatBytes(d.localStorageBytes||0)};
+    const entries={Versión:d.version||'12.6',Vista:d.view||'',Marca:d.brand||'',Escenario:d.scenario||'Plan automático','Viewport':`${innerWidth}×${innerHeight}`,'Visual viewport':vv?`${Math.round(vv.width)}×${Math.round(vv.height)}`:'n/a',DPR:devicePixelRatio,'Modo':matchMedia('(display-mode: standalone)').matches?'PWA standalone':'Safari/browser','Online':navigator.onLine?'Sí':'No','Service Worker':reg?.active?.state||'No activo','Caches':cacheNames.join(', ')||'ninguno','Sync':d.sync?.conflict?'Conflicto':(d.sync?.dirty?'Cambios pendientes':(d.sync?.connected?'Conectado':'Local')),'Revision':`${d.sync?.revision||0} / base ${d.sync?.baseRevision||0}`,'Device ID':d.storage?.deviceId||d.sync?.deviceId||'',IndexedDB:d.storage?.db?'OK':'No disponible','Outbox':d.storage?.pending?'Pendiente':'Vacío','LocalStorage':formatBytes(d.localStorageBytes||0)};
     body.innerHTML=`<div class="v123-diagnostics">${Object.entries(entries).map(([k,v])=>`<div class="v123-diag"><span>${escapeHtml(k)}</span><b>${escapeHtml(String(v))}</b></div>`).join('')}</div><div class="drawer-actions" style="margin-top:10px"><button class="btn" id="v123CopyDiag">Copiar diagnóstico</button><button class="btn" id="v123Recover">Recuperar copia local</button><button class="btn accent" id="v123ForceSync">Sincronizar ahora</button></div>`;
     $('#v123CopyDiag',body).onclick=async()=>{await navigator.clipboard?.writeText?.(JSON.stringify(entries,null,2));toast('Diagnóstico copiado')};
     $('#v123ForceSync',body).onclick=()=>api()?.forceSync?.();
@@ -128,8 +128,8 @@
   function toDateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 
   function boot(){
-    document.documentElement.dataset.editorialVersion='12.5';applyPrefs();
-    const title=$('#brandTitle');if(title)title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.5');
+    document.documentElement.dataset.editorialVersion='12.6';applyPrefs();
+    const title=$('#brandTitle');if(title)title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.6');
     setupPlannerTabs();setupPoolSheet();setupPointerReorderFallback();setupSearch();setupQuickAdd();augmentMore();renderToday();setupPWAUpdate();window.EDITORIAL_STORAGE?.getConflict?.().then(c=>{if(c?.payload)ensureConflictBanner().classList.add('show')});
     window.addEventListener('editorial:rendered',e=>{if(e.detail?.view==='homeView')renderToday();if(e.detail?.view==='emulatorView'){setupPlannerTabs();syncPlannerTabs()}});
     if(location.hash&&location.hash!=='#/home')applyRoute();else if(!location.hash){const v=prefs().defaultView||'homeView';api()?.navigate?.(v);history.replaceState({view:v},'',routeForView(v))}

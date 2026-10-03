@@ -1,0 +1,177 @@
+/* =====================================================================
+   Editorial OS V12.6 · UX Recovery
+   ---------------------------------------------------------------------
+   Recovery principle:
+   - preserve the information-rich V12.4 composition
+   - keep V12.5 domain improvements (LinkedIn L2 additive, sync, production)
+   - improve hierarchy instead of hiding capabilities
+   - guarantee iPhone feed geometry from the real inner viewport
+   ===================================================================== */
+
+:root{
+  --v126-content-max: 760px;
+  --v126-feed-phone-max: 390px;
+  --v126-section-gap: 12px;
+  --v126-card-radius: 20px;
+}
+
+/* Keep the richer V12.4 mobile composition. V12.5's simplification layer is
+   intentionally not loaded in V12.6. */
+
+@media(max-width:899px){
+  /* Better hierarchy: the view title remains strong, secondary controls stay
+     contextual, and important navigation stays visible. */
+  .v124-view-header{margin-bottom:12px!important}
+  .v124-view-title h1{letter-spacing:-.045em!important}
+  .v124-view-title small{font-size:11px!important;letter-spacing:.01em!important}
+  .v124-view-actions{display:flex!important;gap:4px!important}
+
+  /* Emulador: preserve the complete tool, but make the working day visually
+     dominant and keep configuration in the existing sheets. */
+  #emulatorView .v124-emulator-modes{position:sticky;top:0;z-index:18;margin-bottom:9px!important}
+  #emulatorView .v123-daytabs{position:sticky!important;top:48px!important;z-index:17!important;padding:5px 0 7px!important;margin:0 0 8px!important;background:color-mix(in srgb,var(--v124-bg) 94%,transparent)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  #plannerWeekGrid .planner-day{box-shadow:0 1px 0 rgba(0,0,0,.02)!important}
+  .planner-day-head{font-size:15px!important;font-weight:750!important}
+  .plan-item{min-height:82px!important;padding-top:12px!important;padding-bottom:12px!important}
+  .plan-item>b{font-size:15px!important;line-height:1.22!important}
+  .plan-item>small{font-size:11.5px!important;line-height:1.25!important}
+  .plan-item .lot-pill{font-size:9.5px!important}
+  .plan-handle,.plan-more{touch-action:none!important}
+  .plan-more{touch-action:manipulation!important}
+  .planner-day-list:empty:after{content:"Este día está vacío · usa + para añadir"!important;min-height:150px!important;padding:24px;text-align:center}
+
+  /* Feed: preserve visible platform navigation from V12.4, while the detailed
+     configuration remains in its sheet. */
+  .v124-feed-platforms{position:sticky;top:0;z-index:18;padding:4px 0 8px!important;margin-bottom:6px!important;background:color-mix(in srgb,var(--v124-bg) 94%,transparent)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .v124-feed-platforms button{min-height:42px!important;padding-inline:15px!important}
+  #feedRoot{padding:7px!important}
+  .feed-sim-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important;padding:6px!important;box-sizing:border-box!important}
+  .feed-disclaimer{margin-bottom:8px!important}
+
+  /* Definitive phone-shell geometry. Width is also set by v126-runtime.js from
+     the REAL feed viewport, not from viewport assumptions. */
+  .feed-device-shell.device-mobile{
+    display:block!important;
+    width:min(var(--v126-feed-phone-max),100%)!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-inline:auto!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+    contain:layout paint!important;
+    border-width:7px!important;
+    border-radius:28px!important;
+  }
+  .feed-device-shell.device-mobile>*{box-sizing:border-box!important;max-width:100%!important;min-width:0!important}
+
+  /* Instagram: every layer uses the phone's INNER content width. Grid tracks
+     cannot grow from their contents and each media tile is clipped to its cell. */
+  .feed-device-shell.device-mobile.instagram-sim{
+    --ig-gap:1px;
+    inline-size:min(var(--v126-feed-phone-max),100%)!important;
+    max-inline-size:100%!important;
+    min-inline-size:0!important;
+    overflow:hidden!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .feed-inner-tabs,
+  .feed-device-shell.device-mobile.instagram-sim .ig-topline,
+  .feed-device-shell.device-mobile.instagram-sim .ig-profile-real,
+  .feed-device-shell.device-mobile.instagram-sim .ig-highlights,
+  .feed-device-shell.device-mobile.instagram-sim .ig-tabs,
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-grid{
+    inline-size:100%!important;
+    max-inline-size:100%!important;
+    min-inline-size:0!important;
+    box-sizing:border-box!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-profile-real{grid-template-columns:64px minmax(0,1fr)!important;padding:14px 12px!important;gap:12px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-avatar-real{width:60px!important;height:60px!important;font-size:19px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-line1,
+  .feed-device-shell.device-mobile.instagram-sim .ig-stats,
+  .feed-device-shell.device-mobile.instagram-sim .ig-bio{min-width:0!important;max-width:100%!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-stats{gap:7px!important;display:flex!important;justify-content:flex-start!important;flex-wrap:wrap!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-highlights{padding:0 10px 10px!important;gap:10px!important;overflow:hidden!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-highlight{min-width:0!important;flex:0 1 54px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-highlight i{width:44px!important;height:44px!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-tabs{gap:0!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;font-size:7.5px!important;text-align:center!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-tabs span{min-width:0!important;padding:10px 2px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-grid{
+    display:grid!important;
+    grid-template-columns:repeat(3,calc((100% - (2 * var(--ig-gap)))/3))!important;
+    grid-auto-columns:calc((100% - (2 * var(--ig-gap)))/3)!important;
+    grid-auto-flow:row!important;
+    gap:var(--ig-gap)!important;
+    padding:0!important;
+    margin:0!important;
+    overflow:hidden!important;
+    contain:layout paint!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile{
+    position:relative!important;
+    inline-size:auto!important;
+    min-inline-size:0!important;
+    max-inline-size:100%!important;
+    aspect-ratio:1/1!important;
+    overflow:hidden!important;
+    contain:layout paint!important;
+    box-sizing:border-box!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile .sim-media{
+    position:absolute!important;inset:0!important;width:auto!important;height:auto!important;
+    min-width:0!important;max-width:none!important;box-sizing:border-box!important;overflow:hidden!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile .sim-media-label{
+    left:5px!important;right:5px!important;bottom:5px!important;padding:5px!important;border-radius:7px!important;min-width:0!important;max-width:calc(100% - 10px)!important;overflow:hidden!important;
+  }
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile .sim-media-label b{font-size:8.5px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .feed-device-shell.device-mobile.instagram-sim .ig-real-tile .sim-media-label small{display:none!important}
+  .feed-device-shell.device-mobile.instagram-sim .sim-lot-badge,
+  .feed-device-shell.device-mobile.instagram-sim .sim-type-badge{font-size:6px!important;max-width:68%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+
+  /* Zoom-out scales the same fixed surface from outside. */
+  .feed-zoom-stage{width:100%!important;max-width:100%!important;overflow:hidden!important}
+  .feed-zoom-inner{transform-origin:top center!important}
+
+  /* Library keeps the richer V12.4 tab model but separates system tabs from
+     content/strategy visually. Nothing is removed. */
+  #inventoryView>.library-toolbar{position:sticky;top:0;z-index:18;margin-bottom:9px!important;background:color-mix(in srgb,var(--v124-bg) 94%,transparent)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  #inventoryView>.library-toolbar .segbtn{min-height:40px!important}
+
+  /* Sheets remain capable but easier to scan. */
+  .v124-sheet-body{padding:12px!important}
+  .v124-group{border-radius:18px!important}
+  .v124-row{min-height:58px!important;padding:10px 13px!important}
+  .v124-row .v124-row-copy b{font-size:15px!important}
+  .v124-row .v124-row-copy small{font-size:11.5px!important}
+
+  /* Home: restore useful density; don't hide whole capability groups. */
+  #homeView .home-dashboard-grid{display:grid!important;grid-template-columns:1fr!important;gap:9px!important}
+  #homeView .home-panel{display:block!important}
+  #homeView .home-kpis-five{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #homeView .home-kpi{min-height:104px!important}
+
+  /* No transform/scale feedback on touch surfaces. */
+  button:active,.btn:active,.navbtn:active,.dockbtn:active,.segbtn:active,.platformbtn:active,
+  .plan-item:active,.pool-card:active,.v124-row:active{transform:none!important;scale:none!important;rotate:none!important}
+}
+
+/* iPad: richer two-column composition where it actually fits. */
+@media(min-width:700px) and (max-width:899px){
+  #homeView .home-dashboard-grid{grid-template-columns:1fr 1fr!important}
+  #homeView .home-activity{grid-column:1/-1!important}
+  .feed-device-shell.device-mobile{--v126-feed-phone-max:430px}
+}
+
+/* Desktop: keep V12.4 visual density, but ensure Instagram itself remains
+   shrink-safe if the content region is narrow. */
+.instagram-sim,.instagram-sim *{box-sizing:border-box}
+.instagram-sim .ig-real-grid{display:grid;grid-template-columns:repeat(3,calc((100% - 2px)/3));gap:1px;width:100%;min-width:0;max-width:100%;overflow:hidden}
+.instagram-sim .ig-real-tile{min-width:0;max-width:100%;overflow:hidden}
+@media(max-width:899px){
+  .v126-planner-context{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 2px 8px;padding:2px 2px 0;color:var(--v124-label)}
+  .v126-planner-context small{display:block;color:var(--v124-secondary);font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:62vw}
+  .v126-planner-context b{display:block;font-size:23px;line-height:1.05;letter-spacing:-.035em;margin-top:2px}
+  .v126-planner-context>span{flex:0 0 auto;font-size:11px;color:var(--v124-secondary);background:var(--v124-fill);border-radius:999px;padding:5px 8px;font-weight:700}
+  .v126-plan-meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+  .v126-plan-meta span{font-size:9.5px;line-height:1;padding:4px 6px;border-radius:999px;background:var(--v124-fill);color:var(--v124-secondary);font-weight:700}
+}

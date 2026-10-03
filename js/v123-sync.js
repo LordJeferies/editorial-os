@@ -1,4 +1,4 @@
-/* Editorial OS V12.5 · pure sync revision helpers */
+/* Editorial OS V12.6 · pure sync revision helpers */
 (() => {
   'use strict';
   const n=v=>Number.isFinite(Number(v))?Number(v):0;
