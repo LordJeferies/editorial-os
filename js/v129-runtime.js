@@ -145,3 +145,14 @@ function init(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
 else init();
 })();
+
+
+/* V12.10 additive loader */
+(()=>{
+  if(document.querySelector('script[data-editorial-v1210]'))return;
+  const s=document.createElement('script');
+  s.src='./js/v1210-runtime.js?v=12.10';
+  s.defer=true;
+  s.dataset.editorialV1210='1';
+  document.head.appendChild(s);
+})();
