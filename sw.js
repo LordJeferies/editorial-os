@@ -1,4 +1,4 @@
-const CACHE='editorial-os-v12-8-1';
+const CACHE='editorial-os-v12-8-2';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './css/legacy.css','./css/v12.css','./css/v123.css','./css/v124.css','./css/v126.css','./css/v127.css','./css/v128.css',
@@ -11,12 +11,16 @@ self.addEventListener('install',event=>{
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)));
 });
+
 self.addEventListener('activate',event=>event.waitUntil(
   caches.keys()
     .then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
     .then(()=>self.clients.claim())
 ));
-self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting()});
+
+self.addEventListener('message',event=>{
+  if(event.data?.type==='SKIP_WAITING')self.skipWaiting();
+});
 
 async function networkFirst(request){
   const cache=await caches.open(CACHE);
@@ -28,9 +32,14 @@ async function networkFirst(request){
     return (await cache.match(request))||(request.mode==='navigate'?cache.match('./index.html'):undefined);
   }
 }
+
 async function cacheFirst(request){
   const cache=await caches.open(CACHE);
-  return (await cache.match(request))||fetch(request).then(resp=>{if(resp&&resp.ok)cache.put(request,resp.clone());return resp});
+  const cached=await cache.match(request);
+  if(cached)return cached;
+  const resp=await fetch(request);
+  if(resp&&resp.ok)cache.put(request,resp.clone());
+  return resp;
 }
 
 self.addEventListener('fetch',event=>{
