@@ -2,7 +2,7 @@
 set -euo pipefail
 
 INPUT="${1:-}"
-MESSAGE="${2:-Update Editorial OS V12.4}"
+MESSAGE="${2:-Update Editorial OS V12.5}"
 
 if [ -n "$INPUT" ]; then
   if [ ! -e "$INPUT" ]; then
@@ -52,7 +52,7 @@ git fetch origin
 if ! git merge-base --is-ancestor origin/main HEAD; then
   git rebase origin/main
 fi
-./validate_v12_4.sh
+./validate_v12_5.sh
 
 git add .
 if git diff --cached --quiet; then

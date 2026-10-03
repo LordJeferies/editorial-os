@@ -1,4 +1,4 @@
-/* Editorial OS V12.4 · tiny reactive UI store
+/* Editorial OS V12.5 · tiny reactive UI store
    React/Signals-inspired state container for UI-only state. The editorial domain
    remains in app-core.js; this store prevents DOM-only state from leaking back
    into domain persistence and batches subscriber updates in a microtask. */
@@ -11,7 +11,7 @@
     const notify=()=>{
       queued=false;
       const current=state,prev=previous;previous=current;
-      listeners.forEach(fn=>{try{fn(current,prev)}catch(e){console.error('[V12.4 store]',e)}});
+      listeners.forEach(fn=>{try{fn(current,prev)}catch(e){console.error('[V12.5 store]',e)}});
     };
     const schedule=()=>{if(!queued){queued=true;queueMicrotask(notify)}};
     return {

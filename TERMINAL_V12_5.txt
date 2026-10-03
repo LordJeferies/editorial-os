@@ -1,0 +1,32 @@
+EDITORIAL OS V12.5 · INSTALAR SOBRE LA APP ACTUAL
+=================================================
+
+1. Descarga y descomprime EDITORIAL_OS_V12_5_PWA.zip en Downloads.
+
+2. Terminal:
+
+cd ~/Downloads/EDITORIAL_OS_V12_5_PWA
+chmod +x deploy_v12_5_over_existing.sh
+./deploy_v12_5_over_existing.sh
+
+Si no encuentra el repo automáticamente:
+
+./deploy_v12_5_over_existing.sh ~/Downloads/EDITORIAL_OS_V10_FRESH
+
+El updater:
+- exige repo Git limpio;
+- hace git fetch/rebase antes de instalar;
+- crea backup pre-V12.5;
+- conserva .git;
+- conserva supabase-config.js;
+- copia V12.5 sin borrar documentación ajena;
+- ejecuta QA;
+- hace commit;
+- vuelve a hacer fetch antes del push;
+- sólo hace push fast-forward a main.
+
+Repo:
+https://github.com/LordJeferies/editorial-os
+
+PWA:
+https://lordjeferies.github.io/editorial-os/

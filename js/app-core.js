@@ -264,32 +264,45 @@ function youtubeRaw(date,opts=state){
  return a.sort((x,y)=>x.lotRank-y.lotRank||x.order-y.order);
 }
 
-function linkedinRaw(date,opts=state){
- const d=date.getDay(),a=[];
+function linkedinL2ForDate(date,opts=state){
+ const d=date.getDay();
  const core={
+  1:{...make('li-l2-podcast-note-mon','LinkedIn · Nota','LinkedIn L2 · Aprendizaje del podcast','L2',60,'LinkedIn L2 · Podcast','Tesis o aprendizaje operativo derivado del episodio de la semana.','Nota'),sourceMasterKey:'pod-episode-thu',family:'linkedin-l2'},
+  2:{...make('li-l2-podcast-doc-tue','LinkedIn · Carrusel','LinkedIn L2 · Framework del podcast','L2',60,'LinkedIn L2 · Podcast','Documento/carrusel que convierte una idea del episodio en marco práctico.','Documento'),sourceMasterKey:'pod-episode-thu',family:'linkedin-l2'},
+  4:{...make('li-l2-podcast-video-thu','LinkedIn · Video','LinkedIn L2 · Insight del episodio','L2',60,'LinkedIn L2 · Podcast','Video nativo con un criterio o fragmento del episodio, adaptado a LinkedIn.','Video'),sourceMasterKey:'pod-episode-thu',family:'linkedin-l2'},
+  5:{...make('li-l2-week-note-fri','LinkedIn · Nota','LinkedIn L2 · Cierre / contrapunto de la semana','L2',60,'LinkedIn L2 · Criterio','Texto nativo que conecta el aprendizaje del podcast con una conclusión de la semana.','Nota'),sourceMasterKey:'pod-episode-thu',family:'linkedin-l2'}
+ }[d];
+ const expanded={
+  3:{...make('li-l2-authority-note-wed','LinkedIn · Nota','LinkedIn L2 · Insight de autoridad','L2',60,'LinkedIn L2 · Autoridad','Nota derivada de webinar, conversación o criterio principal de la semana.','Nota'),sourceMasterKey:opts.mainSource==='webinar'?'main-video-wed':'web-wed',family:'linkedin-l2'},
+  6:{...make('li-l2-checklist-sat','LinkedIn · Carrusel','LinkedIn L2 · Checklist / diagnóstico','L2',60,'LinkedIn L2 · Documento','Checklist o diagnóstico derivado de los temas del podcast y la semana.','Documento'),sourceMasterKey:'pod-episode-thu',family:'linkedin-l2'},
+  0:{...make('li-l2-case-video-sun','LinkedIn · Video','LinkedIn L2 · Caso / reflexión','L2',60,'LinkedIn L2 · Video','Caso breve o reflexión que cierra la semana y abre conversación.','Video'),sourceMasterKey:'pod-episode-thu',family:'linkedin-l2'}
+ }[d];
+ const out=[];
+ if(core)out.push({...core,platforms:['linkedin']});
+ if(opts.liMode==='daily'&&expanded)out.push({...expanded,platforms:['linkedin']});
+ return out;
+}
+function linkedinRaw(date,opts=state){
+ /* V12.5: LinkedIn is additive. Preserve the historical LinkedIn weekly line,
+    include any other base-plan asset that already targets LinkedIn, and THEN
+    add the dedicated LinkedIn L2 line. */
+ const d=date.getDay();
+ const legacyCore={
   1:make('pod-carousel-mon','Podcast · Carrusel','Carrusel del podcast','L1',10,'Documento podcast','','Documento'),
   2:make('main-carousel-tue','Carrusel LinkedIn','Carrusel principal JOC','L1',10,'Thought leadership','','Documento'),
   3:make('main-video-wed',opts.mainSource==='webinar'?'Webinar':'JOC original','Video importante de la semana','L1',10,'Video profesional','','Video'),
   4:make('guest-carousel-thu','Podcast · Carrusel','Carrusel del invitado + lanzamiento','L1',10,'Podcast / networking','','Documento')
  }[d];
- if(core)a.push({...core,platforms:['linkedin']});
- if(opts.liMode==='daily'){
-   const daily={
-    5:make('li-note-fri','LinkedIn · Nota','Nota de tesis contraria / aprendizaje operativo','L2',10,'Texto nativo compartible','Una tesis fuerte + 3 razones + cierre abierto para conversación.','Nota'),
-    6:make('li-doc-sat','LinkedIn · Carrusel','Carrusel diagnóstico / checklist','L2',10,'Documento nativo guardable','Marco visual: señales, errores, diagnóstico o checklist aplicable.','Documento'),
-    0:make('li-video-sun','LinkedIn · Video','Video de tesis / caso','L2',10,'Video nativo compartible','45–90 s: problema, criterio, ejemplo y conclusión accionable.','Video')
-   }[d];
-   if(daily)a.push({...daily,platforms:['linkedin']});
- }
- if(opts.eventWeek){
-   const ev={
-    1:make('event-c2','Evento','Evento · carrusel 2','EVENT',10,'Evento','','Documento'),
-    3:make('event-v1','Evento','Evento · video 1','EVENT',10,'Evento','','Video'),
-    5:make('event-c1','Evento','Evento · carrusel 1','EVENT',10,'Evento','','Documento')
-   }[d];
-   if(ev)a.push({...ev,platforms:['linkedin']});
- }
- return a.sort((x,y)=>x.lotRank-y.lotRank||x.order-y.order);
+ const base=[];
+ if(legacyCore)base.push({...legacyCore,platforms:['linkedin'],linkedinLayer:'base'});
+ socialRaw(date,opts)
+   .filter(a=>(a.platforms||[]).includes('linkedin'))
+   .forEach(a=>base.push({...a,platforms:['linkedin'],linkedinLayer:'base'}));
+ const l2=linkedinL2ForDate(date,opts).map(a=>({...a,linkedinLayer:'l2'}));
+ const out=[...base,...l2];
+ const seen=new Set();
+ return out.filter(a=>{const k=a.masterKey||a.title;if(seen.has(k))return false;seen.add(k);return true})
+   .sort((x,y)=>x.lotRank-y.lotRank||x.order-y.order||x.title.localeCompare(y.title));
 }
 
 function baseRawForPlatform(date,p,opts=state){
@@ -557,7 +570,9 @@ function loadCurrentDraft(){
        instanceId:uid('plan'),templateId:null,masterKey:`scenario-copy-${uid('m')}`,
        title:a.title,type:a.type,lot:a.lot,lotRank:a.lotRank||LOT_RANK[a.lot]||4,order:a.order||10,
        role:a.role||'',note:a.note||'',surface:(a.surfaces&&a.surfaces[0])||a.surface||'Feed',
-       platforms:[...(a.platforms||[])],fixed:a.lot==='L1',dow
+       platforms:[...(a.platforms||[])],fixed:a.lot==='L1',dow,
+       sourceMasterKey:a.sourceMasterKey||null,linkedinLayer:a.linkedinLayer||null,
+       familyId:a.familyId||null,pillarId:a.pillarId||null
      });
    });
  }
@@ -1243,6 +1258,7 @@ function renderPlannerSummary(){
 }
 function renderPlanner(){renderPlannerPool();renderPlannerWeek();renderPlannerSummary()}
 window.EDITORIAL_PLANNER={move:movePlanInstance,remove:removePlanItem,find:function(id){for(const d of [1,2,3,4,5,6,0]){const item=(plannerDraft[d]||[]).find(x=>x.instanceId===id);if(item)return {item,dow:d}}return null},render:renderPlanner};
+window.EDITORIAL_LINKEDIN={raw:linkedinRaw,l2:linkedinL2ForDate};
 
 function currentScenarioSlots(){
  return cloneSlots(plannerDraft);
@@ -1571,7 +1587,7 @@ function connectCloudClient(){
  if(!cloudConfig.url||!cloudConfig.key||!window.supabase){supabaseClient=null;return null}
  try{supabaseClient=window.supabase.createClient(cloudConfig.url,cloudConfig.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});return supabaseClient}catch(e){console.error(e);supabaseClient=null;return null}
 }
-function cloudPayload(revision=cloudRevision){return {version:9,state,appData,savedScenarios,plannerDraft,syncMeta:{revision,baseRevision:cloudBaseRevision,deviceId:v123DeviceId,productVersion:'12.3',updatedAt:new Date().toISOString()}}}
+function cloudPayload(revision=cloudRevision){return {version:9,state,appData,savedScenarios,plannerDraft,syncMeta:{revision,baseRevision:cloudBaseRevision,deviceId:v123DeviceId,productVersion:'12.5',updatedAt:new Date().toISOString()}}}
 function applyCloudPayload(payload,{force=false}={}){
  if(!payload)return false;
  const meta=payload.syncMeta||{},remoteRevision=Number(meta.revision||0);
@@ -1957,7 +1973,7 @@ document.getElementById('restoreMoveBtn').addEventListener('click',()=>{if(!draw
 document.getElementById('tentativeBtn').addEventListener('click',()=>{if(!drawerAsset)return;checkpoint('Tentativo');state.tentative[drawerAsset.masterKey]=!state.tentative[drawerAsset.masterKey];save();document.getElementById('drawerBg').classList.remove('open');renderAll()});
 document.getElementById('hideBtn').addEventListener('click',()=>{if(!drawerAsset||drawerAsset.lot==='L1')return;checkpoint('Ocultar');state.hidden[drawerAsset.masterKey]=true;save();document.getElementById('drawerBg').classList.remove('open');renderAll()});
 
-/* Production workflow V12.3 */
+/* Production workflow V12.5 */
 function saveDrawerProductionField(){
  if(!drawerAsset?.date)return;
  const patch={status:document.getElementById('drawerWorkflowStatus')?.value||'planned',publishTime:document.getElementById('drawerPublishTime')?.value||'',assignee:document.getElementById('drawerAssignee')?.value?.trim()||'',assetLink:document.getElementById('drawerAssetLink')?.value?.trim()||'',notes:document.getElementById('drawerProductionNotes')?.value?.trim()||''};
@@ -1983,7 +1999,7 @@ document.getElementById('cloudPullBtn').addEventListener('click',()=>cloudPull(f
 /* Export / import */
 document.getElementById('exportBtn').addEventListener('click',()=>{
  const days=Array.from({length:7},(_,i)=>addDays(startOfWeek(anchor()),i));
- const payload={version:'12.3',schemaVersion:9,productVersion:'12.3',exportedAt:new Date().toISOString(),state,appData,savedScenarios,plannerDraft,week:days.map(d=>({date:keyDate(d),assets:assetsForDate(d,'all')})),notes:{memeCadence:'Lun L1 Presión vs Foco · Mar L3 Tip · Mié L2 meme rotativo · Vie L2 meme rotativo · Dom L1 Famoso + frase',facebook:'Replica Instagram por defecto',stories:'No incluidas en los conteos'}};
+ const payload={version:'12.5',schemaVersion:9,productVersion:'12.5',exportedAt:new Date().toISOString(),state,appData,savedScenarios,plannerDraft,week:days.map(d=>({date:keyDate(d),assets:assetsForDate(d,'all')})),notes:{memeCadence:'Lun L1 Presión vs Foco · Mar L3 Tip · Mié L2 meme rotativo · Vie L2 meme rotativo · Dom L1 Famoso + frase',facebook:'Replica Instagram por defecto',stories:'No incluidas en los conteos'}};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`EDITORIAL_OS_${String(activeBrand()?.name||'MARCA').replace(/[^a-z0-9]+/gi,'_')}_V12_3.json`;a.click();URL.revokeObjectURL(a.href);
 });
 document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
@@ -2003,7 +2019,7 @@ window.visualViewport?.addEventListener('resize',queueViewportSync,{passive:true
 window.addEventListener('resize',queueViewportSync,{passive:true});
 window.addEventListener('orientationchange',()=>setTimeout(()=>{syncViewportHeight();renderActiveView()},120),{passive:true});
 
-/* Public V12.3 runtime API */
+/* Public V12.5 runtime API */
 window.EDITORIAL_V123_API={
  getState:()=>({state,appData,savedScenarios,plannerDraft:cloneSlots(plannerDraft)}),
  todayItems:()=>assetsForDate(todayLocal(),'all'),
@@ -2028,7 +2044,7 @@ window.EDITORIAL_V123_API={
  acceptRemote(){if(!pendingRemotePayload)return false;return applyCloudPayload(pendingRemotePayload,{force:true})},
  async keepLocal(){if(!pendingRemotePayload)return false;cloudBaseRevision=Math.max(cloudBaseRevision,Number(pendingRemotePayload.syncMeta?.revision||0));pendingRemotePayload=null;await window.EDITORIAL_STORAGE?.clearConflict?.();cloudLocalDirty=true;persistCloudMeta();return cloudPush(false)},
  forceSync:()=>cloudPush(false),
- diagnostics:async()=>({version:'12.3',brand:activeBrand()?.name||'',scenario:state.activeScenario?.name||'',view:activeView(),sync:{dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,connected:!!cloudSession,online:navigator.onLine,conflict:!!pendingRemotePayload,deviceId:v123DeviceId},storage:await window.EDITORIAL_STORAGE?.diagnostics?.(),localStorageBytes:Object.keys(localStorage).reduce((n,k)=>n+String(localStorage.getItem(k)||'').length*2,0)})
+ diagnostics:async()=>({version:'12.5',brand:activeBrand()?.name||'',scenario:state.activeScenario?.name||'',view:activeView(),sync:{dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,connected:!!cloudSession,online:navigator.onLine,conflict:!!pendingRemotePayload,deviceId:v123DeviceId},storage:await window.EDITORIAL_STORAGE?.diagnostics?.(),localStorageBytes:Object.keys(localStorage).reduce((n,k)=>n+String(localStorage.getItem(k)||'').length*2,0)})
 };
 
 /* Start */
@@ -2044,7 +2060,7 @@ if(activeBrand()?.id!=='joc'&&!state.activeScenario){
  state.activeScenarioId=state.activeScenario.id;state.emulationMode=true;applyScenarioRangeControls(range);
 }
 persistV123Shadow();renderAll();switchView('homeView');initCloud();
-window.EDITORIAL_OS_VERSION='12.3';
+window.EDITORIAL_OS_VERSION='12.5';
 window.EDITORIAL_OS_DIAGNOSTICS={clearDerivedCache:clearV12DerivedCache,api:window.EDITORIAL_V123_API};
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.info('SW no registrado',err)));
 })();

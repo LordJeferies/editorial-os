@@ -1,4 +1,4 @@
-/* Editorial OS V12.4 · progressive desktop glass
+/* Editorial OS V12.5 · progressive desktop glass
    Compact iPhone/iPad mode intentionally uses CSS system blur only. This avoids
    WebGL lifecycle/compositing work during touch, keyboard and drag operations. */
 const compactMQ=matchMedia('(max-width:899px)');

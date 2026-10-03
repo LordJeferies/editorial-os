@@ -1,0 +1,66 @@
+EDITORIAL OS V12.5 · QA
+=========================
+
+VALIDACIONES AUTOMÁTICAS
+
+[PASS] JavaScript syntax · app-core.js
+[PASS] JavaScript syntax · v12-runtime.js
+[PASS] JavaScript syntax · v123-runtime.js
+[PASS] JavaScript syntax · v124-store.js
+[PASS] JavaScript syntax · v125-runtime.js
+[PASS] ES module syntax · v12-glass.js
+[PASS] manifest JSON
+[PASS] IDs HTML duplicados = 0
+[PASS] contratos localStorage legacy presentes
+[PASS] workspace editorial-os presente
+[PASS] planner move tests
+[PASS] schema/import/sync core tests
+[PASS] V12.5 UI/editorial tests
+[PASS] Instagram usa 3 columnas exactas con minmax(0,1fr)
+[PASS] Instagram mobile shell usa border-box
+[PASS] Biblioteca móvil ya no depende de strip de seis tabs
+[PASS] LinkedIn conserva línea base
+[PASS] LinkedIn añade L2 4/semana en core
+[PASS] LinkedIn añade L2 7/semana en daily
+[PASS] Service Worker editorial-os-v12-5
+
+CASOS LINKEDIN VERIFICADOS
+
+- una publicación base que ya iba a LinkedIn continúa existiendo;
+- lunes conserva Carrusel del podcast;
+- martes conserva Carrusel principal;
+- miércoles conserva Video importante;
+- jueves conserva Carrusel del invitado;
+- L2 añade nuevas piezas con masterKey independiente;
+- sourceMasterKey conserva relación editorial con podcast/autoridad;
+- Core no añade miércoles/sábado/domingo L2;
+- Daily sí los añade.
+
+CASOS DE UI
+
+- Feeds tiene selector de plataforma + Ajustes en móvil;
+- Planificador tiene Catálogo + menú contextual;
+- Biblioteca usa selector de sección jerárquico;
+- controles secundarios viven en sheets;
+- runtime V12.5 reemplaza al runtime V12.4 para evitar dos compositores móviles simultáneos.
+
+PRUEBA FÍSICA PENDIENTE
+
+Safari/PWA real de iPhone debe confirmarse después del deploy para:
+- percepción exacta del grid dentro del mockup;
+- teclado y visualViewport;
+- long-press/drag físico;
+- safe area/home indicator;
+- comportamiento del Service Worker al actualizar una PWA ya instalada.
+
+Esas condiciones no pueden reproducirse con fidelidad total fuera de WebKit/iPhone real.
+
+UPDATER E2E
+
+[PASS] repo stale frente a origin/main
+[PASS] fetch + rebase antes de instalar
+[PASS] documentación remota preservada
+[PASS] supabase-config.js preservado byte por byte
+[PASS] commit V12.5
+[PASS] segundo fetch antes del push
+[PASS] push fast-forward

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>JOC · Editorial OS V12.5</title>
+<title>JOC · Editorial OS V12.4</title>
 <meta name="description" content="Editorial OS multi-marca: biblioteca, calendario, emulador, feeds y sincronización.">
 <meta name="theme-color" content="#111214">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -44,7 +44,6 @@
 <link rel="stylesheet" href="./css/v12.css">
 <link rel="stylesheet" href="./css/v123.css">
 <link rel="stylesheet" href="./css/v124.css">
-<link rel="stylesheet" href="./css/v125.css">
 </head>
 <body>
 <div id="glassRoot" data-theme="light">
@@ -54,7 +53,7 @@
     <header class="topbar glass" id="glassHeader">
     <div class="brand">
       <div class="brandmark" id="brandMark">J</div>
-      <div><b id="brandTitle">JOC · EDITORIAL OS V12.5</b><small>multi-brand · library · emulator · feeds · sync</small></div>
+      <div><b id="brandTitle">JOC · EDITORIAL OS V12.4</b><small>multi-brand · library · emulator · feeds · sync</small></div>
     </div>
     <div class="brand-switcher">
       <span class="label">Marca</span>
@@ -227,7 +226,7 @@
     <section id="calendarView" class="view">
       <div class="hero">
         <div class="hero-main glass">
-          <div class="kicker">V12.5 · Simplified Mobile · Feed Repair · LinkedIn L2</div>
+          <div class="kicker">V12.3 · Mobile Core · Stability · Production</div>
           <h1>Un calendario editorial, varias redes, una sola fuente de verdad.</h1>
           <p>Una fuente de verdad para planificar, revisar y ejecutar contenido multi-red. En iPhone se prioriza el día activo; en iPad y desktop aumenta la densidad sin convertir la interfaz en una tabla comprimida.</p>
         </div>
@@ -274,7 +273,7 @@
           <span class="label">YouTube</span>
           <select id="ytMode" class="btn"><option value="base">2 Shorts/día</option><option value="expanded">3 Shorts/día</option></select>
           <span class="label">LinkedIn</span>
-          <select id="liMode" class="btn"><option value="core">L2 adicional · 4/semana</option><option value="daily">L2 adicional · 7/semana</option></select>
+          <select id="liMode" class="btn"><option value="core">Core · 4/semana</option><option value="daily">Diario · 7/semana</option></select>
           <span class="label">Video importante</span>
           <select id="mainSource" class="btn"><option value="webinar">Desde Webinar</option><option value="joc">Guionado JOC</option></select>
         </div>
@@ -606,7 +605,7 @@
         </div>
       </aside>
     </div>
-    <div class="footer">JOC Editorial OS V12.5 · patrones de Resource/Agenda/drag inspirados por ilamy Calendar y CalendarKit; LiquidGlass se usa como mejora visual progresiva.</div>
+    <div class="footer">JOC Editorial OS V12.4 · patrones de Resource/Agenda/drag inspirados por ilamy Calendar y CalendarKit; LiquidGlass se usa como mejora visual progresiva.</div>
   </main>
 
   <div id="dockGlassRoot" class="liquid-root liquid-dock-root">
@@ -646,17 +645,17 @@
 </div>
 
 <script src="./supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script src="./js/v123-data.js"></script>
 <script src="./js/v123-sync.js"></script>
 <script src="./js/v123-storage.js"></script>
-<script src="./js/app-core.js"></script>
+<script src="./js/__app_core_test.js"></script>
 <script src="./js/v12-runtime.js"></script>
 <script src="./js/v123-runtime.js"></script>
 <script src="./js/v124-store.js"></script>
-<script src="./js/v125-runtime.js"></script>
+<script src="./js/v124-runtime.js"></script>
 
-<script type="module" src="./js/v12-glass.js"></script>
+
 </body>
 </html>

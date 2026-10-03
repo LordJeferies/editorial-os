@@ -23,10 +23,19 @@ Estos tipos aparecen automáticamente en una instalación nueva. No hay que volv
 - Webinar · clip — L2
 - Video importante de la semana — L1
 
-## LinkedIn L2
-- Nota de tesis contraria / aprendizaje operativo
-- Carrusel diagnóstico / checklist
-- Video de tesis / caso
+## LinkedIn L2 · capa adicional
+La línea L2 NO reemplaza publicaciones que ya llegaban a LinkedIn. Se suma encima del plan base.
+
+Core adicional · 4/semana:
+- Nota · aprendizaje del podcast — lunes
+- Documento/carrusel · framework del podcast — martes
+- Video · insight del episodio — jueves
+- Nota · cierre/contrapunto — viernes
+
+Diario adicional · 7/semana suma:
+- Nota de autoridad — miércoles
+- Carrusel checklist/diagnóstico — sábado
+- Video caso/reflexión — domingo
 
 ## Series / marca personal
 - Filosofando con Gigantes — L1
