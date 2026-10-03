@@ -1,17 +1,17 @@
 {
   "id": "./",
-  "name": "Editorial OS V12.9",
+  "name": "Editorial OS V12.17",
   "short_name": "Editorial OS",
-  "description": "Editorial OS V12.9: controles generales de frecuencia y mezcla restaurados en móvil, sin perder las mejoras actuales de estabilidad.",
-  "start_url": "./#/home",
+  "description": "Editorial OS V12.17: arranque móvil resiliente, PWA estable, planner multi-vista, sincronización Supabase y MCP.",
+  "start_url": "./launch.html?source=pwa&v=12.17",
   "scope": "./",
   "display": "standalone",
   "display_override": [
     "standalone",
     "minimal-ui"
   ],
-  "background_color": "#f2f2f7",
-  "theme_color": "#f2f2f7",
+  "background_color": "#080a0f",
+  "theme_color": "#080a0f",
   "orientation": "any",
   "categories": [
     "productivity",
@@ -19,66 +19,28 @@
   ],
   "shortcuts": [
     {
-      "name": "Hoy",
-      "short_name": "Hoy",
-      "url": "./#/home",
-      "icons": [
-        {
-          "src": "icons/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "name": "Inicio",
+      "short_name": "Inicio",
+      "url": "./launch.html?source=shortcut&target=home",
+      "icons": [{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]
     },
     {
       "name": "Calendario",
       "short_name": "Calendario",
-      "url": "./#/calendar",
-      "icons": [
-        {
-          "src": "icons/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "url": "./launch.html?source=shortcut&target=calendar",
+      "icons": [{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]
     },
     {
       "name": "Emulador",
       "short_name": "Emulador",
-      "url": "./#/emulator",
-      "icons": [
-        {
-          "src": "icons/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "url": "./launch.html?source=shortcut&target=emulator",
+      "icons": [{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]
     }
   ],
   "icons": [
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"maskable"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
   ]
 }
