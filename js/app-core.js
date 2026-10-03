@@ -607,7 +607,7 @@ function eventCardHtml(a){
  </div>`;
 }
 function isCompactUI(){return window.matchMedia('(max-width:899px)').matches}
-function calendarVisibleDays(){return window.matchMedia('(max-width:600px)').matches?1:(window.matchMedia('(max-width:899px)').matches?3:7)}
+function calendarVisibleDays(){return 7}
 function buildMobileDayPage(date){
  const page=document.createElement('section');page.className='mobile-day-page';
  const items=assetsForDate(date);
@@ -626,22 +626,32 @@ function buildMobileDayPage(date){
 function renderWeekMobile(){
  const root=document.getElementById('calendarRoot');root.innerHTML='';
  const start=startOfWeek(anchor()),dates=Array.from({length:7},(_,i)=>addDays(start,i));
- let selected=dates.findIndex(d=>keyDate(d)===state.anchorDate);if(selected<0)selected=0;
- const visible=calendarVisibleDays(),tabs=document.createElement('div'),pages=document.createElement('div');
- tabs.className='mobile-day-tabs';pages.className='mobile-week-pages';pages.style.setProperty('--visible-days',String(visible));
- const pageWidth=()=>pages.clientWidth/visible;
- const scrollToIndex=(i,behavior='smooth')=>pages.scrollTo({left:i*pageWidth(),behavior});
- const centerTab=i=>{const t=tabs.children[i];if(!t)return;const left=t.offsetLeft-(tabs.clientWidth-t.offsetWidth)/2;tabs.scrollTo({left:Math.max(0,left),behavior:'smooth'})};
+ const selectedKey=state.anchorDate;
+ const overview=document.createElement('div');overview.className='v128-week-overview';
+ const strip=document.createElement('div');strip.className='v128-week-strip';strip.setAttribute('aria-label','Semana completa');
+ const list=document.createElement('div');list.className='v128-week-list';
  dates.forEach((d,i)=>{
-   const count=assetsForDate(d).length,tab=document.createElement('button');
-   tab.className='mobile-day-tab'+(i===selected?' active':'');tab.dataset.index=String(i);
-   tab.innerHTML=`<span>${DAY_SHORT[d.getDay()]}</span><b>${d.getDate()}</b><small>${count}</small>`;
-   tab.addEventListener('click',()=>{scrollToIndex(i);tabs.querySelectorAll('.mobile-day-tab').forEach((x,j)=>x.classList.toggle('active',j===i));state.anchorDate=keyDate(d);setTitle();saveLocalOnly();centerTab(i)});
-   tabs.appendChild(tab);pages.appendChild(buildMobileDayPage(d));
+   const items=assetsForDate(d),isSelected=keyDate(d)===selectedKey,isToday=keyDate(d)===keyDate(todayLocal());
+   const tab=document.createElement('button');tab.type='button';tab.className='v128-week-day'+(isSelected?' active':'')+(isToday?' today':'');
+   tab.dataset.date=keyDate(d);tab.innerHTML=`<span>${DAY_SHORT[d.getDay()]}</span><b>${d.getDate()}</b><small>${items.length}</small>`;
+   tab.addEventListener('click',()=>{state.anchorDate=keyDate(d);saveLocalOnly();setTitle();const target=list.querySelector(`[data-week-date="${keyDate(d)}"]`);if(target){const sc=document.getElementById('appScroller');if(sc){const top=target.getBoundingClientRect().top-sc.getBoundingClientRect().top+sc.scrollTop-8;sc.scrollTo({top:Math.max(0,top),behavior:'smooth'})}}strip.querySelectorAll('.v128-week-day').forEach(x=>x.classList.toggle('active',x===tab))});
+   strip.appendChild(tab);
+
+   const section=document.createElement('section');section.className='v128-week-section';section.dataset.weekDate=keyDate(d);
+   section.innerHTML=`<header class="v128-week-section-head"><div><span>${DAY_NAMES[d.getDay()]}</span><b>${d.getDate()} ${d.toLocaleDateString('es-ES',{month:'short'})}</b></div><small>${items.length} ${items.length===1?'pieza':'piezas'}</small></header><div class="v128-week-section-body"></div>`;
+   const body=section.querySelector('.v128-week-section-body');
+   if(!items.length){body.innerHTML='<div class="v128-week-empty">Sin publicaciones planificadas.</div>'}
+   else ['L1','L2','L3','EVENT'].forEach(lot=>{
+     const subset=items.filter(a=>a.lot===lot);if(!subset.length)return;
+     const group=document.createElement('div');group.className='v128-week-lot';group.innerHTML=`<div class="v128-week-lot-title"><b>${lot==='EVENT'?'EVENTOS':lot}</b><span>${subset.length}</span></div>`;
+     subset.forEach(a=>{const wrap=document.createElement('div');wrap.innerHTML=eventCardHtml(a);const card=wrap.firstElementChild;card.addEventListener('click',()=>openDrawer(a));group.appendChild(card)});body.appendChild(group);
+   });
+   list.appendChild(section);
  });
- root.append(tabs,pages);requestAnimationFrame(()=>{pages.scrollLeft=selected*pageWidth();centerTab(selected)});
- let raf=0;
- pages.addEventListener('scroll',()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;const i=Math.max(0,Math.min(6,Math.round(pages.scrollLeft/Math.max(1,pageWidth()))));tabs.querySelectorAll('.mobile-day-tab').forEach((x,j)=>x.classList.toggle('active',j===i));state.anchorDate=keyDate(dates[i]);setTitle();saveLocalOnly();centerTab(i)})},{passive:true});
+ overview.append(strip,list);root.appendChild(overview);
+ requestAnimationFrame(()=>{
+   const active=list.querySelector(`[data-week-date="${selectedKey}"]`);if(active){const sc=document.getElementById('appScroller');if(sc){const top=active.getBoundingClientRect().top-sc.getBoundingClientRect().top+sc.scrollTop-8;sc.scrollTop=Math.max(0,top)}}
+ });
 }
 function renderMonthMobile(){
  const root=document.getElementById('calendarRoot');root.innerHTML='';
@@ -925,6 +935,12 @@ function finalizeFeedStage(sim){
  if(!sim)return;
  const device=resolvedFeedDevice();
  sim.classList.add('feed-device-shell',device==='mobile'?'device-mobile':'device-desktop');
+ sim.classList.toggle('feed-view-zoomout',state.feedView==='zoomout');
+ if(device==='mobile'&&!sim.querySelector(':scope > .feed-device-viewport')){
+   const viewport=document.createElement('div');viewport.className='feed-device-viewport';
+   while(sim.firstChild)viewport.appendChild(sim.firstChild);
+   sim.appendChild(viewport);
+ }
  if(state.feedView!=='zoomout')return;
  const parent=sim.parentElement;if(!parent)return;
  const stage=document.createElement('div');stage.className='feed-zoom-stage';
@@ -932,10 +948,12 @@ function finalizeFeedStage(sim){
  const note=document.createElement('div');note.className='feed-zoom-note';note.textContent=`Zoom-out · ${device==='mobile'?'Mobile':'Desktop'}`;stage.appendChild(note);
  requestAnimationFrame(()=>{
    sim.style.transform='none';
+   const viewport=sim.querySelector(':scope > .feed-device-viewport');
+   if(viewport){viewport.style.height='auto';viewport.style.overflow='visible'}
    const rawW=Math.max(sim.scrollWidth,sim.getBoundingClientRect().width||1);
    const rawH=Math.max(sim.scrollHeight,sim.getBoundingClientRect().height||1);
    const availW=Math.max(280,stage.clientWidth-8);
-   const availH=Math.max(420,Math.min(window.innerHeight-190,820));
+   const availH=Math.max(420,Math.min((window.visualViewport?.height||window.innerHeight)-150,820));
    const scale=Math.min(1,availW/rawW,availH/rawH);
    sim.style.transform=`scale(${scale})`;
    stage.style.height=`${Math.ceil(rawH*scale)}px`;
@@ -2000,8 +2018,8 @@ document.getElementById('cloudPullBtn').addEventListener('click',()=>cloudPull(f
 /* Export / import */
 document.getElementById('exportBtn').addEventListener('click',()=>{
  const days=Array.from({length:7},(_,i)=>addDays(startOfWeek(anchor()),i));
- const payload={version:'12.6',schemaVersion:9,productVersion:'12.6',exportedAt:new Date().toISOString(),state,appData,savedScenarios,plannerDraft,week:days.map(d=>({date:keyDate(d),assets:assetsForDate(d,'all')})),notes:{memeCadence:'Lun L1 Presión vs Foco · Mar L3 Tip · Mié L2 meme rotativo · Vie L2 meme rotativo · Dom L1 Famoso + frase',facebook:'Replica Instagram por defecto',stories:'No incluidas en los conteos'}};
- const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`EDITORIAL_OS_${String(activeBrand()?.name||'MARCA').replace(/[^a-z0-9]+/gi,'_')}_V12_6.json`;a.click();URL.revokeObjectURL(a.href);
+ const payload={version:'12.8',schemaVersion:9,productVersion:'12.8',exportedAt:new Date().toISOString(),state,appData,savedScenarios,plannerDraft,week:days.map(d=>({date:keyDate(d),assets:assetsForDate(d,'all')})),notes:{memeCadence:'Lun L1 Presión vs Foco · Mar L3 Tip · Mié L2 meme rotativo · Vie L2 meme rotativo · Dom L1 Famoso + frase',facebook:'Replica Instagram por defecto',stories:'No incluidas en los conteos'}};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`EDITORIAL_OS_${String(activeBrand()?.name||'MARCA').replace(/[^a-z0-9]+/gi,'_')}_V12_8.json`;a.click();URL.revokeObjectURL(a.href);
 });
 document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
 document.getElementById('importFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text());const check=window.EDITORIAL_DATA?.validateBackup?.(raw)||{ok:!!raw&&typeof raw==='object',errors:[]};if(!check.ok)throw new Error(check.errors.join('\n'));const data=window.EDITORIAL_DATA?.migrateBackup?.(raw)||raw;checkpoint('Importar');if(data.state)state={...state,...data.state};if(data.appData)appData={...appData,...data.appData,production:data.appData.production||appData.production||{}};if(Array.isArray(data.savedScenarios))savedScenarios=data.savedScenarios;if(data.plannerDraft)plannerDraft=cloneSlots(data.plannerDraft);localStorage.setItem('jocEditorialV9',JSON.stringify(state));localStorage.setItem('jocEditorialV9AppData',JSON.stringify(appData));localStorage.setItem('jocEditorialV9Scenarios',JSON.stringify(savedScenarios));persistV123Shadow();scheduleCloudSync();renderAll()}catch(err){alert('No se pudo importar: '+err.message)}e.target.value=''});
@@ -2020,7 +2038,7 @@ window.visualViewport?.addEventListener('resize',queueViewportSync,{passive:true
 window.addEventListener('resize',queueViewportSync,{passive:true});
 window.addEventListener('orientationchange',()=>setTimeout(()=>{syncViewportHeight();renderActiveView()},120),{passive:true});
 
-/* Public V12.7 runtime API */
+/* Public V12.8 runtime API */
 window.EDITORIAL_V123_API={
  getState:()=>({state,appData,savedScenarios,plannerDraft:cloneSlots(plannerDraft)}),
  todayItems:()=>assetsForDate(todayLocal(),'all'),
@@ -2045,7 +2063,7 @@ window.EDITORIAL_V123_API={
  acceptRemote(){if(!pendingRemotePayload)return false;return applyCloudPayload(pendingRemotePayload,{force:true})},
  async keepLocal(){if(!pendingRemotePayload)return false;cloudBaseRevision=Math.max(cloudBaseRevision,Number(pendingRemotePayload.syncMeta?.revision||0));pendingRemotePayload=null;await window.EDITORIAL_STORAGE?.clearConflict?.();cloudLocalDirty=true;persistCloudMeta();return cloudPush(false)},
  forceSync:()=>cloudPush(false),
- diagnostics:async()=>({version:'12.7',brand:activeBrand()?.name||'',scenario:state.activeScenario?.name||'',view:activeView(),sync:{dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,connected:!!cloudSession,online:navigator.onLine,conflict:!!pendingRemotePayload,deviceId:v123DeviceId},storage:await window.EDITORIAL_STORAGE?.diagnostics?.(),localStorageBytes:Object.keys(localStorage).reduce((n,k)=>n+String(localStorage.getItem(k)||'').length*2,0)})
+ diagnostics:async()=>({version:'12.8',brand:activeBrand()?.name||'',scenario:state.activeScenario?.name||'',view:activeView(),sync:{dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,connected:!!cloudSession,online:navigator.onLine,conflict:!!pendingRemotePayload,deviceId:v123DeviceId},storage:await window.EDITORIAL_STORAGE?.diagnostics?.(),localStorageBytes:Object.keys(localStorage).reduce((n,k)=>n+String(localStorage.getItem(k)||'').length*2,0)})
 };
 
 /* Start */
@@ -2061,7 +2079,7 @@ if(activeBrand()?.id!=='joc'&&!state.activeScenario){
  state.activeScenarioId=state.activeScenario.id;state.emulationMode=true;applyScenarioRangeControls(range);
 }
 persistV123Shadow();renderAll();switchView('homeView');initCloud();
-window.EDITORIAL_OS_VERSION='12.7';
+window.EDITORIAL_OS_VERSION='12.8';
 window.EDITORIAL_OS_DIAGNOSTICS={clearDerivedCache:clearV12DerivedCache,api:window.EDITORIAL_V123_API};
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.info('SW no registrado',err)));
 })();

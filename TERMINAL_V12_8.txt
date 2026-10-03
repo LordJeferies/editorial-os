@@ -1,0 +1,33 @@
+EDITORIAL OS V12.8 · INSTALAR Y PUBLICAR
+
+1) Deja EDITORIAL_OS_V12_8_PWA.zip en ~/Downloads
+
+2) Pega exactamente esto en Terminal:
+
+cd ~/Downloads
+unzip -o EDITORIAL_OS_V12_8_PWA.zip
+cd EDITORIAL_OS_V12_8_PWA
+chmod +x deploy_v12_8_over_existing.sh
+./deploy_v12_8_over_existing.sh
+
+Si no detecta el repo automáticamente:
+
+./deploy_v12_8_over_existing.sh ~/Downloads/EDITORIAL_OS_V10_FRESH
+
+El script:
+- hace git fetch/rebase antes de tocar la app
+- crea backup
+- preserva supabase-config.js
+- instala V12.8
+- ejecuta validate_v12_8.sh
+- hace commit
+- vuelve a hacer fetch
+- push fast-forward a main
+- espera a que GitHub Pages responda con V12.8
+- abre la PWA con cache-buster del commit
+
+Repo:
+https://github.com/LordJeferies/editorial-os
+
+PWA:
+https://lordjeferies.github.io/editorial-os/

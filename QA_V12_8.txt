@@ -1,0 +1,48 @@
+EDITORIAL OS V12.8 · QA
+
+Base: V12.7 + grabaciones reales de iPhone proporcionadas por el usuario.
+
+Problemas observados en video y reparados:
+- topbar cubriendo contenido superior
+- espacio negro inferior no utilizado
+- vista Semana comportándose como vista diaria
+- ficha/drawer demasiado densa y con salida poco fiable
+- modal/sheet que podía dejar la app bloqueada tras cerrar
+- feeds móviles recortados y sin scroll interno útil
+- necesidad de navegación Atrás / Adelante visible
+- Liquid Glass ausente del chrome móvil
+
+QA estática ejecutada:
+- node --check app-core.js: OK
+- node --check v128-runtime.js: OK
+- node --check v12-glass.js: OK
+- manifest JSON: OK
+- planner move tests: OK
+- core compatibility tests: OK
+- V12.8 UI contract tests: OK
+- IDs HTML duplicados: ninguno
+- llaves CSS V12.8: balanceadas
+
+Contratos comprobados:
+- Semana móvil contiene los 7 días en el mismo overview
+- feeds móviles reciben feed-device-viewport con overflow-y:auto
+- Instagram usa repeat(3,minmax(0,1fr))
+- detented sheets incluyen pointerdown/pointercancel y cleanup modal
+- back/forward usa History API
+- detalle usa scroll body + action footer
+- LiquidGlass usa @ybouane/liquidglass con fallback de FPS
+- LinkedIn base + L2 adicional preservado
+- SW cache editorial-os-v12-8
+
+Updater E2E:
+- remote main adelantado antes de instalar: probado
+- fetch/rebase: OK
+- documentación remota preservada: OK
+- supabase-config.js preservado: OK
+- QA post-install: OK
+- commit: OK
+- segundo fetch: OK
+- push fast-forward: OK
+
+Limitación:
+El gesto físico exacto, safe-area real y WebGL de Safari/PWA deben confirmarse en el iPhone real. La geometría se basa en visualViewport y medidas DOM reales para reducir la diferencia entre navegador de prueba y PWA instalada.

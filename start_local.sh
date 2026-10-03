@@ -1,9 +1,5 @@
 #!/bin/bash
-set -euo pipefail
-ROOT="$(cd "$(dirname "$0")" && pwd)"
-cd "$ROOT"
-PORT="${1:-8080}"
-echo "Editorial OS V12.4"
-echo "http://localhost:$PORT"
-echo "Ctrl+C para detener."
-python3 -m http.server "$PORT"
+set -e
+cd "$(dirname "$0")"
+echo "Editorial OS V12.8 · http://localhost:8080"
+python3 -m http.server 8080
