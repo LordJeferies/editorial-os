@@ -1,37 +1,178 @@
-# Editorial OS V12.4
+# Editorial OS V12.15
 
-PWA editorial estática multi-marca para GitHub Pages + Supabase. V12.4 reconstruye el frontend móvil manteniendo el engine y los contratos de datos existentes.
+PWA editorial multi-marca para planificar, revisar, simular y sincronizar contenido entre Web, iPhone/iPad, Desktop macOS y asistentes de IA mediante MCP.
 
-## Instalar sobre la versión actual
+## Links
 
-```bash
-cd ~/Downloads
-unzip -o EDITORIAL_OS_V12_4_PWA.zip
-cd EDITORIAL_OS_V12_4_PWA
-chmod +x deploy_v12_4_over_existing.sh
-./deploy_v12_4_over_existing.sh
+- App: https://lordjeferies.github.io/editorial-os/
+- Guía pública: https://lordjeferies.github.io/editorial-os/guia.html
+- MCP: https://lordjeferies.github.io/editorial-os/mcp.html
+- Repo: https://github.com/LordJeferies/editorial-os
+
+## Arquitectura
+
+```text
+Editorial OS Web / PWA / Desktop
+              │
+              ├── localStorage + IndexedDB
+              │
+              └── Supabase Auth + Realtime
+                         │
+                         ▼
+                public.editorial_state
+                workspace: editorial-os
+                payload version: 9
+                         ▲
+                         │
+                  Editorial OS MCP
 ```
 
-Si el repo no se detecta:
+## Planner
 
-```bash
-./deploy_v12_4_over_existing.sh ~/Downloads/EDITORIAL_OS_V10_FRESH
+Las tres vistas trabajan sobre el mismo `plannerDraft`:
+
+- **Tablero**: estilo kanban/Trello con drag handle, drop zones por día y reorder.
+- **Agenda**: días apilados y acciones táctiles sin depender del drag.
+- **Matriz**: contenido × días para componer la semana rápidamente.
+
+Cambiar de vista no crea otro plan ni elimina fichas.
+
+## Cuenta y Supabase
+
+La Project URL y la publishable/anon key ya vienen preconfiguradas en `supabase-config.js`.
+
+La app permite:
+
+- iniciar sesión;
+- crear cuenta;
+- cerrar sesión;
+- guardar perfiles rápidos por nombre/email;
+- subir y bajar estado;
+- restaurar la configuración oficial.
+
+Los perfiles rápidos no guardan la contraseña en GitHub ni en localStorage. Si una cuenta usa `4brxs`, el usuario puede escribir `4brxs` al iniciar sesión y Supabase mantiene la sesión persistente en ese dispositivo.
+
+## Welcome + Progress · V12.15
+
+- Pantalla de bienvenida de primer uso.
+- Acceso directo a Configuración y MCP.
+- Barra global superior con porcentaje y descripción de la operación.
+- Cargas normales no bloqueantes.
+- Operaciones críticas pueden usar `blocking:true`; en ese caso aparece un overlay explicando por qué hay que esperar.
+- Login y sincronización se reflejan en la barra de progreso.
+
+API disponible para módulos futuros:
+
+```js
+const token = window.EDITORIAL_PROGRESS.start('Procesando…', { blocking: false });
+window.EDITORIAL_PROGRESS.set(token, 50, 'Mitad del proceso…');
+window.EDITORIAL_PROGRESS.done(token, 'Listo');
+
+await window.EDITORIAL_PROGRESS.run(
+  'Aplicando cambios…',
+  async ({ set }) => {
+    set(30, 'Validando…');
+    // trabajo
+  },
+  { blocking: true, blockReason: 'Este cambio debe terminar antes de seguir.' }
+);
 ```
 
-## Qué cambia
+## MCP · V12.15
 
-- shell iPhone/iPad específico;
-- toolbar limpia y tab bar de navegación;
-- sistema consistente de sheets/menus;
-- Emulador móvil de un solo día con menú contextual y catálogo en sheet;
-- Calendar/Feeds/Library adaptados a tareas móviles;
-- inputs 16 px y sin escalados táctiles para evitar auto-zoom extraño;
-- LiquidGlass WebGL desactivado en compacto;
-- UI state separado del domain state mediante `v124-store.js`;
-- component islands y event delegation en `v124-runtime.js`;
-- mantiene IndexedDB/outbox/conflict detection de V12.3.
+Editorial OS incluye un servidor MCP local basado en el SDK oficial MCP TypeScript v2 y transporte stdio.
 
-Consulta `CHANGELOG_V12_4.md` y `TERMINAL_V12_4.txt`.
+Instalación:
+
+```bash
+curl -fL "https://lordjeferies.github.io/editorial-os/INSTALL_EDITORIAL_MCP.command" -o "$HOME/Downloads/INSTALL_EDITORIAL_MCP.command"
+chmod +x "$HOME/Downloads/INSTALL_EDITORIAL_MCP.command"
+"$HOME/Downloads/INSTALL_EDITORIAL_MCP.command"
+```
+
+Requiere Node.js 20+.
+
+El instalador deja el servidor en:
+
+```text
+~/.editorial-os-mcp/
+```
+
+y crea un `.env` local con permisos restringidos. La URL y anon key ya vienen precargadas; el usuario agrega email y contraseña de Supabase.
+
+### Herramientas MCP
+
+Lectura:
+
+- `editorial_status`
+- `editorial_get_state`
+- `editorial_search`
+- `planner_list_week`
+- `content_list`
+- `content_list_notes`
+- `production_get`
+- `scenario_list`
+- `brand_list`
+- `history_recent`
+- `editorial_backup`
+
+Escritura:
+
+- `planner_add_content`
+- `planner_move_content`
+- `planner_remove_content`
+- `planner_clear_week`
+- `content_create`
+- `content_update`
+- `content_delete`
+- `content_add_note`
+- `production_set`
+- `scenario_save_current`
+- `scenario_apply`
+- `brand_create`
+- `brand_update`
+- `brand_set_active`
+
+Resources:
+
+- `editorial://state`
+- `editorial://planner`
+- `editorial://criteria`
+
+Prompts:
+
+- `plan-week`
+- `review-week`
+- `triage-corrections`
+
+### Criterios MCP
+
+- leer antes de escribir cuando el cambio dependa del estado actual;
+- preservar campos desconocidos del payload;
+- usar `expectedRevision` en secuencias críticas;
+- no borrar fichas `fixed` sin instrucción explícita;
+- las operaciones destructivas requieren confirmación;
+- no usar `service_role` para este flujo normal;
+- `EDITORIAL_MCP_READ_ONLY=true` deja el servidor sólo en lectura.
+
+Ver `mcp/README.md` y `mcp/EXAMPLES.md`.
+
+## Desktop macOS
+
+Editorial OS puede instalarse como app independiente de Safari/Chrome mediante WKWebView y seguir cargando la GitHub Page viva.
+
+```bash
+curl -fL "https://lordjeferies.github.io/editorial-os/INSTALL_EDITORIAL_OS_DESKTOP.command?v=12.11" -o "$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
+chmod +x "$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
+"$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
+```
+
+Destino:
+
+```text
+~/Applications/Editorial OS.app
+~/Desktop/Editorial OS
+```
 
 ## Contratos preservados
 
@@ -40,45 +181,19 @@ Consulta `CHANGELOG_V12_4.md` y `TERMINAL_V12_4.txt`.
 - `jocEditorialV9Scenarios`
 - `jocEditorialV9Cloud`
 - `public.editorial_state`
-- workspace `editorial-os`
-- payload `version:9`
+- `workspace_key = editorial-os`
+- `payload.version = 9`
 
-## Stack de producción
+## Stack
 
-- HTML5/CSS/JavaScript estático;
-- módulos ES selectivos;
+- HTML/CSS/JavaScript estático;
 - GitHub Pages;
-- Supabase;
-- SortableJS con alternativas de interacción en móvil;
+- Supabase Auth + Realtime;
 - localStorage + IndexedDB;
 - Service Worker;
-- sin build obligatorio.
+- WKWebView para Desktop;
+- MCP TypeScript SDK v2 para integración con IA.
 
-La arquitectura V12.4 adopta patrones actuales de React/Signals (estado UI aislado, componentes, identidad estable, actualizaciones batched y event delegation) sin introducir todavía un segundo renderer virtual que compita con el engine DOM existente.
+## QA
 
-
-## V12.11 · Desktop macOS
-
-Editorial OS puede instalarse como una app independiente de Safari/Chrome. El wrapper nativo usa WKWebView y sigue cargando la GitHub Page viva, por lo que las nuevas versiones web aparecen sin reinstalar la app.
-
-Instalación directa:
-
-```bash
-curl -fL "https://lordjeferies.github.io/editorial-os/INSTALL_EDITORIAL_OS_DESKTOP.command?v=12.11" -o "$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
-chmod +x "$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
-"$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
-```
-
-Destino: `~/Applications/Editorial OS.app` y alias en `~/Desktop/Editorial OS`.
-
-## V12.12 · Planificador multi-vista
-
-El Planificador ahora ofrece tres representaciones del mismo `plannerDraft`:
-
-- **Tablero**: columnas por día, con drag handle dedicado, drop zone de columna completa y targets Lun–Dom durante el gesto.
-- **Agenda**: días apilados con `+ Añadir aquí` como alternativa táctil al drag.
-- **Matriz**: tipos de contenido × días para componer la semana tocando celdas.
-
-Cambiar de vista no crea otro escenario ni borra fichas: las tres superficies leen y escriben la misma fuente de verdad. El drag móvil V12.12 usa Pointer Events y no depende del SortableJS legacy del planner compacto.
-
-Consulta `CHANGELOG_V12_12.md` y `QA_V12_12.md`.
+Consulta `QA_V12_15.md`.
