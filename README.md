@@ -70,3 +70,15 @@ chmod +x "$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
 ```
 
 Destino: `~/Applications/Editorial OS.app` y alias en `~/Desktop/Editorial OS`.
+
+## V12.12 · Planificador multi-vista
+
+El Planificador ahora ofrece tres representaciones del mismo `plannerDraft`:
+
+- **Tablero**: columnas por día, con drag handle dedicado, drop zone de columna completa y targets Lun–Dom durante el gesto.
+- **Agenda**: días apilados con `+ Añadir aquí` como alternativa táctil al drag.
+- **Matriz**: tipos de contenido × días para componer la semana tocando celdas.
+
+Cambiar de vista no crea otro escenario ni borra fichas: las tres superficies leen y escriben la misma fuente de verdad. El drag móvil V12.12 usa Pointer Events y no depende del SortableJS legacy del planner compacto.
+
+Consulta `CHANGELOG_V12_12.md` y `QA_V12_12.md`.
