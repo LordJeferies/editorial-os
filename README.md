@@ -1,131 +1,85 @@
 # Editorial OS V12
 
-PWA editorial multi-marca para GitHub Pages + Supabase. V12 prioriza fluidez, ergonomía iPhone/iPad y una arquitectura frontend modular sin build step.
+PWA editorial multi-marca para GitHub Pages + Supabase, diseñada para operar planificación, escenarios, producción y simulación de feeds desde iPhone, iPad y desktop.
 
-## V12 · versión actual
+> **IA / continuidad:** si eres un asistente de IA que va a modificar este proyecto, empieza por [`docs/AI_START_HERE.md`](docs/AI_START_HERE.md) y después usa [`AI_MASTER_PROMPT.md`](AI_MASTER_PROMPT.md) como protocolo de trabajo para una versión nueva.
 
-Cambios principales:
+## Estado actual
 
-- frontend separado en `css/` + `js/` manteniendo JavaScript vanilla y GitHub Pages;
-- estilo mobile-first inspirado en herramientas creativas iOS y patrones de 21st.dev;
-- bottom dock de cinco destinos con safe areas y targets táctiles;
-- bottom sheets para acciones secundarias;
-- calendario compacto hasta iPad portrait;
-- LiquidGlass WebGL real sólo en chrome pequeño, con lifecycle de destroy/re-init;
-- memo de derivación editorial por render;
-- feed de escenarios largos con render inicial limitado para evitar DOM masivo;
-- correcciones de sync en Biblioteca y Undo/Redo;
+Versión de producto documentada: **V12**.
+
+V12 consolida la reconstrucción de rendimiento de V11 y añade:
+- CSS/JS fuera del `index.html` monolítico;
+- capa visual mobile-first;
+- tratamiento iPad portrait;
+- progressive disclosure;
+- bottom sheet de herramientas;
+- lifecycle de LiquidGlass;
+- memo de derivación editorial por ciclo;
+- límite inicial para feeds de escenarios largos;
+- correcciones de sync Biblioteca/Undo;
 - cache PWA `editorial-os-v12`.
 
-Para actualizar tu instalación existente usa `deploy_v12_over_existing.sh`. El script preserva `.git` y tu `supabase-config.js`.
+## Qué hace
 
-Consulta `CHANGELOG_V12.md`, `SOURCES_V12.md` y `TERMINAL_V12.txt`.
+- Home / Dashboard.
+- Calendario semana/mes.
+- Franjas.
+- Emulador tipo Kanban.
+- Agenda.
+- Feeds simulados Instagram/Facebook/TikTok/YouTube/LinkedIn.
+- Biblioteca de contenido/pilares/familias/marcas.
+- escenarios con rango temporal.
+- tracking Hecho/Pendiente.
+- historial.
+- Undo/Redo.
+- Supabase Auth + Realtime sync.
+- PWA instalable.
 
-## Qué viene cargado
+## Documentación de continuidad
 
-Una instalación nueva ya trae el catálogo JOC que venimos definiendo:
-Memes, Podcast, Webinar, Testimonios, Reacciones, Carruseles, LinkedIn L2,
-Filosofando, Lifestyle/Voiceover y formatos específicos de YouTube.
+| Documento | Propósito |
+|---|---|
+| [`docs/AI_START_HERE.md`](docs/AI_START_HERE.md) | Entrada obligatoria para cualquier IA |
+| [`docs/PRODUCT_SPEC.md`](docs/PRODUCT_SPEC.md) | Qué es el producto y qué problemas resuelve |
+| [`docs/FEATURES_AND_USE_CASES.md`](docs/FEATURES_AND_USE_CASES.md) | Cómo funciona cada herramienta y casos de uso |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Stack, módulos, rendering, PWA y arquitectura |
+| [`docs/DATA_CONTRACTS.md`](docs/DATA_CONTRACTS.md) | Contratos legacy, Supabase, escenarios y completion |
+| [`docs/VISUAL_REFERENCE_SPEC.md`](docs/VISUAL_REFERENCE_SPEC.md) | Traducción técnica de las referencias visuales originales |
+| [`docs/REFERENCES.md`](docs/REFERENCES.md) | Repos, 21st.dev y fuentes a estudiar |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Deuda y siguientes mejoras |
+| [`docs/RELEASE_AND_QA.md`](docs/RELEASE_AND_QA.md) | QA, packaging, instalación y rollback |
+| [`AI_MASTER_PROMPT.md`](AI_MASTER_PROMPT.md) | Prompt listo para crear la siguiente versión |
 
-Consulta `DEFAULT_JOC_CATALOG.md`.
+## Stack
 
-Eso significa que **no tienes que volver a crear esos tipos**.
+- HTML5 + CSS + JavaScript vanilla.
+- módulos ES selectivos.
+- sin React/Vue/Svelte.
+- sin bundler/build obligatorio.
+- Supabase JS v2 por CDN.
+- SortableJS.
+- LiquidGlass WebGL real.
+- localStorage.
+- Service Worker.
+- GitHub Pages.
 
-Lo que no existe automáticamente es un historial retroactivo de archivos finales ya producidos:
-la aplicación no puede adivinar qué Reel o carrusel anterior ya estaba terminado.
-Desde V10 puedes llevar ese control con **Hecho / Pendiente** por fecha.
+## Compatibilidad que no se rompe
 
-## Novedades V10
+LocalStorage histórico:
+- `jocEditorialV9`
+- `jocEditorialV9AppData`
+- `jocEditorialV9Scenarios`
+- `jocEditorialV9Cloud`
 
-### Producción
-Cada contenido fechado puede marcarse:
-- `Pendiente`
-- `✓ Hecho`
+Cloud:
+- `public.editorial_state`
+- workspace `editorial-os`
+- payload legacy compatible.
 
-El check aparece en:
-- calendario;
-- mes;
-- franjas;
-- agenda;
-- feeds realistas;
-- zoom-out;
-- mapa compacto;
-- Home;
-- vista de emulación.
+Durante upgrades se preserva el `supabase-config.js` real del repo/usuario.
 
-El estado es del **asset maestro** de esa fecha, por lo que la misma pieza aparece hecha
-en todas las redes a las que se distribuye.
-
-### Rango de emulación
-Antes de pulsar `Emular` o `Guardar emulación` puedes elegir:
-
-- fecha inicial;
-- `N` semanas; o
-- una fecha final concreta.
-
-Una emulación solo genera contenido dentro de ese rango.
-
-Ejemplos:
-- 5 oct → 4 semanas;
-- 1 nov → 30 nov;
-- 15 ene → 8 semanas.
-
-Las emulaciones guardadas muestran:
-- rango;
-- piezas por semana;
-- piezas totales;
-- cuántas están hechas;
-- barra de progreso.
-
-### Catálogo inicial
-JOC empieza con los tipos ya definidos.
-Las nuevas marcas pueden seleccionar contenidos del repositorio global o crear otros nuevos.
-
-## Instalación desde cero en Mac
-
-1. Descomprime `EDITORIAL_OS_V12_PWA.zip`.
-2. Entra a la carpeta.
-3. Ejecuta:
-
-```bash
-chmod +x *.sh INSTALL_FROM_ZERO.command
-./install_from_zero.sh
-```
-
-También puedes hacer doble clic en `INSTALL_FROM_ZERO.command`.
-
-El instalador:
-- comprueba Git/Homebrew;
-- instala GitHub CLI si hace falta;
-- instala Supabase CLI si hace falta;
-- inicia sesión en GitHub;
-- opcionalmente configura Supabase;
-- crea el repo público;
-- hace el primer push;
-- activa GitHub Pages.
-
-## Supabase
-
-Si ya tienes un proyecto Supabase:
-
-```bash
-./setup_supabase.sh
-```
-
-El script:
-1. inicia sesión;
-2. muestra tus proyectos;
-3. pide el Project Ref;
-4. vincula el proyecto;
-5. ejecuta `supabase_schema.sql`;
-6. activa RLS/Realtime;
-7. obtiene Project URL + publishable/anon key;
-8. genera `supabase-config.js`.
-
-La información editorial, estados Hecho/Pendiente, marcas y emulaciones se guardan
-dentro del payload sincronizado.
-
-## Probar localmente
+## Instalar / probar local
 
 ```bash
 ./start_local.sh
@@ -137,74 +91,52 @@ Abre:
 http://localhost:8080
 ```
 
-## Publicar una actualización
+## Actualizar una instalación existente a V12
 
-Si editaste los archivos actuales:
-
-```bash
-./publish_update.sh
-```
-
-Si recibes una versión nueva de `index.html`:
+Desde el paquete V12:
 
 ```bash
-./publish_update.sh "/ruta/a/index.html" "Actualiza Editorial OS"
+chmod +x deploy_v12_over_existing.sh
+./deploy_v12_over_existing.sh /ruta/al/repo/editorial-os
 ```
 
-También acepta un ZIP.
+El script crea backup, preserva `.git` y `supabase-config.js`, valida y publica.
 
-## Crear el repo público sin el instalador completo
+## Instalar desde cero en Mac
 
 ```bash
-./setup_and_deploy.sh editorial-os
+chmod +x *.sh INSTALL_FROM_ZERO.command
+./install_from_zero.sh
 ```
 
-## iPhone
+También puedes ejecutar `INSTALL_FROM_ZERO.command`.
 
-Después de que GitHub Pages esté publicado:
+## Supabase
 
-1. abre la URL en Safari;
-2. Compartir;
-3. Añadir a pantalla de inicio.
+La PWA sólo debe utilizar Project URL + publishable/anon key en frontend. Nunca incluir `service_role` ni secretos administrativos.
 
-La PWA incluye:
-- Home;
-- Calendario;
-- Emulador;
-- Feeds;
-- Biblioteca;
-- Mobile/Desktop/Auto;
-- vista Realista;
-- Zoom-out;
-- Mapa compacto.
+Schema de referencia: `supabase_schema.sql`.
 
-Con Supabase, Mac y iPhone usan el mismo estado al iniciar sesión con el mismo usuario.
+## Catálogo JOC
 
-## Seguridad
+`DEFAULT_JOC_CATALOG.md` documenta el catálogo inicial. La implementación ejecutable está en el código y sus IDs forman parte de la compatibilidad.
 
-`supabase-config.js` solo debe contener la Project URL y una publishable/anon key.
-No pongas una `service_role` key en una aplicación pública.
-La protección de datos depende de Supabase Auth + RLS, configurados por `supabase_schema.sql`.
+## Referencias
 
-## V11 · rendimiento + iPhone
+Consulta `docs/REFERENCES.md` y `SOURCES_V12.md`.
 
-- Solo se renderiza la vista activa; navegar ya no reconstruye todas las pantallas.
-- El render dejó de escribir en Supabase.
-- LiquidGlass usa roots pequeños para header/dock y ya no rasteriza toda la app.
-- `visualViewport` + 100dvh corrige el viewport standalone de iPhone.
-- Bottom dock está en flujo, no fixed.
-- Semana móvil = carrusel scroll-snap; mes móvil = celdas compactas.
-- Kanban táctil usa SortableJS.
-- Franjas, biblioteca, feeds y emulador permiten pan horizontal real.
+Principales:
+- ybouane/liquidglass.
+- SortableJS.
+- ILaMY Calendar.
+- CalendarKit.
+- Calendar Planner.
+- Schedule-X.
+- nextjs-mobile-app-template.
+- 21st.dev.
 
-## Repositorios usados en V11
+## Releases
 
-- `ybouane/liquidglass`: WebGL Liquid Glass. V11 aísla el header y el dock en roots
-  pequeños para evitar rasterizar calendarios/feeds enteros.
-- `SortableJS/Sortable`: drag & drop táctil para el Kanban.
-- `RhysSullivan/nextjs-mobile-app-template`: patrón iOS PWA de viewport `dvh`,
-  bottom nav en flujo y panes móviles.
-- `kotapullarao/calendar-planner`: referencia de calendario PWA vanilla y rendering
-  eficiente.
-
-La aplicación sigue siendo HTML/JS estático para conservar GitHub Pages + Supabase.
+- `CHANGELOG_V12.md`: cambios V12.
+- `docs/RELEASE_AND_QA.md`: criterios de una release válida.
+- `AI_MASTER_PROMPT.md`: instrucción completa para que otro chat analice, mejore, empaquete y entregue una nueva versión.

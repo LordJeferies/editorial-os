@@ -64,3 +64,17 @@ Sin migración destructiva:
 - semántica de `completion`
 - slots/rangos de escenarios
 - payload cloud legacy compatible
+
+## Continuidad para IA
+
+Se añadió documentación persistente para que cualquier chat pueda continuar el producto sin depender de conversaciones anteriores:
+- `docs/AI_START_HERE.md`
+- `docs/PRODUCT_SPEC.md`
+- `docs/FEATURES_AND_USE_CASES.md`
+- `docs/ARCHITECTURE.md`
+- `docs/DATA_CONTRACTS.md`
+- `docs/VISUAL_REFERENCE_SPEC.md`
+- `docs/REFERENCES.md`
+- `docs/ROADMAP.md`
+- `docs/RELEASE_AND_QA.md`
+- `AI_MASTER_PROMPT.md`
