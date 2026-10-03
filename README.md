@@ -90,7 +90,7 @@ chmod +x "$HOME/Downloads/INSTALL_EDITORIAL_MCP.command"
 "$HOME/Downloads/INSTALL_EDITORIAL_MCP.command"
 ```
 
-Requiere Node.js 20+.
+Requiere Node.js 22+. El instalador intenta instalar/actualizar Node mediante Homebrew si hace falta.
 
 El instalador deja el servidor en:
 
@@ -99,6 +99,14 @@ El instalador deja el servidor en:
 ```
 
 y crea un `.env` local con permisos restringidos. La URL y anon key ya vienen precargadas; el usuario agrega email y contraseña de Supabase.
+
+Además crea:
+
+```text
+~/Desktop/EDITORIAL_OS_MCP_CONFIG.json
+```
+
+con el bloque que debes registrar en tu host MCP.
 
 ### Herramientas MCP
 
