@@ -1,9 +1,9 @@
-const CACHE='editorial-os-v12-8-2';
+const CACHE='editorial-os-v12-9';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
-  './css/legacy.css','./css/v12.css','./css/v123.css','./css/v124.css','./css/v126.css','./css/v127.css','./css/v128.css',
+  './css/legacy.css','./css/v12.css','./css/v123.css','./css/v124.css','./css/v126.css','./css/v127.css','./css/v128.css','./css/v129.css',
   './js/v123-data.js','./js/v123-sync.js','./js/v123-storage.js',
-  './js/app-core.js','./js/v12-runtime.js','./js/v123-runtime.js','./js/v124-store.js','./js/v124-runtime.js','./js/v126-runtime.js','./js/v127-runtime.js','./js/v128-runtime.js','./js/v12-glass.js',
+  './js/app-core.js','./js/v12-runtime.js','./js/v123-runtime.js','./js/v124-store.js','./js/v124-runtime.js','./js/v126-runtime.js','./js/v127-runtime.js','./js/v128-runtime.js','./js/v129-runtime.js','./js/v12-glass.js',
   './icons/icon-192.png','./icons/icon-512.png'
 ];
 

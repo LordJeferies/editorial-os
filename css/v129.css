@@ -1,0 +1,253 @@
+/* =====================================================================
+   Editorial OS V12.9 · Mobile Planning Controls Restore
+   Restores general weekly density/mix controls outside the Emulator.
+   Loaded after V12.8 so it intentionally overrides V12.4 mobile hiding.
+   ===================================================================== */
+
+:root{
+  --v129-plan-gap:8px;
+}
+
+/* The general planner controls must exist on every viewport. V12.4 hid this
+   block on compact screens, which made weekly density/mix look removed. */
+#calendarView > .controls{
+  display:block!important;
+}
+
+.v129-plan-head,
+.v129-plan-summary{
+  display:none;
+}
+
+@media(max-width:899px){
+  #calendarView > .controls{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:0 0 10px!important;
+    padding:0!important;
+    border:1px solid var(--studio-border)!important;
+    border-radius:18px!important;
+    background:var(--studio-card)!important;
+    box-shadow:var(--studio-shadow)!important;
+    overflow:hidden!important;
+  }
+
+  .v129-plan-head{
+    min-width:0;
+    min-height:58px;
+    padding:10px 11px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:8px;
+    border-bottom:1px solid var(--studio-border);
+    background:color-mix(in srgb,var(--studio-card) 96%,var(--studio-muted));
+  }
+  .v129-plan-copy{min-width:0;display:grid;gap:2px}
+  .v129-plan-copy small{font-size:10px;font-weight:700;color:var(--studio-muted-fg);letter-spacing:.02em;text-transform:uppercase}
+  .v129-plan-copy strong{font-size:14px;line-height:1.2;color:var(--studio-fg)}
+  .v129-plan-toggle{
+    min-width:72px!important;
+    min-height:40px!important;
+    padding:0 10px!important;
+    border:1px solid var(--studio-border)!important;
+    border-radius:11px!important;
+    background:var(--studio-muted)!important;
+    color:var(--studio-fg)!important;
+    font-size:11px!important;
+    font-weight:700!important;
+  }
+
+  .v129-plan-summary{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:6px;
+    padding:8px 10px;
+    border-bottom:1px solid var(--studio-border);
+    background:var(--studio-muted);
+  }
+  .v129-plan-metric{
+    min-width:0;
+    display:grid;
+    gap:1px;
+    padding:7px 8px;
+    border:1px solid color-mix(in srgb,var(--studio-border) 86%,transparent);
+    border-radius:11px;
+    background:var(--studio-card);
+  }
+  .v129-plan-metric b{font-size:15px;line-height:1;color:var(--studio-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .v129-plan-metric small{font-size:8.5px;color:var(--studio-muted-fg);line-height:1.15}
+
+  .v129-plan-quick{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:7px;
+    align-items:end;
+    padding:9px 10px 0;
+  }
+  .v129-plan-quick label{display:grid;gap:4px;min-width:0;font-size:9px;font-weight:700;color:var(--studio-muted-fg);text-transform:uppercase;letter-spacing:.02em}
+  #v129WeeklyPreset{
+    width:100%!important;
+    min-width:0!important;
+    min-height:44px!important;
+    height:44px!important;
+    border:1px solid var(--studio-border)!important;
+    border-radius:12px!important;
+    background:var(--studio-card)!important;
+    color:var(--studio-fg)!important;
+    padding:0 10px!important;
+    font-size:16px!important;
+  }
+  .v129-plan-quick-note{
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0 9px;
+    border-radius:12px;
+    background:var(--studio-primary);
+    color:var(--studio-primary-fg);
+    font-size:10px;
+    font-weight:750;
+    white-space:nowrap;
+  }
+
+  .v129-plan-body{
+    display:grid;
+    gap:var(--v129-plan-gap);
+    padding:9px 10px 10px;
+  }
+  #calendarView > .controls.v129-collapsed .v129-plan-body,
+  #calendarView > .controls.v129-collapsed .v129-plan-quick{
+    display:none!important;
+  }
+  #calendarView > .controls.v129-collapsed .v129-plan-summary{
+    border-bottom:0!important;
+  }
+
+  #calendarView > .controls .control-row{
+    width:100%!important;
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    align-items:stretch!important;
+    gap:6px!important;
+    margin:0!important;
+    padding:9px!important;
+    border:1px solid var(--studio-border)!important;
+    border-radius:14px!important;
+    background:color-mix(in srgb,var(--studio-muted) 72%,var(--studio-card))!important;
+  }
+  #calendarView > .controls .control-row + .control-row{
+    margin-top:0!important;
+  }
+  #calendarView > .controls .control-row > .label{
+    margin:0!important;
+    font-size:10px!important;
+    font-weight:750!important;
+    color:var(--studio-muted-fg)!important;
+    text-transform:none!important;
+  }
+  #calendarView > .controls .control-row > .spacer{display:none!important}
+
+  #calendarView > .controls .platforms{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    display:flex!important;
+    gap:5px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    padding:1px 0 3px!important;
+    scroll-snap-type:x proximity;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  #calendarView > .controls .platforms::-webkit-scrollbar{display:none!important}
+  #calendarView > .controls .platformbtn{
+    flex:0 0 auto!important;
+    min-height:40px!important;
+    border-radius:11px!important;
+    scroll-snap-align:start;
+  }
+
+  #calendarView > .controls .segmented{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:5px!important;
+    overflow:visible!important;
+    padding:0!important;
+    background:transparent!important;
+  }
+  #calendarView > .controls .segbtn[data-volume]{
+    min-width:0!important;
+    min-height:50px!important;
+    height:auto!important;
+    padding:6px 8px!important;
+    border:1px solid var(--studio-border)!important;
+    border-radius:11px!important;
+    display:grid!important;
+    place-items:center!important;
+    gap:1px!important;
+    background:var(--studio-card)!important;
+    color:var(--studio-fg)!important;
+    box-shadow:none!important;
+    font-size:11px!important;
+    line-height:1.15!important;
+  }
+  #calendarView > .controls .segbtn[data-volume].active{
+    background:var(--studio-primary)!important;
+    color:var(--studio-primary-fg)!important;
+    border-color:var(--studio-primary)!important;
+  }
+  #calendarView > .controls .segbtn[data-volume] .v129-weekly-hint{
+    font-size:8.5px!important;
+    font-weight:600!important;
+    opacity:.72;
+  }
+
+  #calendarView > .controls select.btn,
+  #calendarView > .controls .toggle{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    min-height:44px!important;
+    border-radius:11px!important;
+  }
+  #calendarView > .controls select.btn{
+    height:44px!important;
+    padding:0 10px!important;
+    border:1px solid var(--studio-border)!important;
+    background:var(--studio-card)!important;
+  }
+  #calendarView > .controls .toggle{
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding:0 10px!important;
+    border:1px solid var(--studio-border)!important;
+    background:var(--studio-card)!important;
+  }
+  #calendarView > .controls .toggle input{width:20px!important;height:20px!important;flex:0 0 20px!important}
+
+  /* Keep the general planner visually before the week calendar. */
+  #calendarView .cal-layout{margin-top:0!important}
+}
+
+@media(max-width:390px){
+  .v129-plan-summary{grid-template-columns:1fr 1fr!important}
+  .v129-plan-metric:last-child{grid-column:1/-1!important}
+  .v129-plan-quick{grid-template-columns:1fr!important}
+  .v129-plan-quick-note{min-height:34px!important}
+}
+
+@media(min-width:900px){
+  /* Desktop retains the original full controls without mobile wrapper chrome. */
+  .v129-plan-head,.v129-plan-summary,.v129-plan-quick{display:none!important}
+  .v129-plan-body{display:contents!important}
+}

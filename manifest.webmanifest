@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Editorial OS V12.8",
+  "name": "Editorial OS V12.9",
   "short_name": "Editorial OS",
-  "description": "Editorial OS V12.8: iOS polish, semana completa, bottom sheets estables, feeds móviles completos y Liquid Glass progresivo.",
+  "description": "Editorial OS V12.9: controles generales de frecuencia y mezcla restaurados en móvil, sin perder las mejoras actuales de estabilidad.",
   "start_url": "./#/home",
   "scope": "./",
   "display": "standalone",

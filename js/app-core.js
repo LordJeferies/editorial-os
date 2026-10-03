@@ -2018,8 +2018,8 @@ document.getElementById('cloudPullBtn').addEventListener('click',()=>cloudPull(f
 /* Export / import */
 document.getElementById('exportBtn').addEventListener('click',()=>{
  const days=Array.from({length:7},(_,i)=>addDays(startOfWeek(anchor()),i));
- const payload={version:'12.8',schemaVersion:9,productVersion:'12.8',exportedAt:new Date().toISOString(),state,appData,savedScenarios,plannerDraft,week:days.map(d=>({date:keyDate(d),assets:assetsForDate(d,'all')})),notes:{memeCadence:'Lun L1 Presión vs Foco · Mar L3 Tip · Mié L2 meme rotativo · Vie L2 meme rotativo · Dom L1 Famoso + frase',facebook:'Replica Instagram por defecto',stories:'No incluidas en los conteos'}};
- const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`EDITORIAL_OS_${String(activeBrand()?.name||'MARCA').replace(/[^a-z0-9]+/gi,'_')}_V12_8.json`;a.click();URL.revokeObjectURL(a.href);
+ const payload={version:'12.9',schemaVersion:9,productVersion:'12.9',exportedAt:new Date().toISOString(),state,appData,savedScenarios,plannerDraft,week:days.map(d=>({date:keyDate(d),assets:assetsForDate(d,'all')})),notes:{memeCadence:'Lun L1 Presión vs Foco · Mar L3 Tip · Mié L2 meme rotativo · Vie L2 meme rotativo · Dom L1 Famoso + frase',facebook:'Replica Instagram por defecto',stories:'No incluidas en los conteos'}};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`EDITORIAL_OS_${String(activeBrand()?.name||'MARCA').replace(/[^a-z0-9]+/gi,'_')}_V12_9.json`;a.click();URL.revokeObjectURL(a.href);
 });
 document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
 document.getElementById('importFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const raw=JSON.parse(await file.text());const check=window.EDITORIAL_DATA?.validateBackup?.(raw)||{ok:!!raw&&typeof raw==='object',errors:[]};if(!check.ok)throw new Error(check.errors.join('\n'));const data=window.EDITORIAL_DATA?.migrateBackup?.(raw)||raw;checkpoint('Importar');if(data.state)state={...state,...data.state};if(data.appData)appData={...appData,...data.appData,production:data.appData.production||appData.production||{}};if(Array.isArray(data.savedScenarios))savedScenarios=data.savedScenarios;if(data.plannerDraft)plannerDraft=cloneSlots(data.plannerDraft);localStorage.setItem('jocEditorialV9',JSON.stringify(state));localStorage.setItem('jocEditorialV9AppData',JSON.stringify(appData));localStorage.setItem('jocEditorialV9Scenarios',JSON.stringify(savedScenarios));persistV123Shadow();scheduleCloudSync();renderAll()}catch(err){alert('No se pudo importar: '+err.message)}e.target.value=''});
@@ -2038,7 +2038,7 @@ window.visualViewport?.addEventListener('resize',queueViewportSync,{passive:true
 window.addEventListener('resize',queueViewportSync,{passive:true});
 window.addEventListener('orientationchange',()=>setTimeout(()=>{syncViewportHeight();renderActiveView()},120),{passive:true});
 
-/* Public V12.8 runtime API */
+/* Public V12.9 runtime API */
 window.EDITORIAL_V123_API={
  getState:()=>({state,appData,savedScenarios,plannerDraft:cloneSlots(plannerDraft)}),
  todayItems:()=>assetsForDate(todayLocal(),'all'),
@@ -2063,7 +2063,7 @@ window.EDITORIAL_V123_API={
  acceptRemote(){if(!pendingRemotePayload)return false;return applyCloudPayload(pendingRemotePayload,{force:true})},
  async keepLocal(){if(!pendingRemotePayload)return false;cloudBaseRevision=Math.max(cloudBaseRevision,Number(pendingRemotePayload.syncMeta?.revision||0));pendingRemotePayload=null;await window.EDITORIAL_STORAGE?.clearConflict?.();cloudLocalDirty=true;persistCloudMeta();return cloudPush(false)},
  forceSync:()=>cloudPush(false),
- diagnostics:async()=>({version:'12.8',brand:activeBrand()?.name||'',scenario:state.activeScenario?.name||'',view:activeView(),sync:{dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,connected:!!cloudSession,online:navigator.onLine,conflict:!!pendingRemotePayload,deviceId:v123DeviceId},storage:await window.EDITORIAL_STORAGE?.diagnostics?.(),localStorageBytes:Object.keys(localStorage).reduce((n,k)=>n+String(localStorage.getItem(k)||'').length*2,0)})
+ diagnostics:async()=>({version:'12.9',brand:activeBrand()?.name||'',scenario:state.activeScenario?.name||'',view:activeView(),sync:{dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,connected:!!cloudSession,online:navigator.onLine,conflict:!!pendingRemotePayload,deviceId:v123DeviceId},storage:await window.EDITORIAL_STORAGE?.diagnostics?.(),localStorageBytes:Object.keys(localStorage).reduce((n,k)=>n+String(localStorage.getItem(k)||'').length*2,0)})
 };
 
 /* Start */
@@ -2079,7 +2079,7 @@ if(activeBrand()?.id!=='joc'&&!state.activeScenario){
  state.activeScenarioId=state.activeScenario.id;state.emulationMode=true;applyScenarioRangeControls(range);
 }
 persistV123Shadow();renderAll();switchView('homeView');initCloud();
-window.EDITORIAL_OS_VERSION='12.8';
+window.EDITORIAL_OS_VERSION='12.9';
 window.EDITORIAL_OS_DIAGNOSTICS={clearDerivedCache:clearV12DerivedCache,api:window.EDITORIAL_V123_API};
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.info('SW no registrado',err)));
 })();
