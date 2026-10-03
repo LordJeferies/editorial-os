@@ -55,3 +55,18 @@ Consulta `CHANGELOG_V12_4.md` y `TERMINAL_V12_4.txt`.
 - sin build obligatorio.
 
 La arquitectura V12.4 adopta patrones actuales de React/Signals (estado UI aislado, componentes, identidad estable, actualizaciones batched y event delegation) sin introducir todavía un segundo renderer virtual que compita con el engine DOM existente.
+
+
+## V12.11 · Desktop macOS
+
+Editorial OS puede instalarse como una app independiente de Safari/Chrome. El wrapper nativo usa WKWebView y sigue cargando la GitHub Page viva, por lo que las nuevas versiones web aparecen sin reinstalar la app.
+
+Instalación directa:
+
+```bash
+curl -fL "https://lordjeferies.github.io/editorial-os/INSTALL_EDITORIAL_OS_DESKTOP.command?v=12.11" -o "$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
+chmod +x "$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
+"$HOME/Downloads/INSTALL_EDITORIAL_OS_DESKTOP.command"
+```
+
+Destino: `~/Applications/Editorial OS.app` y alias en `~/Desktop/Editorial OS`.
