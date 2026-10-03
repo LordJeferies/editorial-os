@@ -6,7 +6,7 @@ cd "$ROOT"
 
 clear || true
 echo "=========================================================="
-echo " EDITORIAL OS V10 · INSTALACIÓN DESDE CERO"
+echo " EDITORIAL OS V11 · INSTALACIÓN DESDE CERO"
 echo "=========================================================="
 echo
 echo "Carpeta:"
@@ -95,7 +95,7 @@ fi
 
 echo
 echo "----------------------------------------------------------"
-echo "Editorial OS V10"
+echo "Editorial OS V11"
 echo "Repo:  https://github.com/$OWNER/$REPO_NAME"
 echo "PWA:   $PAGE_URL"
 echo "----------------------------------------------------------"

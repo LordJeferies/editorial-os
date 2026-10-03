@@ -1,12 +1,12 @@
 {
-  "name": "Editorial OS V10",
+  "name": "Editorial OS V11",
   "short_name": "Editorial OS",
-  "description": "Editorial OS multi-marca: catálogo, calendario, emulaciones por rango, feeds y seguimiento de producción.",
+  "description": "Editorial OS multi-marca optimizado para iPhone, iPad y desktop.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#111214",
-  "theme_color": "#111214",
+  "background_color": "#f4f1eb",
+  "theme_color": "#f4f1eb",
   "orientation": "any",
   "icons": [
     {

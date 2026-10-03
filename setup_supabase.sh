@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo "======================================================"
-echo " Editorial OS V10 · Supabase setup automático"
+echo " Editorial OS V11 · Supabase setup automático"
 echo "======================================================"
 echo
 

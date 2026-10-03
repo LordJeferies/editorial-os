@@ -1,4 +1,4 @@
-const CACHE='editorial-os-v10';
+const CACHE='editorial-os-v11-ios';
 const CORE=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));

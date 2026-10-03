@@ -1,10 +1,10 @@
-EDITORIAL OS V10 · COMANDOS
+EDITORIAL OS V11 · COMANDOS
 
 INSTALAR TODO DESDE CERO
 ------------------------
 cd ~/Downloads
-unzip EDITORIAL_OS_V10_FRESH.zip
-cd EDITORIAL_OS_V10_FRESH
+unzip EDITORIAL_OS_V11_FRESH.zip
+cd EDITORIAL_OS_V11_FRESH
 
 chmod +x *.sh INSTALL_FROM_ZERO.command
 ./install_from_zero.sh

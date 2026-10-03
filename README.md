@@ -166,3 +166,26 @@ Con Supabase, Mac y iPhone usan el mismo estado al iniciar sesión con el mismo 
 `supabase-config.js` solo debe contener la Project URL y una publishable/anon key.
 No pongas una `service_role` key en una aplicación pública.
 La protección de datos depende de Supabase Auth + RLS, configurados por `supabase_schema.sql`.
+
+## V11 · rendimiento + iPhone
+
+- Solo se renderiza la vista activa; navegar ya no reconstruye todas las pantallas.
+- El render dejó de escribir en Supabase.
+- LiquidGlass usa roots pequeños para header/dock y ya no rasteriza toda la app.
+- `visualViewport` + 100dvh corrige el viewport standalone de iPhone.
+- Bottom dock está en flujo, no fixed.
+- Semana móvil = carrusel scroll-snap; mes móvil = celdas compactas.
+- Kanban táctil usa SortableJS.
+- Franjas, biblioteca, feeds y emulador permiten pan horizontal real.
+
+## Repositorios usados en V11
+
+- `ybouane/liquidglass`: WebGL Liquid Glass. V11 aísla el header y el dock en roots
+  pequeños para evitar rasterizar calendarios/feeds enteros.
+- `SortableJS/Sortable`: drag & drop táctil para el Kanban.
+- `RhysSullivan/nextjs-mobile-app-template`: patrón iOS PWA de viewport `dvh`,
+  bottom nav en flujo y panes móviles.
+- `kotapullarao/calendar-planner`: referencia de calendario PWA vanilla y rendering
+  eficiente.
+
+La aplicación sigue siendo HTML/JS estático para conservar GitHub Pages + Supabase.
