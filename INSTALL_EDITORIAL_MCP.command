@@ -14,13 +14,13 @@ ensure_node(){
   if command -v node >/dev/null 2>&1; then
     local major
     major="$(node -p 'Number(process.versions.node.split(".")[0])')"
-    if [ "$major" -ge 20 ]; then
+    if [ "$major" -ge 22 ]; then
       echo "OK    Node $(node -v)"
       return 0
     fi
   fi
 
-  echo "INFO  Node.js 20+ no está disponible."
+  echo "INFO  Node.js 22+ no está disponible."
   if command -v brew >/dev/null 2>&1; then
     echo "INFO  Instalando/actualizando Node con Homebrew..."
     brew install node || brew upgrade node || true
@@ -28,14 +28,15 @@ ensure_node(){
 
   if ! command -v node >/dev/null 2>&1; then
     echo "ERROR: no pude instalar Node automáticamente."
-    echo "Instálalo desde https://nodejs.org/ y vuelve a ejecutar este archivo."
+    echo "Instala Node.js 22 o superior desde https://nodejs.org/ y vuelve a ejecutar este archivo."
     exit 1
   fi
 
   local major
   major="$(node -p 'Number(process.versions.node.split(".")[0])')"
-  if [ "$major" -lt 20 ]; then
-    echo "ERROR: Node.js 20+ requerido. Actual: $(node -v)"
+  if [ "$major" -lt 22 ]; then
+    echo "ERROR: Node.js 22+ requerido. Actual: $(node -v)"
+    echo "Si usas Homebrew, prueba: brew upgrade node"
     exit 1
   fi
   echo "OK    Node $(node -v)"
