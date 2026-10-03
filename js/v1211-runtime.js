@@ -162,3 +162,13 @@ else init();
   s.dataset.editorialV1212='1';
   document.head.appendChild(s);
 })();
+
+/* V12.13 additive loader */
+(()=>{
+  if(document.querySelector('script[data-editorial-v1213]'))return;
+  const s=document.createElement('script');
+  s.src='./js/v1213-runtime.js?v=12.13';
+  s.defer=true;
+  s.dataset.editorialV1213='1';
+  document.head.appendChild(s);
+})();
