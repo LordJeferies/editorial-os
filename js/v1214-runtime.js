@@ -46,17 +46,8 @@ function renderProfiles(){
   const root=$('#v1214ProfileList');if(!root)return;
   const list=readProfiles(),selected=localStorage.getItem(SELECTED)||'';
   root.innerHTML='';
-  if(!list.length){
-    root.innerHTML='<div class="v1214-empty">Todavía no hay perfiles guardados en este dispositivo. Escribe un email y pulsa “Guardar perfil”.</div>';
-    return;
-  }
-  list.forEach(p=>{
-    const row=document.createElement('div');row.className='v1214-profile'+(p.email===selected?' selected':'');
-    row.innerHTML=`<button type="button" class="v1214-profile-main"><span class="v1214-avatar">${(p.label||p.email).slice(0,1).toUpperCase()}</span><span><b>${escapeHtml(p.label||p.email)}</b><small>${escapeHtml(p.email)}</small></span></button><button type="button" class="v1214-remove" aria-label="Eliminar perfil">×</button>`;
-    row.querySelector('.v1214-profile-main').onclick=()=>chooseProfile(p.email);
-    row.querySelector('.v1214-remove').onclick=()=>removeProfile(p.email);
-    root.appendChild(row);
-  });
+  if(!list.length){root.innerHTML='<div class="v1214-empty">Todavía no hay perfiles guardados en este dispositivo. Escribe un email y pulsa “Guardar perfil”.</div>';return;}
+  list.forEach(p=>{const row=document.createElement('div');row.className='v1214-profile'+(p.email===selected?' selected':'');row.innerHTML=`<button type="button" class="v1214-profile-main"><span class="v1214-avatar">${(p.label||p.email).slice(0,1).toUpperCase()}</span><span><b>${escapeHtml(p.label||p.email)}</b><small>${escapeHtml(p.email)}</small></span></button><button type="button" class="v1214-remove" aria-label="Eliminar perfil">×</button>`;row.querySelector('.v1214-profile-main').onclick=()=>chooseProfile(p.email);row.querySelector('.v1214-remove').onclick=()=>removeProfile(p.email);root.appendChild(row);});
 }
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function mount(){
@@ -66,31 +57,24 @@ function mount(){
     const box=document.createElement('div');box.id='v1214Profiles';box.className='v1214-profiles';
     box.innerHTML=`<div class="v1214-head"><div><small>Perfiles rápidos</small><strong>Elige usuario y escribe sólo la contraseña</strong></div><button id="v1214SaveProfile" type="button">Guardar perfil</button></div><div id="v1214ProfileList" class="v1214-list"></div><p class="v1214-note">Se guardan sólo el nombre y el email en este dispositivo. La contraseña no se guarda en la repo ni en localStorage. Supabase mantiene la sesión iniciada para que normalmente no tengas que escribirla de nuevo.</p>`;
     const emailLabel=$('#v1213Email')?.closest('label');accountSection.insertBefore(box,emailLabel||accountSection.firstChild);
-    $('#v1214SaveProfile').onclick=()=>{
-      const email=$('#v1213Email')?.value.trim()||currentConnectedEmail();
-      if(!email){setMessage('Escribe primero el email que quieres guardar.','error');$('#v1213Email')?.focus();return}
-      const existing=readProfiles().find(x=>x.email===email);
-      const label=prompt('Nombre para este perfil',existing?.label||normalizeLabel(email));
-      if(label===null)return;upsertProfile(email,label);setMessage('Perfil guardado en este dispositivo.','ok');
-    };
+    $('#v1214SaveProfile').onclick=()=>{const email=$('#v1213Email')?.value.trim()||currentConnectedEmail();if(!email){setMessage('Escribe primero el email que quieres guardar.','error');$('#v1213Email')?.focus();return}const existing=readProfiles().find(x=>x.email===email);const label=prompt('Nombre para este perfil',existing?.label||normalizeLabel(email));if(label===null)return;upsertProfile(email,label);setMessage('Perfil guardado en este dispositivo.','ok');};
     $('#v1213SignIn')?.addEventListener('click',()=>{const email=$('#v1213Email')?.value.trim();if(email)upsertProfile(email)},true);
   }
   const connected=currentConnectedEmail();if(connected&&!readProfiles().some(x=>x.email===connected))upsertProfile(connected);
-  const selected=localStorage.getItem(SELECTED)||readProfiles()[0]?.email||'';
-  if(selected&&!$('#v1213Email')?.value)$('#v1213Email').value=selected;
-  renderProfiles();
-  return true;
+  const selected=localStorage.getItem(SELECTED)||readProfiles()[0]?.email||'';if(selected&&!$('#v1213Email')?.value)$('#v1213Email').value=selected;
+  renderProfiles();return true;
 }
-function patchVersion(){
-  document.documentElement.dataset.editorialVersion=VERSION;
-  document.title=document.title.replace(/V12\.(?:9|10|11|12|13)(?:\.\d+)?/g,`V${VERSION}`);
-  const brand=$('#brandTitle');if(brand)brand.textContent=brand.textContent.replace(/V12\.(?:9|10|11|12|13)(?:\.\d+)?/g,`V${VERSION}`);
-  window.EDITORIAL_OS_VERSION=VERSION;
-}
-function init(){
-  ensureCss();patchVersion();
-  let tries=0;const timer=setInterval(()=>{tries++;if(mount()||tries>100)clearInterval(timer)},80);
-  new MutationObserver(()=>mount()).observe(document.body,{childList:true,subtree:true});
-}
+function patchVersion(){document.documentElement.dataset.editorialVersion=VERSION;document.title=document.title.replace(/V12\.(?:9|10|11|12|13)(?:\.\d+)?/g,`V${VERSION}`);const brand=$('#brandTitle');if(brand)brand.textContent=brand.textContent.replace(/V12\.(?:9|10|11|12|13)(?:\.\d+)?/g,`V${VERSION}`);window.EDITORIAL_OS_VERSION=VERSION;}
+function init(){ensureCss();patchVersion();let tries=0;const timer=setInterval(()=>{tries++;if(mount()||tries>100)clearInterval(timer)},80);new MutationObserver(()=>mount()).observe(document.body,{childList:true,subtree:true});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+
+/* V12.15 additive loader */
+(()=>{
+  if(document.querySelector('script[data-editorial-v1215]'))return;
+  const s=document.createElement('script');
+  s.src='./js/v1215-runtime.js?v=12.15';
+  s.defer=true;
+  s.dataset.editorialV1215='1';
+  document.head.appendChild(s);
 })();
