@@ -1,0 +1,58 @@
+EDITORIAL OS V12.4 · QA EJECUTADA
+
+ESTÁTICA / SINTAXIS
+- app-core.js                         PASS
+- v12-runtime.js                      PASS
+- v123-runtime.js                     PASS
+- v124-store.js                       PASS
+- v124-runtime.js                     PASS
+- v12-glass.js (ESM syntax)           PASS
+- manifest JSON                       PASS
+- IDs HTML duplicados                 PASS (0)
+- Bash scripts                        PASS
+
+CONTRATOS
+- jocEditorialV9                      PASS
+- jocEditorialV9AppData               PASS
+- jocEditorialV9Scenarios             PASS
+- jocEditorialV9Cloud                 PASS
+- workspace editorial-os              PASS
+- planner API                         PASS
+- manualOverride                      PASS
+
+MOBILE FRONTEND V12.4
+- editable controls >=16px mobile     PASS
+- touch-action manipulation           PASS
+- desktop chrome hidden compact       PASS
+- mobile tab bar present              PASS
+- shared sheet/list components        PASS
+- mobile shell init                   PASS
+- planner context actions             PASS
+- catalog sheet                       PASS
+- event delegation                    PASS
+- v124 runtime avoids scrollIntoView  PASS
+- reactive UI store / batched update  PASS
+- compact planner renders one day     PASS
+- detail open API                     PASS
+- WebGL skipped on compact            PASS
+- LiquidGlass dynamic desktop load    PASS
+- service worker cache v12-4          PASS
+
+LEGACY/STABILITY TESTS
+- V12.3 core tests                    PASS
+- planner move tests                  PASS
+
+UPDATER END-TO-END
+- repository remote advances first    PASS
+- fetch/rebase before update          PASS
+- remote-only docs preserved          PASS
+- supabase-config.js preserved        PASS
+- V12.4 installed                     PASS
+- QA post-install                     PASS
+- commit                              PASS
+- second fetch                        PASS
+- fast-forward push                   PASS
+- clean working tree after push       PASS
+
+LIMITACIÓN DE ESTE ENTORNO
+No sustituye una prueba física final en Safari/PWA sobre tu iPhone. La grabación entregada se usó para rediseñar la composición móvil; V12.4 añade además Diagnostics y alternativas explícitas a gestos para reducir dependencia de comportamiento táctil específico de Safari.

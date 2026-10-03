@@ -1,0 +1,25 @@
+const fs=require('fs');
+const path=require('path');
+const root=path.resolve(__dirname,'..');
+const read=f=>fs.readFileSync(path.join(root,f),'utf8');
+function ok(cond,msg){if(!cond){console.error('FAIL:',msg);process.exit(1)}console.log('PASS:',msg)}
+const html=read('index.html'),css=read('css/v124.css'),rt=read('js/v124-runtime.js'),store=read('js/v124-store.js'),app=read('js/app-core.js'),glass=read('js/v12-glass.js'),sw=read('sw.js');
+ok(/V12\.4/.test(html),'HTML version V12.4');
+ok(html.includes('./css/v124.css'),'V12.4 CSS linked');
+ok(html.includes('./js/v124-store.js')&&html.includes('./js/v124-runtime.js'),'V12.4 store/runtime linked');
+ok(/input,select,textarea\{font-size:16px!important/.test(css),'iOS editable fields >=16px');
+ok(css.includes('touch-action:manipulation'),'touch-action manipulation present');
+ok(css.includes('#topGlassRoot{display:none!important}'),'desktop chrome hidden on compact');
+ok(css.includes('.mobile-dock')&&css.includes('--v124-tab-h'),'mobile tab bar system present');
+ok(css.includes('.v124-sheet-layer')&&css.includes('.v124-row'),'shared sheet/list components present');
+ok(rt.includes('setupMobileTopbar')&&rt.includes('setupViewHeaders')&&rt.includes('setupDock'),'mobile shell initialized');
+ok(rt.includes('openPlanMenu')&&rt.includes('openCatalogSheet'),'planner contextual actions and catalog sheet');
+ok(rt.includes('stopPropagation')&&rt.includes('MutationObserver'),'event delegation / incremental augmentation');
+ok(!rt.includes('scrollIntoView('),'V12.4 runtime avoids scrollIntoView');
+ok(store.includes('queueMicrotask')&&store.includes('select(selector'),'batched reactive UI store');
+ok(app.includes('const renderDows=compact?[selectedDow]'),'planner renders one day in compact mode');
+ok(app.includes('openItem(item){if(item){openDrawer(item);return true}return false}'),'domain exposes safe detail open API');
+ok(glass.includes('if(compactMQ.matches)return'),'WebGL skipped on compact');
+ok(glass.includes("await import('https://cdn.jsdelivr.net/npm/@ybouane/liquidglass/dist/index.js')"),'LiquidGlass dynamically loaded only when used');
+ok(sw.includes("editorial-os-v12-4"),'service worker cache V12.4');
+console.log('V12.4 UI tests: OK');

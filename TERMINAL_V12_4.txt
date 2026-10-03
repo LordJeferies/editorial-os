@@ -1,0 +1,20 @@
+EDITORIAL OS V12.4 · INSTALAR SOBRE LA APP ACTUAL
+
+1. Pon EDITORIAL_OS_V12_4_PWA.zip en Downloads.
+
+2. Terminal:
+
+cd ~/Downloads
+unzip -o EDITORIAL_OS_V12_4_PWA.zip
+cd EDITORIAL_OS_V12_4_PWA
+chmod +x deploy_v12_4_over_existing.sh
+./deploy_v12_4_over_existing.sh
+
+Si no detecta el repo:
+
+./deploy_v12_4_over_existing.sh ~/Downloads/EDITORIAL_OS_V10_FRESH
+
+El updater hace fetch/rebase antes de tocar archivos, backup, preserva .git y supabase-config.js, valida V12.4, commit, segundo fetch y push fast-forward.
+
+PWA:
+https://lordjeferies.github.io/editorial-os/

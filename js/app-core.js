@@ -2021,6 +2021,7 @@ window.EDITORIAL_V123_API={
    if(item.kind==='brand'){switchBrand(item.id);switchView('homeView')}
  },
  navigate(view){switchView(view)},
+ openItem(item){if(item){openDrawer(item);return true}return false},
  setCalendarDate(date){if(/^\d{4}-\d{2}-\d{2}$/.test(date)){state.anchorDate=date;state.calendarMode='week';saveLocalOnly();switchView('calendarView')}},
  getProduction:getProductionRecord,setProduction:setProductionRecord,
  getSyncState:()=>({dirty:cloudLocalDirty,revision:cloudRevision,baseRevision:cloudBaseRevision,deviceId:v123DeviceId,conflict:!!pendingRemotePayload,connected:!!cloudSession,online:navigator.onLine}),

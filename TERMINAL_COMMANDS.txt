@@ -1,12 +1,12 @@
-EDITORIAL OS V12.3
+EDITORIAL OS V12.4
 
 Actualizar repo existente:
 cd ~/Downloads/EDITORIAL_OS_V12_3_PWA
-chmod +x deploy_v12_3_over_existing.sh
-./deploy_v12_3_over_existing.sh
+chmod +x deploy_v12_4_over_existing.sh
+./deploy_v12_4_over_existing.sh
 
 Validar:
-./validate_v12_3.sh
+./validate_v12_4.sh
 
 Probar local:
 ./start_local.sh

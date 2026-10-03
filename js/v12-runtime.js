@@ -112,7 +112,7 @@
 
   function syncBrandSubtitle(){
     const title=document.getElementById('brandTitle');if(!title)return;
-    title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.3');
+    title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.4');
     const small=title.parentElement?.querySelector('small');if(small)small.textContent='plan · producción · feeds · biblioteca';
   }
 

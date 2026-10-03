@@ -1,4 +1,4 @@
-/* Editorial OS V12.3 · mobile-first operating shell */
+/* Editorial OS V12.4 · mobile-first operating shell */
 (() => {
   'use strict';
   const compact=matchMedia('(max-width:899px)');
@@ -129,7 +129,7 @@
 
   function boot(){
     document.documentElement.dataset.editorialVersion='12.3';applyPrefs();
-    const title=$('#brandTitle');if(title)title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.3');
+    const title=$('#brandTitle');if(title)title.textContent=title.textContent.replace(/V\d+(?:\.\d+)?/i,'V12.4');
     setupPlannerTabs();setupPoolSheet();setupPointerReorderFallback();setupSearch();setupQuickAdd();augmentMore();renderToday();setupPWAUpdate();window.EDITORIAL_STORAGE?.getConflict?.().then(c=>{if(c?.payload)ensureConflictBanner().classList.add('show')});
     window.addEventListener('editorial:rendered',e=>{if(e.detail?.view==='homeView')renderToday();if(e.detail?.view==='emulatorView'){setupPlannerTabs();syncPlannerTabs()}});
     if(location.hash&&location.hash!=='#/home')applyRoute();else if(!location.hash){const v=prefs().defaultView||'homeView';api()?.navigate?.(v);history.replaceState({view:v},'',routeForView(v))}
