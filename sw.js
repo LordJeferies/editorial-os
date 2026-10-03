@@ -1,9 +1,9 @@
-const CACHE='editorial-os-v12-15';
+const CACHE='editorial-os-v12-17';
 const CORE=[
-  './','./index.html','./manifest.webmanifest','./supabase-config.js','./mcp.html',
+  './','./index.html','./launch.html','./manifest.webmanifest','./supabase-config.js','./mcp.html',
   './css/legacy.css','./css/v12.css','./css/v123.css','./css/v124.css','./css/v126.css','./css/v127.css','./css/v128.css','./css/v129.css','./css/v1210.css','./css/v1211.css','./css/v1212.css','./css/v1213.css','./css/v1214.css','./css/v1215.css',
   './js/v123-data.js','./js/v123-sync.js','./js/v123-storage.js',
-  './js/app-core.js','./js/v12-runtime.js','./js/v123-runtime.js','./js/v124-store.js','./js/v124-runtime.js','./js/v126-runtime.js','./js/v127-runtime.js','./js/v128-runtime.js','./js/v129-runtime.js','./js/v1210-runtime.js','./js/v1211-runtime.js','./js/v1212-runtime.js','./js/v1213-runtime.js','./js/v1214-runtime.js','./js/v1215-runtime.js','./js/v12-glass.js',
+  './js/app-core.js','./js/v12-runtime.js','./js/v123-runtime.js','./js/v124-store.js','./js/v124-runtime.js','./js/v126-runtime.js','./js/v127-runtime.js','./js/v128-runtime.js','./js/v129-runtime.js','./js/v1210-runtime.js','./js/v1211-runtime.js','./js/v1212-runtime.js','./js/v1213-runtime.js','./js/v1214-runtime.js','./js/v1215-runtime.js','./js/v1217-recovery.js','./js/v12-glass.js',
   './icons/icon-192.png','./icons/icon-512.png'
 ];
 
@@ -20,6 +20,9 @@ self.addEventListener('activate',event=>event.waitUntil(
 
 self.addEventListener('message',event=>{
   if(event.data?.type==='SKIP_WAITING')self.skipWaiting();
+  if(event.data?.type==='CLEAR_OLD_CACHES'){
+    event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+  }
 });
 
 async function networkFirst(request){
@@ -29,7 +32,10 @@ async function networkFirst(request){
     if(resp&&resp.ok)cache.put(request,resp.clone());
     return resp;
   }catch(e){
-    return (await cache.match(request))||(request.mode==='navigate'?cache.match('./index.html'):undefined);
+    if(request.mode==='navigate'){
+      return (await cache.match('./launch.html'))||(await cache.match('./index.html'));
+    }
+    return cache.match(request);
   }
 }
 
@@ -48,7 +54,7 @@ self.addEventListener('fetch',event=>{
   if(url.origin!==location.origin)return;
   const pathname=url.pathname;
   const codeAsset=/\.(?:js|css|json|webmanifest)$/i.test(pathname);
-  const htmlNav=event.request.mode==='navigate'||pathname.endsWith('/index.html')||pathname.endsWith('/editorial-os/');
+  const htmlNav=event.request.mode==='navigate'||pathname.endsWith('/index.html')||pathname.endsWith('/launch.html')||pathname.endsWith('/editorial-os/');
   if(htmlNav||codeAsset){
     event.respondWith(networkFirst(event.request));
     return;
