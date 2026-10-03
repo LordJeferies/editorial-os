@@ -5,7 +5,7 @@
   "type": "module",
   "description": "MCP server for Editorial OS shared Supabase workspace",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "start": "node server.mjs",
