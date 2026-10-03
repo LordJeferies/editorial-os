@@ -2,7 +2,7 @@
 set -euo pipefail
 
 INPUT="${1:-}"
-MESSAGE="${2:-Update Editorial OS V10}"
+MESSAGE="${2:-Update Editorial OS V12}"
 
 if [ -n "$INPUT" ]; then
   if [ ! -e "$INPUT" ]; then

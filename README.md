@@ -1,6 +1,25 @@
-# Editorial OS V10
+# Editorial OS V12
 
-PWA editorial multi-marca para GitHub Pages + Supabase.
+PWA editorial multi-marca para GitHub Pages + Supabase. V12 prioriza fluidez, ergonomía iPhone/iPad y una arquitectura frontend modular sin build step.
+
+## V12 · versión actual
+
+Cambios principales:
+
+- frontend separado en `css/` + `js/` manteniendo JavaScript vanilla y GitHub Pages;
+- estilo mobile-first inspirado en herramientas creativas iOS y patrones de 21st.dev;
+- bottom dock de cinco destinos con safe areas y targets táctiles;
+- bottom sheets para acciones secundarias;
+- calendario compacto hasta iPad portrait;
+- LiquidGlass WebGL real sólo en chrome pequeño, con lifecycle de destroy/re-init;
+- memo de derivación editorial por render;
+- feed de escenarios largos con render inicial limitado para evitar DOM masivo;
+- correcciones de sync en Biblioteca y Undo/Redo;
+- cache PWA `editorial-os-v12`.
+
+Para actualizar tu instalación existente usa `deploy_v12_over_existing.sh`. El script preserva `.git` y tu `supabase-config.js`.
+
+Consulta `CHANGELOG_V12.md`, `SOURCES_V12.md` y `TERMINAL_V12.txt`.
 
 ## Qué viene cargado
 
@@ -64,7 +83,7 @@ Las nuevas marcas pueden seleccionar contenidos del repositorio global o crear o
 
 ## Instalación desde cero en Mac
 
-1. Descomprime `EDITORIAL_OS_V10_FRESH.zip`.
+1. Descomprime `EDITORIAL_OS_V12_PWA.zip`.
 2. Entra a la carpeta.
 3. Ejecuta:
 

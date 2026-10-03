@@ -1,12 +1,12 @@
 {
-  "name": "Editorial OS V11",
+  "name": "Editorial OS V12",
   "short_name": "Editorial OS",
-  "description": "Editorial OS multi-marca optimizado para iPhone, iPad y desktop.",
+  "description": "Editorial OS multi-marca V12: mobile-first, fluido y optimizado para iPhone, iPad y desktop.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f1eb",
-  "theme_color": "#f4f1eb",
+  "background_color": "#f3f3ef",
+  "theme_color": "#f3f3ef",
   "orientation": "any",
   "icons": [
     {
