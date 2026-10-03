@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Editorial OS · Guía pública</title>
+<meta name="description" content="Guía simple de Editorial OS: qué hace, cómo funciona, qué problemas resuelve, configuración, sincronización, PWA y Desktop.">
+<meta name="theme-color" content="#0f1115">
+<style>
+:root{--bg:#0f1115;--card:#171a21;--card2:#1d212a;--text:#f5f7fb;--muted:#a6adbb;--line:#2a303a;--accent:#e6ff57;--blue:#6aa8ff;--green:#6fe0a0;--radius:22px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#0d0f13,#12151b 45%,#0d0f13);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;line-height:1.5}a{color:inherit}.wrap{width:min(1120px,calc(100% - 28px));margin:auto}.top{position:sticky;top:0;z-index:20;background:rgba(15,17,21,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.topin{min-height:66px;display:flex;align-items:center;gap:12px;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px;font-weight:850}.mark{width:36px;height:36px;border-radius:12px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:950}.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a,.btn{min-height:42px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border-radius:12px;border:1px solid var(--line);text-decoration:none;background:var(--card);font-weight:750;font-size:14px}.btn.primary{background:var(--accent);color:#111;border-color:transparent}.hero{padding:72px 0 42px}.eyebrow{color:var(--accent);font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase}.hero h1{font-size:clamp(42px,8vw,82px);line-height:.95;letter-spacing:-.055em;margin:12px 0 18px;max-width:900px}.hero p{font-size:clamp(18px,2.4vw,24px);color:var(--muted);max-width:800px;margin:0}.heroactions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{grid-column:span 6;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--radius);padding:22px}.card.full{grid-column:1/-1}.card.third{grid-column:span 4}.card h2,.card h3{margin:0 0 8px;letter-spacing:-.025em}.card p{margin:0;color:var(--muted)}.section{padding:30px 0}.section h2{font-size:clamp(28px,4vw,44px);letter-spacing:-.04em;margin:0 0 14px}.pain{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.pain>div{padding:16px;border-radius:16px;background:#11141a;border:1px solid var(--line)}.pain b{display:block;margin-bottom:5px}.pain .solve b{color:var(--green)}.steps{counter-reset:s}.step{display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:start;padding:16px 0;border-top:1px solid var(--line)}.step:first-child{border-top:0}.num{width:36px;height:36px;border-radius:12px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:900}.step h3{margin:0 0 4px}.step p{margin:0;color:var(--muted)}.views{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.view{padding:18px;border-radius:18px;background:#11141a;border:1px solid var(--line)}.view b{font-size:18px}.view small{display:block;color:var(--muted);margin-top:5px}.tag{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border-radius:999px;background:#202631;border:1px solid var(--line);font-size:12px;font-weight:800;margin:4px 4px 0 0}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b0d11;border:1px solid var(--line);border-radius:14px;padding:14px;overflow:auto;color:#dfe6f2;font-size:13px}.note{padding:14px;border-left:3px solid var(--blue);background:rgba(106,168,255,.08);border-radius:10px;color:#c7d7f2}.footer{padding:42px 0 70px;color:var(--muted);font-size:13px}.mini{color:var(--muted);font-size:13px}.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}@media(max-width:820px){.nav{display:none}.hero{padding-top:48px}.card,.card.third{grid-column:1/-1}.pain,.views{grid-template-columns:1fr}.topin{min-height:58px}.hero h1{font-size:48px}.wrap{width:min(100% - 22px,1120px)}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap topin"><div class="brand"><div class="mark">J</div><span>Editorial OS · Guía</span></div><nav class="nav"><a href="#que-es">Qué hace</a><a href="#planner">Planner</a><a href="#config">Configurar</a><a href="#acceso">Entrar</a></nav><a class="btn primary" href="./">Abrir app</a></div></header>
+<main>
+<section class="hero"><div class="wrap"><div class="eyebrow">Editorial OS</div><h1>Planifica, revisa y sincroniza contenido desde una sola app.</h1><p>Editorial OS organiza una semana editorial, permite probar distintas combinaciones de contenido y mantiene el mismo estado entre web, PWA móvil y app Desktop.</p><div class="heroactions"><a class="btn primary" href="./">Abrir Editorial OS</a><a class="btn" href="https://github.com/LordJeferies/editorial-os">Ver repositorio</a><a class="btn" href="./INSTALL_EDITORIAL_OS_DESKTOP.command">Instalador Desktop</a></div></div></section>
+
+<section class="section" id="que-es"><div class="wrap"><h2>Qué hace</h2><div class="grid">
+<article class="card"><h3>Planifica la semana</h3><p>Construye el plan por día usando tablero, agenda o matriz. Las tres vistas editan el mismo plan.</p></article>
+<article class="card"><h3>Simula antes de publicar</h3><p>Prueba frecuencia, mezcla de formatos y distribución por plataformas antes de convertirlo en una semana real.</p></article>
+<article class="card"><h3>Centraliza contenido</h3><p>Guarda tipos de contenido, familias, pilares, plataformas, escenarios y estado de producción en un solo lugar.</p></article>
+<article class="card"><h3>Sincroniza dispositivos</h3><p>Supabase permite mantener alineados Mac, iPhone, PWA y Desktop usando el mismo usuario.</p></article>
+</div></div></section>
+
+<section class="section"><div class="wrap"><h2>Problemas que resuelve</h2><div class="card full"><div class="pain">
+<div><b>Problema</b><span class="mini">Planificar en notas, chats y calendarios separados hace difícil ver la semana completa.</span></div><div class="solve"><b>Solución</b><span class="mini">Una sola fuente de verdad para la semana, escenarios, biblioteca y producción.</span></div>
+<div><b>Problema</b><span class="mini">Arrastrar contenido en móvil puede ser impreciso y competir con el scroll.</span></div><div class="solve"><b>Solución</b><span class="mini">Tres formas de construir lo mismo: Tablero, Agenda y Matriz, más acciones manuales.</span></div>
+<div><b>Problema</b><span class="mini">Cambiar de vista o dispositivo puede generar versiones diferentes del plan.</span></div><div class="solve"><b>Solución</b><span class="mini">Las vistas comparten el mismo plannerDraft y Supabase sincroniza el estado.</span></div>
+<div><b>Problema</b><span class="mini">Una corrección se pierde si sólo vive en un chat externo.</span></div><div class="solve"><b>Solución</b><span class="mini">Notas por contenido con autor, fecha y contexto dentro de la propia ficha.</span></div>
+</div></div></div></section>
+
+<section class="section" id="planner"><div class="wrap"><h2>Planner: 3 maneras de armar la misma semana</h2><div class="views">
+<div class="view"><b>1 · Tablero</b><small>Estilo Trello. Arrastra fichas entre días y reordénalas. Mejor para escritorio y para quien trabaja visualmente.</small></div>
+<div class="view"><b>2 · Agenda</b><small>Días uno debajo del otro. Selecciona contenido y usa “Añadir aquí”. Muy estable en móvil.</small></div>
+<div class="view"><b>3 · Matriz</b><small>Contenido × días. Toca una celda para añadir. Es la manera más rápida de construir una semana completa sin drag.</small></div>
+</div><p class="note" style="margin-top:14px">Cambiar de Tablero a Agenda o Matriz no crea otro plan ni borra contenido. Son tres interfaces para la misma información.</p></div></section>
+
+<section class="section" id="config"><div class="wrap"><h2>Cómo configurar la app</h2><div class="card full steps">
+<div class="step"><div class="num">1</div><div><h3>Abre Configuración</h3><p>En móvil toca ⚙. En desktop usa el botón “Configuración”.</p></div></div>
+<div class="step"><div class="num">2</div><div><h3>Supabase ya viene configurado</h3><p>Editorial OS ya incluye la Project URL y la clave pública de cliente. Normalmente no tienes que escribirlas.</p></div></div>
+<div class="step"><div class="num">3</div><div><h3>Inicia sesión</h3><p>Selecciona un perfil rápido o escribe manualmente email + contraseña. La sesión queda persistida en ese dispositivo.</p></div></div>
+<div class="step"><div class="num">4</div><div><h3>Sincroniza</h3><p>Una vez conectado puedes usar “Subir ahora” o “Bajar ahora”; después la app mantiene el estado compartido.</p></div></div>
+</div></div></section>
+
+<section class="section" id="acceso"><div class="wrap"><h2>Cómo iniciar sesión</h2><div class="grid">
+<article class="card"><h3>Modo rápido</h3><p>En Configuración elige un perfil guardado. La app rellena el email. Tú sólo escribes la contraseña de ese usuario y pulsas <b>Entrar</b>.</p></article>
+<article class="card"><h3>Modo manual</h3><p>Escribe email y contraseña directamente. Sirve para cualquier usuario autorizado de Supabase, aunque no esté guardado como perfil rápido.</p></article>
+<article class="card full"><h3>Importante</h3><p>La página pública no muestra contraseñas privadas. Los perfiles rápidos guardan el nombre/email localmente; la contraseña no se publica en GitHub.</p></article>
+</div></div></section>
+
+<section class="section"><div class="wrap"><h2>Web, PWA y Desktop</h2><div class="grid">
+<article class="card third"><h3>Web</h3><p>Abre el enlace desde Safari, Chrome o cualquier navegador moderno.</p><div class="links"><a class="btn" href="./">Abrir web</a></div></article>
+<article class="card third"><h3>PWA móvil</h3><p>En iPhone abre la web en Safari → Compartir → Añadir a pantalla de inicio.</p></article>
+<article class="card third"><h3>Desktop Mac</h3><p>La versión Desktop usa una ventana propia con WKWebView y carga la misma GitHub Page actualizada.</p><div class="links"><a class="btn" href="./INSTALL_EDITORIAL_OS_DESKTOP.command">Descargar instalador</a></div></article>
+</div></div></section>
+
+<section class="section"><div class="wrap"><h2>Datos y sincronización</h2><div class="card full"><div class="code">Supabase table: public.editorial_state
+workspace_key: editorial-os
+payload version: 9
+
+Mismo usuario + mismo workspace = mismo estado editorial.</div><p class="mini" style="margin-top:12px">Editorial OS usa Auth de Supabase y una clave pública de cliente. Las claves privadas como service_role no deben estar dentro de una web pública.</p></div></div></section>
+
+<section class="section"><div class="wrap"><h2>Enlaces</h2><div class="card full"><div class="links"><a class="btn primary" href="./">Usar Editorial OS</a><a class="btn" href="https://github.com/LordJeferies/editorial-os">Repositorio GitHub</a><a class="btn" href="./INSTALL_EDITORIAL_OS_DESKTOP.command">Desktop Mac</a></div></div></div></section>
+</main>
+<footer class="footer"><div class="wrap">Editorial OS · Guía pública · GitHub Pages</div></footer>
+</body>
+</html>
