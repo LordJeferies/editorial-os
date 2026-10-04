@@ -1,0 +1,31 @@
+/* Editorial OS V12.20 · iPhone-first progressive UX */
+:root{--v1220-safe-top:env(safe-area-inset-top,0px);--v1220-safe-bottom:env(safe-area-inset-bottom,0px)}
+html{min-height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-height:100dvh}
+#v1220Status{position:fixed;z-index:50000;top:calc(var(--v1220-safe-top) + 7px);right:10px;display:flex;align-items:center;gap:7px;min-height:30px;padding:5px 9px;border-radius:999px;background:rgba(20,22,28,.78);color:#fff;border:1px solid rgba(255,255,255,.12);box-shadow:0 7px 24px rgba(0,0,0,.2);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);font:700 11px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+#v1220Status[data-state="ok"] .v1220-dot{background:#30d158}#v1220Status[data-state="sync"] .v1220-dot{background:#0a84ff;animation:v1220pulse 1s ease-in-out infinite alternate}#v1220Status[data-state="offline"] .v1220-dot{background:#ff9f0a}#v1220Status[data-state="warn"] .v1220-dot{background:#ffd60a}
+.v1220-dot{width:7px;height:7px;border-radius:999px;background:#8e8e93;box-shadow:0 0 0 3px rgba(255,255,255,.06)}
+@keyframes v1220pulse{to{opacity:.35}}
+.v1220-mobile-help{margin-top:12px;padding:12px;border-radius:14px;background:rgba(10,132,255,.07);border:1px solid rgba(10,132,255,.14)}
+.v1220-mobile-help b{display:block;margin-bottom:5px}.v1220-mobile-help p{margin:0 0 9px;line-height:1.4}.v1220-mobile-help .v1220-help-actions{display:flex;gap:7px;flex-wrap:wrap}.v1220-mobile-help button,.v1220-mobile-help a{min-height:40px;padding:0 12px;border:0;border-radius:11px;font-weight:800;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.09);color:inherit}.v1220-mobile-help .primary{background:#0a84ff;color:#fff}
+@media(max-width:899px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{-webkit-overflow-scrolling:touch}
+  button,.btn,input,select,textarea,a[role="button"]{font-size:16px}
+  button,.btn,.navbtn,.dockbtn,.segbtn,.platformbtn{min-height:44px}
+  input,select,textarea{min-height:44px}
+  #appScroller{padding-bottom:calc(92px + var(--v1220-safe-bottom));overflow-x:hidden}
+  .shell,.view,.panel,.glass,.home-shell,.home-welcome,.home-dashboard-grid,.home-kpis{max-width:100%;min-width:0}
+  .drawer-bg .drawer,.v1213-card,.v1215-card,.v1214-card{max-height:calc(100dvh - var(--v1220-safe-top) - 8px);padding-bottom:var(--v1220-safe-bottom);overflow:auto;-webkit-overflow-scrolling:touch}
+  #mobileDock,.mobile-dock{padding-bottom:max(8px,var(--v1220-safe-bottom))}
+  .resource-scroll,.calendar-panel,.planner-week,.feed-stage,.v1212-canvas{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  #v1212Planner .v1212-layout{grid-template-columns:minmax(0,1fr)!important}
+  #v1212Planner .v1212-library.collapsed{display:none!important}
+  #v1212Planner .v1212-canvas{min-width:0!important;width:100%!important}
+  #v1212Planner .v1212-agenda-day,#v1212Planner .v1212-view{max-width:100%}
+  .v1212-grip,.plan-handle,[data-drag-template]{touch-action:none}
+  .plan-item,.v1212-card,.v1212-lib-card{touch-action:pan-y}
+  #v1220Status{top:calc(var(--v1220-safe-top) + 5px);right:8px;min-height:28px;padding:4px 8px}
+}
+@media(display-mode:standalone){body{padding-top:0}#v1220Status{top:calc(var(--v1220-safe-top) + 6px)}}
+@media(prefers-reduced-motion:reduce){#v1220Status,.v1220-dot{animation:none!important;transition:none!important}}
