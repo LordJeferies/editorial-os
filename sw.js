@@ -1,8 +1,8 @@
-const CACHE='editorial-os-v12-20';
+const CACHE='editorial-os-v12-21';
 const SHELL=[
-  './js/v1220-bootstrap.js','./js/v1220-runtime.js','./css/v1220.css','./vendor/sortable.min.js','./vendor/supabase.min.js',
   './index.html','./manifest.webmanifest','./supabase-config.js',
-  './css/v1220-mobile.css','./js/v1218-bootstrap.js','./js/v1220-mobile.js',
+  './js/v1218-bootstrap.js','./js/v1221-web.js','./css/v1221-web.css',
+  './vendor/sortable.min.js','./vendor/supabase.min.js',
   './icons/icon-192.png','./icons/icon-512.png'
 ];
 
@@ -32,7 +32,7 @@ self.addEventListener('message',event=>{
   }
 });
 
-function fetchWithTimeout(request,ms=3000){
+function fetchWithTimeout(request,ms=3200){
   return Promise.race([
     fetch(request,{cache:'no-store'}),
     new Promise((_,reject)=>setTimeout(()=>reject(new Error('network-timeout')),ms))
@@ -42,16 +42,12 @@ function fetchWithTimeout(request,ms=3000){
 async function navigation(request){
   const cache=await caches.open(CACHE);
   try{
-    const response=await fetchWithTimeout(request,3000);
-    if(response&&response.ok){
-      const type=response.headers.get('content-type')||'';
-      if(type.includes('text/html'))cache.put('./index.html',response.clone());
-      return response;
-    }
+    const response=await fetchWithTimeout(request,3200);
+    if(response&&response.ok){cache.put('./index.html',response.clone());return response}
   }catch(e){}
   const fallback=await cache.match('./index.html');
   if(fallback)return fallback;
-  return new Response('<!doctype html><meta name="viewport" content="width=device-width"><title>Editorial OS</title><body style="font-family:-apple-system;padding:24px"><h1>Editorial OS</h1><p>Sin conexión. Vuelve a intentarlo cuando tengas internet.</p></body>',{headers:{'content-type':'text/html; charset=utf-8'}});
+  return new Response('<!doctype html><meta name="viewport" content="width=device-width"><title>Editorial OS</title><body style="font-family:-apple-system;padding:24px"><h1>Editorial OS</h1><p>Sin conexión. La app volverá a sincronizar cuando recuperes internet.</p></body>',{headers:{'content-type':'text/html; charset=utf-8'}});
 }
 
 async function networkFirst(request){
@@ -78,12 +74,7 @@ self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
   const url=new URL(event.request.url);
   if(url.origin!==location.origin)return;
-
-  if(event.request.mode==='navigate'){
-    event.respondWith(navigation(event.request));
-    return;
-  }
-
+  if(event.request.mode==='navigate'){event.respondWith(navigation(event.request));return;}
   const path=url.pathname;
   const codeAsset=/\.(?:js|css|json|webmanifest)$/i.test(path);
   if(codeAsset){event.respondWith(networkFirst(event.request));return;}
