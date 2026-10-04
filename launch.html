@@ -7,67 +7,84 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Editorial OS">
-<link rel="manifest" href="./manifest.webmanifest">
+<link rel="manifest" href="./manifest.webmanifest?v=12.18">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
-<title>Editorial OS · Cargando</title>
+<title>Editorial OS · Iniciando</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080a0f;color:#f7f8fb;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif}body{min-height:100dvh;display:grid;place-items:center;overflow:hidden}.bg{position:fixed;inset:0;background:radial-gradient(circle at 18% 18%,rgba(80,160,255,.16),transparent 28%),radial-gradient(circle at 80% 72%,rgba(198,255,82,.10),transparent 30%),linear-gradient(180deg,#0a0d13,#06070b)}.orb{position:fixed;width:46vw;height:46vw;max-width:520px;max-height:520px;border:1px solid rgba(255,255,255,.08);border-radius:50%;animation:spin 18s linear infinite}.orb:before,.orb:after{content:"";position:absolute;inset:12%;border:1px solid rgba(112,245,255,.12);border-radius:50%}.orb:after{inset:27%;border-color:rgba(217,255,92,.12)}@keyframes spin{to{transform:rotate(360deg)}}main{position:relative;z-index:2;width:min(520px,calc(100% - 36px));text-align:center}.mark{width:72px;height:72px;margin:0 auto 22px;border-radius:23px;display:grid;place-items:center;background:#f5f7fb;color:#080a0f;font-size:34px;font-weight:950;box-shadow:0 22px 60px rgba(0,0,0,.34)}small{display:block;color:#91a0b8;font-size:11px;font-weight:850;letter-spacing:.13em}h1{margin:9px 0 10px;font-size:clamp(34px,9vw,58px);line-height:.98;letter-spacing:-.055em}p{margin:0 auto;color:#a7b1c3;font-size:15px;line-height:1.45;max-width:430px}.progress{margin:28px auto 10px;width:100%;height:7px;border-radius:999px;background:rgba(255,255,255,.09);overflow:hidden}.progress i{display:block;height:100%;width:4%;border-radius:inherit;background:linear-gradient(90deg,#6befff,#d9ff5c);transition:width .28s ease}.meta{display:flex;justify-content:space-between;gap:16px;color:#a7b1c3;font-size:12px}.meta b{color:#fff;font-variant-numeric:tabular-nums}.error{display:none;margin-top:18px;padding:13px 14px;border-radius:15px;background:rgba(255,82,110,.10);border:1px solid rgba(255,82,110,.2);color:#ffdbe1;text-align:left;font-size:12px}.actions{display:none;gap:8px;margin-top:12px}.actions button{flex:1;min-height:44px;border:0;border-radius:13px;font-weight:850}.actions .primary{background:#fff;color:#111}.actions .ghost{background:rgba(255,255,255,.09);color:#fff}@media(prefers-reduced-motion:reduce){.orb{animation:none}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080a0f;color:#f7f8fb;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif}body{min-height:100dvh;display:grid;place-items:center;overflow:hidden}.bg{position:fixed;inset:0;background:radial-gradient(circle at 18% 18%,rgba(80,160,255,.16),transparent 28%),radial-gradient(circle at 80% 72%,rgba(198,255,82,.10),transparent 30%),linear-gradient(180deg,#0a0d13,#06070b)}.orb{position:fixed;width:46vw;height:46vw;max-width:520px;max-height:520px;border:1px solid rgba(255,255,255,.08);border-radius:50%;animation:spin 18s linear infinite}.orb:before,.orb:after{content:"";position:absolute;inset:12%;border:1px solid rgba(112,245,255,.12);border-radius:50%}.orb:after{inset:27%;border-color:rgba(217,255,92,.12)}@keyframes spin{to{transform:rotate(360deg)}}main{position:relative;z-index:2;width:min(520px,calc(100% - 36px));text-align:center}.mark{width:72px;height:72px;margin:0 auto 22px;border-radius:23px;display:grid;place-items:center;background:#f5f7fb;color:#080a0f;font-size:34px;font-weight:950;box-shadow:0 22px 60px rgba(0,0,0,.34)}small{display:block;color:#91a0b8;font-size:11px;font-weight:850;letter-spacing:.13em}h1{margin:9px 0 10px;font-size:clamp(34px,9vw,58px);line-height:.98;letter-spacing:-.055em}p{margin:0 auto;color:#a7b1c3;font-size:15px;line-height:1.45;max-width:430px}.progress{margin:28px auto 10px;width:100%;height:7px;border-radius:999px;background:rgba(255,255,255,.09);overflow:hidden}.progress i{display:block;height:100%;width:8%;border-radius:inherit;background:linear-gradient(90deg,#6befff,#d9ff5c);transition:width .22s ease}.meta{display:flex;justify-content:space-between;gap:16px;color:#a7b1c3;font-size:12px}.meta b{color:#fff;font-variant-numeric:tabular-nums}.error{display:none;margin-top:16px;padding:13px 14px;border-radius:15px;background:rgba(255,82,110,.10);border:1px solid rgba(255,82,110,.2);color:#ffdbe1;text-align:left;font-size:12px}.actions{display:flex;gap:8px;margin-top:16px}.actions a,.actions button{flex:1;min-height:44px;border:0;border-radius:13px;font-weight:850;text-decoration:none;display:flex;align-items:center;justify-content:center}.actions .primary{background:#fff;color:#111}.actions .ghost{background:rgba(255,255,255,.09);color:#fff}.hint{margin-top:12px!important;font-size:11px!important;color:#737f94!important}@media(prefers-reduced-motion:reduce){.orb{animation:none}}
 </style>
 </head>
 <body>
 <div class="bg"></div><div class="orb" aria-hidden="true"></div>
 <main>
   <div class="mark">J</div>
-  <small>EDITORIAL OS · SAFE BOOT</small>
+  <small>EDITORIAL OS · FAST BOOT</small>
   <h1>Preparando tu espacio editorial.</h1>
-  <p id="copy">Cargando la interfaz sin bloquearla por servicios externos.</p>
+  <p id="copy">La interfaz abre primero. Supabase y otras dependencias se conectan después, sin bloquearte.</p>
   <div class="progress"><i id="bar"></i></div>
-  <div class="meta"><span id="label">Iniciando…</span><b id="pct">4%</b></div>
+  <div class="meta"><span id="label">Iniciando interfaz…</span><b id="pct">8%</b></div>
   <div id="error" class="error"></div>
-  <div id="actions" class="actions"><button id="retry" class="primary">Reintentar</button><button id="plain" class="ghost">Abrir modo local</button></div>
+  <div class="actions"><a id="direct" class="primary" href="./?v=12.18&direct=1">Abrir directo</a><button id="retry" class="ghost" type="button">Reintentar</button></div>
+  <p class="hint">Si esta pantalla no cambia en 3 segundos, toca “Abrir directo”.</p>
+  <noscript><div class="error" style="display:block">JavaScript está desactivado en este navegador. Editorial OS necesita JavaScript para funcionar. Actívalo en Safari y vuelve a abrir esta página.</div></noscript>
 </main>
 <script>
-(()=>{
-  const $=s=>document.querySelector(s);
-  const set=(p,l)=>{const n=Math.max(0,Math.min(100,Math.round(p)));$('#bar').style.width=n+'%';$('#pct').textContent=n+'%';if(l)$('#label').textContent=l};
-  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-  const loadScript=(src,test,timeout=2600)=>new Promise(resolve=>{
-    if(test())return resolve(true);
-    const s=document.createElement('script');let done=false;
-    const finish=v=>{if(done)return;done=true;resolve(v)};
-    s.src=src;s.async=true;s.onload=()=>finish(!!test());s.onerror=()=>finish(false);document.head.appendChild(s);
-    setTimeout(()=>finish(!!test()),timeout);
-  });
-  async function boot(){
-    try{
-      set(10,'Preparando entorno…');
-      const vendors=Promise.allSettled([
-        loadScript('https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',()=>!!window.Sortable,2400),
-        loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',()=>!!window.supabase,2600)
-      ]);
-      await sleep(120);set(22,'Cargando interfaz base…');
-      const resp=await fetch('./index.html?v=12.17',{cache:'no-store'});
-      if(!resp.ok)throw new Error('No se pudo descargar la interfaz principal.');
-      let html=await resp.text();
-      set(48,'Aislando dependencias externas…');
-      html=html.replace(/<script\s+src=["']https:\/\/cdn\.jsdelivr\.net\/npm\/sortablejs[^>]*><\/script>\s*/ig,'');
-      html=html.replace(/<script\s+src=["']https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js[^>]*><\/script>\s*/ig,'');
-      html=html.replace('</body>','<script src="./js/v1217-recovery.js?v=12.17"></script></body>');
-      await Promise.race([vendors,sleep(700)]);
-      set(72,window.supabase?'Supabase listo · iniciando app…':'Iniciando en modo local…');
-      await sleep(140);
-      set(91,'Abriendo Editorial OS…');
-      history.replaceState(null,'','./?boot=12.17');
-      document.open();document.write(html);document.close();
-    }catch(err){
-      set(100,'No se pudo completar la carga');
-      $('#error').style.display='block';$('#error').textContent=err?.message||String(err);
-      $('#actions').style.display='flex';
-    }
+(function(){
+  var bar=document.getElementById('bar');
+  var pct=document.getElementById('pct');
+  var label=document.getElementById('label');
+  var error=document.getElementById('error');
+  var finished=false;
+  function setProgress(n,text){
+    if(bar)bar.style.width=n+'%';
+    if(pct)pct.textContent=n+'%';
+    if(label&&text)label.textContent=text;
   }
-  $('#retry').onclick=()=>location.reload();
-  $('#plain').onclick=()=>location.replace('./?boot=12.17&plain=1');
-  boot();
+  function fail(message){
+    if(finished)return;
+    setProgress(100,'No se pudo abrir automáticamente');
+    if(error){error.style.display='block';error.textContent=message+' Usa “Abrir directo” o recarga.';}
+  }
+  function sanitize(html){
+    html=html.replace(/<script\s+src=["']https:\/\/cdn\.jsdelivr\.net\/npm\/sortablejs[^>]*><\/script>\s*/ig,'');
+    html=html.replace(/<script\s+src=["']https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js[^>]*><\/script>\s*/ig,'');
+    var injected='<script src="./js/v1218-bootstrap.js?v=12.18"><\\/script>'+
+      '<script>(function(){function a(u){var s=document.createElement("script");s.src=u;s.async=true;document.head.appendChild(s)}a("https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js");a("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");})();<\\/script>';
+    return html.replace('</body>',injected+'</body>');
+  }
+  function openHtml(html){
+    finished=true;
+    setProgress(88,'Abriendo Editorial OS…');
+    try{history.replaceState(null,'','./?v=12.18&boot=fast');}catch(e){}
+    setTimeout(function(){
+      document.open();
+      document.write(html);
+      document.close();
+    },40);
+  }
+  function boot(){
+    setProgress(14,'Cargando interfaz local…');
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET','./index.html?v=12.18&t='+Date.now(),true);
+    xhr.timeout=5000;
+    xhr.onreadystatechange=function(){
+      if(xhr.readyState!==4||finished)return;
+      if(xhr.status>=200&&xhr.status<400){
+        setProgress(52,'Preparando modo no bloqueante…');
+        var html=sanitize(xhr.responseText||'');
+        if(!html){fail('La interfaz llegó vacía.');return;}
+        setProgress(76,'Interfaz lista. Servicios externos cargarán después…');
+        openHtml(html);
+      }else fail('No pude descargar la interfaz principal.');
+    };
+    xhr.onerror=function(){fail('Error de red al cargar la interfaz.');};
+    xhr.ontimeout=function(){fail('La red tardó demasiado en responder.');};
+    try{xhr.send();}catch(e){fail('El navegador bloqueó la carga: '+e.message);}
+  }
+  document.getElementById('retry').onclick=function(){location.reload();};
+  setProgress(10,'Arrancando…');
+  setTimeout(boot,30);
+  setTimeout(function(){if(!finished)fail('El arranque superó 6 segundos.');},6200);
 })();
 </script>
 </body>
