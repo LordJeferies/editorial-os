@@ -1,0 +1,31 @@
+name: Editorial OS V12.18 service worker refresh
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/v1218-sw.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh cache version
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('sw.js')
+          s=p.read_text()
+          s=s.replace("editorial-os-v12-17","editorial-os-v12-18")
+          if "./js/v1218-bootstrap.js" not in s:
+              s=s.replace("'./js/v1217-recovery.js','./js/v12-glass.js'", "'./js/v1217-recovery.js','./js/v1218-bootstrap.js','./js/v12-glass.js'")
+          p.write_text(s)
+          PY
+      - name: Commit cache refresh
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add sw.js
+          git diff --cached --quiet || git commit -m 'Editorial OS V12.18 - refresh service worker cache'
+          git push
