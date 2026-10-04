@@ -1,9 +1,9 @@
-const CACHE='editorial-os-v12-17';
+const CACHE='editorial-os-v12-18';
 const CORE=[
   './','./index.html','./launch.html','./manifest.webmanifest','./supabase-config.js','./mcp.html',
   './css/legacy.css','./css/v12.css','./css/v123.css','./css/v124.css','./css/v126.css','./css/v127.css','./css/v128.css','./css/v129.css','./css/v1210.css','./css/v1211.css','./css/v1212.css','./css/v1213.css','./css/v1214.css','./css/v1215.css',
   './js/v123-data.js','./js/v123-sync.js','./js/v123-storage.js',
-  './js/app-core.js','./js/v12-runtime.js','./js/v123-runtime.js','./js/v124-store.js','./js/v124-runtime.js','./js/v126-runtime.js','./js/v127-runtime.js','./js/v128-runtime.js','./js/v129-runtime.js','./js/v1210-runtime.js','./js/v1211-runtime.js','./js/v1212-runtime.js','./js/v1213-runtime.js','./js/v1214-runtime.js','./js/v1215-runtime.js','./js/v1217-recovery.js','./js/v12-glass.js',
+  './js/app-core.js','./js/v12-runtime.js','./js/v123-runtime.js','./js/v124-store.js','./js/v124-runtime.js','./js/v126-runtime.js','./js/v127-runtime.js','./js/v128-runtime.js','./js/v129-runtime.js','./js/v1210-runtime.js','./js/v1211-runtime.js','./js/v1212-runtime.js','./js/v1213-runtime.js','./js/v1214-runtime.js','./js/v1215-runtime.js','./js/v1217-recovery.js','./js/v1218-bootstrap.js','./js/v12-glass.js',
   './icons/icon-192.png','./icons/icon-512.png'
 ];
 
