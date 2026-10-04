@@ -1,41 +1,20 @@
 {
   "id": "./",
-  "name": "Editorial OS V12.17",
+  "name": "Editorial OS V12.18",
   "short_name": "Editorial OS",
-  "description": "Editorial OS V12.17: arranque móvil resiliente, PWA estable, planner multi-vista, sincronización Supabase y MCP.",
-  "start_url": "./launch.html?source=pwa&v=12.17",
+  "description": "Editorial OS V12.18 con arranque rápido no bloqueante: la interfaz abre primero y Supabase/servicios externos se conectan después.",
+  "start_url": "./launch.html?v=12.18&pwa=1",
   "scope": "./",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
+  "display_override": ["standalone","minimal-ui"],
   "background_color": "#080a0f",
   "theme_color": "#080a0f",
   "orientation": "any",
-  "categories": [
-    "productivity",
-    "business"
-  ],
+  "categories": ["productivity","business"],
   "shortcuts": [
-    {
-      "name": "Inicio",
-      "short_name": "Inicio",
-      "url": "./launch.html?source=shortcut&target=home",
-      "icons": [{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]
-    },
-    {
-      "name": "Calendario",
-      "short_name": "Calendario",
-      "url": "./launch.html?source=shortcut&target=calendar",
-      "icons": [{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]
-    },
-    {
-      "name": "Emulador",
-      "short_name": "Emulador",
-      "url": "./launch.html?source=shortcut&target=emulator",
-      "icons": [{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]
-    }
+    {"name":"Inicio","short_name":"Inicio","url":"./launch.html?v=12.18&go=home","icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]},
+    {"name":"Calendario","short_name":"Calendario","url":"./launch.html?v=12.18&go=calendar","icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]},
+    {"name":"Emulador","short_name":"Emulador","url":"./launch.html?v=12.18&go=emulator","icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]}
   ],
   "icons": [
     {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
