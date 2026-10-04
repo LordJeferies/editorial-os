@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080a0f">
+<title>Editorial OS · Reparar</title>
+<style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080a0f;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif}body{min-height:100dvh;display:grid;place-items:center;padding:24px}.card{width:min(420px,100%);padding:22px;border-radius:24px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);text-align:center}.mark{width:64px;height:64px;margin:0 auto 16px;border-radius:20px;display:grid;place-items:center;background:#fff;color:#111;font-size:30px;font-weight:900}h1{margin:0 0 8px;font-size:30px;letter-spacing:-.04em}p{margin:0 0 16px;color:#aab3c3;line-height:1.5}.status{margin:14px 0;color:#dce4f0;font-size:13px}.actions{display:grid;gap:8px}.actions a,.actions button{min-height:48px;border:0;border-radius:14px;font-weight:800;display:flex;align-items:center;justify-content:center;text-decoration:none}.primary{background:#fff;color:#111}.secondary{background:rgba(255,255,255,.1);color:#fff}</style>
+</head>
+<body>
+<main class="card"><div class="mark">J</div><h1>Reparar Editorial OS</h1><p>Esto limpia únicamente la caché técnica y el Service Worker de Editorial OS. No borra tu plan local ni tus datos de Supabase.</p><div id="status" class="status">Preparando reparación…</div><div class="actions"><button class="primary" id="repair">Reparar y abrir</button><a class="secondary" href="./?v=12.20&direct=1">Abrir sin reparar</a></div></main>
+<script>
+(function(){
+  var status=document.getElementById('status');
+  async function run(){
+    status.textContent='Limpiando caché técnica…';
+    try{
+      if('serviceWorker' in navigator){
+        var regs=await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.filter(function(r){return String(r.scope||'').indexOf('/editorial-os/')!==-1;}).map(function(r){return r.unregister();}));
+      }
+      if(window.caches&&caches.keys){
+        var keys=await caches.keys();
+        await Promise.all(keys.filter(function(k){return /^editorial-os-/i.test(k);}).map(function(k){return caches.delete(k);}));
+      }
+      status.textContent='Listo. Abriendo una copia limpia…';
+    }catch(e){status.textContent='No pude limpiar todo, pero abriré la app sin esperar.'}
+    setTimeout(function(){location.replace('./?v=12.20&fresh='+Date.now());},250);
+  }
+  document.getElementById('repair').onclick=run;
+  setTimeout(run,250);
+})();
+</script>
+</body>
+</html>
