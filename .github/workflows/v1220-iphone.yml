@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Vendor pinned browser dependencies locally
+      - name: Vendor browser dependencies locally
         shell: bash
         run: |
           set -euo pipefail
@@ -37,8 +37,8 @@ jobs:
           index = Path('index.html')
           html = index.read_text(encoding='utf-8')
           html = html.replace('./js/v1218-bootstrap.js?v=12.18', './js/v1220-bootstrap.js?v=12.20')
-          html = re.sub(r'\s*<script\s+async\s+src="https://cdn\.jsdelivr\.net/npm/sortablejs@1\.15\.6/Sortable\.min\.js"></script>', '', html)
-          html = re.sub(r'\s*<script\s+async\s+src="https://cdn\.jsdelivr\.net/npm/@supabase/supabase-js@2"></script>', '', html)
+          html = re.sub(r'\s*<script[^>]+src=["\']https://cdn\.jsdelivr\.net/npm/sortablejs@1\.15\.6/Sortable\.min\.js["\'][^>]*></script>', '', html, flags=re.I)
+          html = re.sub(r'\s*<script[^>]+src=["\']https://cdn\.jsdelivr\.net/npm/@supabase/supabase-js@2["\'][^>]*></script>', '', html, flags=re.I)
           if './css/v1220.css?v=12.20' not in html:
               html = html.replace('</head>', '<link rel="stylesheet" href="./css/v1220.css?v=12.20">\n</head>', 1)
           if './js/v1220-runtime.js?v=12.20' not in html:
@@ -63,8 +63,9 @@ jobs:
           sw_path = Path('sw.js')
           sw = sw_path.read_text(encoding='utf-8')
           sw = re.sub(r"const CACHE='editorial-os-v12-[^']+';", "const CACHE='editorial-os-v12-20';", sw, count=1)
-          if "'./js/v1220-bootstrap.js'" not in sw:
-              sw = sw.replace("'./manifest.webmanifest','./supabase-config.js','./mcp.html',", "'./manifest.webmanifest','./supabase-config.js','./mcp.html','./js/v1220-bootstrap.js','./js/v1220-runtime.js','./css/v1220.css','./vendor/sortable.min.js','./vendor/supabase.min.js',")
+          extra = "  './js/v1220-bootstrap.js','./js/v1220-runtime.js','./css/v1220.css','./vendor/sortable.min.js','./vendor/supabase.min.js',\n"
+          if './vendor/supabase.min.js' not in sw:
+              sw = sw.replace('const ASSETS=[\n', 'const ASSETS=[\n' + extra, 1)
           sw_path.write_text(sw, encoding='utf-8')
 
       - name: Validate production patch
@@ -73,12 +74,24 @@ jobs:
           set -euo pipefail
           node --check js/v1220-bootstrap.js
           node --check js/v1220-runtime.js
-          grep -q 'v1220-bootstrap.js?v=12.20' index.html
-          grep -q 'v1220-runtime.js?v=12.20' index.html
-          grep -q 'vendor/supabase.min.js' sw.js
-          grep -q '"start_url": "./?pwa=1&v=12.20"' manifest.webmanifest
-          if grep -q 'script async src="https://cdn.jsdelivr.net/npm/@supabase' index.html; then exit 1; fi
-          if grep -q 'script async src="https://cdn.jsdelivr.net/npm/sortablejs' index.html; then exit 1; fi
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          html=Path('index.html').read_text(encoding='utf-8')
+          sw=Path('sw.js').read_text(encoding='utf-8')
+          manifest=json.loads(Path('manifest.webmanifest').read_text(encoding='utf-8'))
+          assert 'v1220-bootstrap.js?v=12.20' in html
+          assert 'v1220-runtime.js?v=12.20' in html
+          assert 'css/v1220.css?v=12.20' in html
+          assert 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js' not in html
+          assert 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2' not in html
+          assert './vendor/sortable.min.js' in sw
+          assert './vendor/supabase.min.js' in sw
+          assert manifest.get('start_url') == './?pwa=1&v=12.20'
+          assert Path('vendor/sortable.min.js').stat().st_size > 10000
+          assert Path('vendor/supabase.min.js').stat().st_size > 50000
+          print('V12.20 validation OK')
+          PY
 
       - name: Commit production patch
         shell: bash
