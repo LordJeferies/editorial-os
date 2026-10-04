@@ -65,7 +65,12 @@ jobs:
           sw = re.sub(r"const CACHE='editorial-os-v12-[^']+';", "const CACHE='editorial-os-v12-20';", sw, count=1)
           extra = "  './js/v1220-bootstrap.js','./js/v1220-runtime.js','./css/v1220.css','./vendor/sortable.min.js','./vendor/supabase.min.js',\n"
           if './vendor/supabase.min.js' not in sw:
-              sw = sw.replace('const ASSETS=[\n', 'const ASSETS=[\n' + extra, 1)
+              if 'const ASSETS=[\n' in sw:
+                  sw = sw.replace('const ASSETS=[\n', 'const ASSETS=[\n' + extra, 1)
+              elif 'const SHELL=[\n' in sw:
+                  sw = sw.replace('const SHELL=[\n', 'const SHELL=[\n' + extra, 1)
+              else:
+                  raise SystemExit('Unknown service worker asset layout')
           sw_path.write_text(sw, encoding='utf-8')
 
       - name: Validate production patch
