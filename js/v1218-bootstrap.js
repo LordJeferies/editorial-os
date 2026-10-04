@@ -35,8 +35,8 @@
     document.head.appendChild(s);
   }
   function ensureVendors(){
-    loadAsync('https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',function(){return !!window.Sortable},'sortable');
-    loadAsync('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',function(){return !!window.supabase},'supabase');
+    loadAsync('./vendor/sortable.min.js?v=12.21',function(){return !!window.Sortable},'sortable');
+    loadAsync('./vendor/supabase.min.js?v=12.21',function(){return !!window.supabase},'supabase');
   }
   function makeReady(){
     setVersion();
@@ -61,7 +61,7 @@
   function init(){
     setVersion();loadWebShell();watchCore();dismissStaleStartupUi();registerServiceWorker();
     window.addEventListener('editorial:need-vendors',ensureVendors);
-    setTimeout(ensureVendors,1800);
+    setTimeout(ensureVendors,1500);
     vendorTimer=setInterval(ensureVendors,9000);
     setTimeout(function(){clearInterval(vendorTimer);},30000);
     window.addEventListener('pageshow',function(){setTimeout(function(){dismissStaleStartupUi();loadWebShell();},50);});
