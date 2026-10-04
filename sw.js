@@ -1,5 +1,6 @@
 const CACHE='editorial-os-v12-20';
 const SHELL=[
+  './js/v1220-bootstrap.js','./js/v1220-runtime.js','./css/v1220.css','./vendor/sortable.min.js','./vendor/supabase.min.js',
   './index.html','./manifest.webmanifest','./supabase-config.js',
   './css/v1220-mobile.css','./js/v1218-bootstrap.js','./js/v1220-mobile.js',
   './icons/icon-192.png','./icons/icon-512.png'
