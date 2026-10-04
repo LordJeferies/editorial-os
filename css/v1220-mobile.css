@@ -5,8 +5,7 @@
 
 @media (max-width:899px){
   html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#f2f2f7}
-  body{min-height:100dvh;touch-action:pan-y}
-  *{max-width:100%}
+  body{min-height:100dvh}
   button,a,input,select,textarea{touch-action:manipulation}
   input,select,textarea{font-size:16px!important}
   button,.btn,.segbtn,.platformbtn,.dockbtn{min-height:44px}
