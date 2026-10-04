@@ -1,84 +1,26 @@
 {
   "id": "./",
-  "name": "Editorial OS V12.20",
+  "name": "Editorial OS V12.21",
   "short_name": "Editorial OS",
-  "description": "Editorial OS V12.20 iPhone-first: abre la interfaz local primero y conecta Supabase y servicios secundarios después sin bloquear el uso.",
-  "start_url": "./?pwa=1&v=12.20",
+  "description": "Editorial OS V12.21 con interfaz web/PWA reconstruida: navegación clara, trabajo local inmediato y sincronización posterior.",
+  "start_url": "./?pwa=1&v=12.21",
   "scope": "./",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
-  "background_color": "#f2f2f7",
-  "theme_color": "#f2f2f7",
+  "display_override": ["standalone","minimal-ui"],
+  "background_color": "#f4f5f7",
+  "theme_color": "#f4f5f7",
   "orientation": "any",
-  "categories": [
-    "productivity",
-    "business"
-  ],
+  "categories": ["productivity","business"],
   "shortcuts": [
-    {
-      "name": "Inicio",
-      "short_name": "Inicio",
-      "url": "./?pwa=1&v=12.20&go=home",
-      "icons": [
-        {
-          "src": "icons/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Calendario",
-      "short_name": "Calendario",
-      "url": "./?pwa=1&v=12.20&go=calendar",
-      "icons": [
-        {
-          "src": "icons/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Planificador",
-      "short_name": "Plan",
-      "url": "./?pwa=1&iphone=1&v=12.20&go=emulator",
-      "icons": [
-        {
-          "src": "icons/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    }
+    {"name":"Inicio","short_name":"Inicio","url":"./?pwa=1&v=12.21&go=home","icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]},
+    {"name":"Calendario","short_name":"Calendario","url":"./?pwa=1&v=12.21&go=calendar","icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]},
+    {"name":"Planificador","short_name":"Plan","url":"./?pwa=1&v=12.21&go=emulator","icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]},
+    {"name":"Feeds","short_name":"Feeds","url":"./?pwa=1&v=12.21&go=feeds","icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"}]}
   ],
   "icons": [
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"maskable"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
   ]
 }
