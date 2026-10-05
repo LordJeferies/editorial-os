@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 
-var VERSION='12.23';
+var VERSION='12.24';
 var nativeDesktop=/EditorialOSDesktop/i.test(navigator.userAgent||'');
 var errors=[];
 var CORE=[
@@ -38,7 +38,7 @@ function loadScript(src,key,opts){
   opts=opts||{};
   return new Promise(function(resolve){
     if(q('script[data-editorial-module="'+key+'"]')){resolve(true);return}
-    var s=document.createElement('script');s.src=src+'?v=12.23';s.async=false;s.dataset.editorialModule=key;if(opts.module)s.type='module';
+    var s=document.createElement('script');s.src=src+'?v=12.24';s.async=false;s.dataset.editorialModule=key;if(opts.module)s.type='module';
     var done=false;
     function finish(ok){if(done)return;done=true;clearTimeout(timer);if(!ok)errors.push({module:key,src:src});resolve(ok)}
     var timer=setTimeout(function(){console.warn('Editorial OS: timeout',key);finish(false)},7000);
@@ -52,9 +52,9 @@ async function cleanDesktopCaches(){
     var regs=await navigator.serviceWorker?.getRegistrations?.()||[];
     if(regs.length)await Promise.all(regs.map(function(r){return r.unregister()}));
     if(window.caches){var keys=await caches.keys();await Promise.all(keys.filter(function(k){return /^editorial-os-/i.test(k)}).map(function(k){return caches.delete(k)}))}
-    if((regs.length||sessionStorage.getItem('editorialOsDesktopCacheClean')!=='1')&&!sessionStorage.getItem('editorialOsDesktopReloaded1223')){
+    if((regs.length||sessionStorage.getItem('editorialOsDesktopCacheClean')!=='1')&&!sessionStorage.getItem('editorialOsDesktopReloaded1224')){
       sessionStorage.setItem('editorialOsDesktopCacheClean','1');
-      sessionStorage.setItem('editorialOsDesktopReloaded1223','1');
+      sessionStorage.setItem('editorialOsDesktopReloaded1224','1');
       location.reload();
       return true;
     }
@@ -63,7 +63,7 @@ async function cleanDesktopCaches(){
 }
 function ensureWebShell(){
   if(nativeDesktop)return Promise.resolve(true);
-  if(!q('#v1221WebCss')){var l=document.createElement('link');l.id='v1221WebCss';l.rel='stylesheet';l.href='./css/v1221-web.css?v=12.23';document.head.appendChild(l)}
+  if(!q('#v1221WebCss')){var l=document.createElement('link');l.id='v1221WebCss';l.rel='stylesheet';l.href='./css/v1221-web.css?v=12.24';document.head.appendChild(l)}
   return loadScript('./js/v1221-web.js','v1221-web');
 }
 function loadVendor(local,cdn,test,key){
@@ -75,8 +75,8 @@ function loadVendor(local,cdn,test,key){
 }
 function loadServices(){
   Promise.allSettled([
-    loadVendor('./vendor/sortable.min.js?v=12.23','https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',function(){return !!window.Sortable},'sortable'),
-    loadVendor('./vendor/supabase.min.js?v=12.23','https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',function(){return !!window.supabase},'supabase')
+    loadVendor('./vendor/sortable.min.js?v=12.24','https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',function(){return !!window.Sortable},'sortable'),
+    loadVendor('./vendor/supabase.min.js?v=12.24','https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',function(){return !!window.supabase},'supabase')
   ]).then(function(){
     window.dispatchEvent(new CustomEvent('editorial:services-ready',{detail:{sortable:!!window.Sortable,supabase:!!window.supabase}}));
     try{if(window.supabase&&window.EDITORIAL_V123_API?.forceSync)window.EDITORIAL_V123_API.forceSync()}catch(e){}
@@ -85,7 +85,7 @@ function loadServices(){
 function scheduleServices(){if('requestIdleCallback'in window)requestIdleCallback(loadServices,{timeout:1800});else setTimeout(loadServices,700)}
 async function registerSW(){
   if(nativeDesktop||!('serviceWorker'in navigator))return;
-  try{var reg=await navigator.serviceWorker.register('./sw.js?v=12.23',{scope:'./',updateViaCache:'none'});reg.update?.()}catch(e){console.info('Editorial OS: Service Worker no disponible',e)}
+  try{var reg=await navigator.serviceWorker.register('./sw.js?v=12.24',{scope:'./',updateViaCache:'none'});reg.update?.()}catch(e){console.info('Editorial OS: Service Worker no disponible',e)}
 }
 function markReady(){
   setVersion();clearLegacyBootUI();

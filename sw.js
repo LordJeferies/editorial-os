@@ -1,7 +1,8 @@
-const CACHE='editorial-os-v12-23-stable';
+const CACHE='editorial-os-v12-24-canonical';
 const SHELL=[
   './','./index.html','./manifest.webmanifest','./supabase-config.js',
   './css/legacy.css','./css/v12.css','./css/v123.css','./css/v124.css','./css/v126.css','./css/v127.css','./css/v128.css','./css/v129.css','./css/v1212.css','./css/v1220.css','./css/v1221-web.css',
+  './css/v1224-polish.css',
   './js/v1222-bootstrap.js','./js/v123-data.js','./js/v123-sync.js','./js/v123-storage.js','./js/app-core.js','./js/v12-runtime.js','./js/v124-store.js','./js/v124-runtime.js','./js/v126-runtime.js','./js/v127-runtime.js','./js/v128-runtime.js','./js/v129-runtime.js','./js/v1212-runtime.js','./js/v1221-web.js','./js/v12-glass.js',
   './vendor/sortable.min.js','./vendor/supabase.min.js','./icons/icon-192.png','./icons/icon-512.png'
 ];

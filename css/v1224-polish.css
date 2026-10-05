@@ -1,0 +1,285 @@
+/*
+ Editorial OS V12.24
+ Shared precision / responsive layer for Web, PWA and macOS.
+*/
+
+:root{
+  --v1224-control-h:38px;
+  --v1224-touch-h:44px;
+}
+
+*,*::before,*::after{
+  box-sizing:border-box;
+}
+
+html{
+  width:100%;
+  min-width:0;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+
+body{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;
+}
+
+button,
+.btn{
+  line-height:1.15;
+}
+
+img,
+video,
+canvas,
+svg{
+  max-width:100%;
+}
+
+#glassRoot,
+#appScroller,
+.view,
+.panel,
+.toolbar,
+.controls,
+.control-row,
+.hero,
+.hero-main,
+#v1212Planner,
+#v1212Planner *,
+#v1221HomeHub,
+#v1221WebHeader,
+.v1221-header-center,
+.v1221-header-actions{
+  min-width:0;
+}
+
+.toolbar,
+.control-row,
+.v1221-header-actions,
+.v1221-hero-actions,
+.v1221-panel-head{
+  align-items:center;
+}
+
+.toolbar > *,
+.control-row > *,
+.v1221-header-actions > *{
+  min-width:0;
+}
+
+button,
+.btn,
+.v1221-header-actions button,
+.v1221-panel-head button{
+  min-height:var(--v1224-control-h);
+}
+
+.v1221-header-actions button,
+.v1221-navbtn,
+.v1221-dockbtn,
+.v1221-quick button{
+  line-height:1.1;
+}
+
+.v1221-context,
+.v1221-context b,
+.v1221-brandcopy,
+.v1221-header-center{
+  min-width:0;
+}
+
+.v1221-context b{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.v1221-days{
+  grid-template-columns:repeat(7,minmax(0,1fr))!important;
+}
+
+.v1221-grid,
+.v1221-hero,
+.v1221-hero-side,
+.v1221-quick{
+  min-width:0;
+}
+
+#v1212Planner{
+  width:100%;
+  max-width:100%;
+}
+
+#v1212Planner .v1212-topbar{
+  min-width:0;
+}
+
+@media (min-width:1280px){
+  html[data-editorial-webshell="1"] #appScroller{
+    max-width:1600px;
+    padding-left:28px!important;
+    padding-right:28px!important;
+  }
+}
+
+@media (min-width:960px) and (max-width:1279px){
+  html[data-editorial-webshell="1"] #appScroller{
+    padding-left:20px!important;
+    padding-right:20px!important;
+  }
+
+  .v1221-header-actions{
+    gap:6px!important;
+  }
+}
+
+@media (max-width:959px){
+  .v1221-grid{
+    grid-template-columns:1fr!important;
+  }
+
+  .v1221-hero{
+    grid-template-columns:1fr!important;
+  }
+
+  .v1221-hero-side{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .toolbar,
+  .control-row{
+    flex-wrap:wrap!important;
+  }
+}
+
+@media (max-width:719px){
+  :root{
+    --v1224-control-h:42px;
+  }
+
+  body{
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+  }
+
+  button,
+  [role="button"],
+  input,
+  select{
+    min-height:var(--v1224-touch-h);
+  }
+
+  html[data-editorial-webshell="1"] #appScroller{
+    padding-left:max(10px,env(safe-area-inset-left))!important;
+    padding-right:max(10px,env(safe-area-inset-right))!important;
+  }
+
+  #v1221WebHeader{
+    padding-left:max(10px,env(safe-area-inset-left))!important;
+    padding-right:max(10px,env(safe-area-inset-right))!important;
+  }
+
+  .v1221-brandcopy small,
+  .v1221-header-center{
+    display:none!important;
+  }
+
+  .v1221-header-actions{
+    margin-left:auto;
+  }
+
+  .v1221-header-actions button{
+    min-width:44px;
+    padding-inline:10px!important;
+  }
+
+  .v1221-days{
+    gap:5px!important;
+  }
+
+  .v1221-day{
+    min-width:0;
+    padding:9px 4px!important;
+  }
+
+  .v1221-day b{
+    font-size:18px!important;
+  }
+
+  .v1221-quick{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+
+  .v1221-more-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+@media (max-width:429px){
+  .v1221-brandcopy{
+    display:none!important;
+  }
+
+  .v1221-mark{
+    width:34px!important;
+    height:34px!important;
+  }
+
+  .v1221-days{
+    gap:3px!important;
+  }
+
+  .v1221-day{
+    border-radius:10px!important;
+    padding-inline:2px!important;
+  }
+
+  .v1221-day span{
+    font-size:9px!important;
+  }
+
+  .v1221-day b{
+    font-size:16px!important;
+  }
+
+  .v1221-hero{
+    padding:17px!important;
+  }
+
+  .v1221-hero h1{
+    font-size:clamp(27px,11vw,40px)!important;
+  }
+}
+
+@media (display-mode:standalone){
+  body{
+    min-height:100dvh;
+  }
+
+  #v1221MobileDock{
+    bottom:max(8px,env(safe-area-inset-bottom))!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}

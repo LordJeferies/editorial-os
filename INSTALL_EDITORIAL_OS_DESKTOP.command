@@ -135,13 +135,13 @@ import WebKit
 final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUIDelegate {
     var window: NSWindow!
     var webView: WKWebView!
-    let appURL = URL(string: "https://lordjeferies.github.io/editorial-os/")!
+    let appURL = URL(string: "https://lordjeferies.github.io/editorial-os/?desktop=1&v=12.24")!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let config = WKWebViewConfiguration()
         config.websiteDataStore = .default()
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
-        config.applicationNameForUserAgent = "EditorialOSDesktop/12.11.1"
+        config.applicationNameForUserAgent = "EditorialOSDesktop/12.24"
         config.mediaTypesRequiringUserActionForPlayback = []
 
         webView = WKWebView(frame: .zero, configuration: config)
@@ -294,8 +294,8 @@ cat > "$STAGE_APP/Contents/Info.plist" <<PLIST
   <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
   <key>CFBundleName</key><string>Editorial OS</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>12.11.1</string>
-  <key>CFBundleVersion</key><string>12111</string>
+  <key>CFBundleShortVersionString</key><string>12.24</string>
+  <key>CFBundleVersion</key><string>1224</string>
   <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>LSMinimumSystemVersion</key><string>13.0</string>
   <key>NSHighResolutionCapable</key><true/>
@@ -306,7 +306,7 @@ PLIST
 
 ICON_PNG="$TMP_DIR/icon.png"
 ICONSET="$TMP_DIR/AppIcon.iconset"
-if curl -fsSL "https://lordjeferies.github.io/editorial-os/icons/icon-512.png?v=12.11.1" -o "$ICON_PNG"; then
+if curl -fsSL "https://lordjeferies.github.io/editorial-os/icons/icon-512.png?v=12.24" -o "$ICON_PNG"; then
   mkdir -p "$ICONSET"
   sips -z 16 16 "$ICON_PNG" --out "$ICONSET/icon_16x16.png" >/dev/null
   sips -z 32 32 "$ICON_PNG" --out "$ICONSET/icon_16x16@2x.png" >/dev/null
