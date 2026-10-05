@@ -1,390 +1,109 @@
 (function(){
 'use strict';
 
-var VERSION='12.22';
+var VERSION='12.23';
 var nativeDesktop=/EditorialOSDesktop/i.test(navigator.userAgent||'');
 var errors=[];
-
 var CORE=[
   ['./js/v123-data.js','v123-data'],
   ['./js/v123-sync.js','v123-sync'],
   ['./js/v123-storage.js','v123-storage'],
   ['./js/app-core.js','app-core'],
   ['./js/v12-runtime.js','v12-runtime'],
-  ['./js/v123-runtime.js','v123-runtime'],
   ['./js/v124-store.js','v124-store'],
   ['./js/v124-runtime.js','v124-runtime'],
   ['./js/v126-runtime.js','v126-runtime'],
   ['./js/v127-runtime.js','v127-runtime'],
   ['./js/v128-runtime.js','v128-runtime'],
   ['./js/v129-runtime.js','v129-runtime'],
-  ['./js/v1210-runtime.js','v1210-runtime'],
-  ['./js/v1211-runtime.js','v1211-runtime'],
-  ['./js/v1212-runtime.js','v1212-runtime'],
-  ['./js/v1213-runtime.js','v1213-runtime'],
-  ['./js/v1214-runtime.js','v1214-runtime'],
-  ['./js/v1215-runtime.js','v1215-runtime']
+  ['./js/v1212-runtime.js','v1212-runtime']
 ];
 
-window.EDITORIAL_BOOT={
-  version:VERSION,
-  phase:'starting',
-  startedAt:Date.now(),
-  nativeDesktop:nativeDesktop,
-  errors:errors
-};
+window.EDITORIAL_BOOT={version:VERSION,phase:'starting',startedAt:Date.now(),nativeDesktop:nativeDesktop,errors:errors};
 
-function q(selector){
-  return document.querySelector(selector);
-}
-
+function q(s,r){return (r||document).querySelector(s)}
 function setVersion(){
   window.EDITORIAL_OS_VERSION=VERSION;
-
   document.documentElement.dataset.editorialVersion=VERSION;
-
-  document.title=document.title.replace(
-    /V12\.\d+(?:\.\d+)?/g,
-    'V'+VERSION
-  );
-
+  document.title=document.title.replace(/V12\.\d+(?:\.\d+)?/g,'V'+VERSION);
   var brand=q('#brandTitle');
-
-  if(brand){
-    brand.textContent=brand.textContent.replace(
-      /V12\.\d+(?:\.\d+)?/g,
-      'V'+VERSION
-    );
-  }
+  if(brand)brand.textContent=brand.textContent.replace(/V12\.\d+(?:\.\d+)?/g,'V'+VERSION);
 }
-
 function clearLegacyBootUI(){
-  var blocker=q('#v1215Blocker');
-
-  if(blocker){
-    blocker.classList.remove('open');
-  }
-
-  var recovery=q('#v1217Recovery');
-
-  if(recovery){
-    recovery.style.display='none';
-  }
+  q('#v1215Blocker')?.classList.remove('open');
+  q('#v1215Progress')?.classList.remove('show','error');
+  var recovery=q('#v1217Recovery');if(recovery)recovery.style.display='none';
 }
-
-function ensureWebShell(){
-  if(nativeDesktop)return;
-
-  if(!q('#v1221WebCss')){
-    var link=document.createElement('link');
-    link.id='v1221WebCss';
-    link.rel='stylesheet';
-    link.href='./css/v1221-web.css?v=12.22';
-    document.head.appendChild(link);
-  }
-
-  if(!q('script[data-editorial-webshell]')){
-    var script=document.createElement('script');
-    script.src='./js/v1221-web.js?v=12.22';
-    script.async=true;
-    script.dataset.editorialWebshell='1';
-    document.head.appendChild(script);
-  }
-}
-
-function loadScript(src,key,options){
-  options=options||{};
-
+function loadScript(src,key,opts){
+  opts=opts||{};
   return new Promise(function(resolve){
-    var existing=q(
-      'script[data-editorial-module="'+key+'"]'
-    );
-
-    if(existing){
-      resolve(true);
-      return;
-    }
-
-    var script=document.createElement('script');
-
-    script.src=src+'?v=12.22';
-    script.async=false;
-    script.dataset.editorialModule=key;
-
-    if(options.module){
-      script.type='module';
-    }
-
-    var finished=false;
-
-    function done(ok){
-      if(finished)return;
-      finished=true;
-      clearTimeout(timer);
-
-      if(!ok){
-        errors.push({
-          module:key,
-          src:src
-        });
-      }
-
-      resolve(ok);
-    }
-
-    var timer=setTimeout(function(){
-      console.warn(
-        'Editorial OS: timeout cargando',
-        key
-      );
-
-      done(false);
-    },8000);
-
-    script.onload=function(){
-      done(true);
-    };
-
-    script.onerror=function(){
-      console.error(
-        'Editorial OS: no se pudo cargar',
-        key
-      );
-
-      done(false);
-    };
-
-    document.body.appendChild(script);
+    if(q('script[data-editorial-module="'+key+'"]')){resolve(true);return}
+    var s=document.createElement('script');s.src=src+'?v=12.23';s.async=false;s.dataset.editorialModule=key;if(opts.module)s.type='module';
+    var done=false;
+    function finish(ok){if(done)return;done=true;clearTimeout(timer);if(!ok)errors.push({module:key,src:src});resolve(ok)}
+    var timer=setTimeout(function(){console.warn('Editorial OS: timeout',key);finish(false)},7000);
+    s.onload=function(){finish(true)};s.onerror=function(){console.error('Editorial OS: fallo cargando',key);finish(false)};
+    document.body.appendChild(s);
   });
 }
-
-async function loadCore(){
-  for(var i=0;i<CORE.length;i++){
-    var item=CORE[i];
-
-    await loadScript(
-      item[0],
-      item[1]
-    );
-
-    clearLegacyBootUI();
-  }
+async function cleanDesktopCaches(){
+  if(!nativeDesktop)return false;
+  try{
+    var regs=await navigator.serviceWorker?.getRegistrations?.()||[];
+    if(regs.length)await Promise.all(regs.map(function(r){return r.unregister()}));
+    if(window.caches){var keys=await caches.keys();await Promise.all(keys.filter(function(k){return /^editorial-os-/i.test(k)}).map(function(k){return caches.delete(k)}))}
+    if((regs.length||sessionStorage.getItem('editorialOsDesktopCacheClean')!=='1')&&!sessionStorage.getItem('editorialOsDesktopReloaded1223')){
+      sessionStorage.setItem('editorialOsDesktopCacheClean','1');
+      sessionStorage.setItem('editorialOsDesktopReloaded1223','1');
+      location.reload();
+      return true;
+    }
+  }catch(e){console.info('Editorial OS: limpieza Desktop no disponible',e)}
+  return false;
 }
-
+function ensureWebShell(){
+  if(nativeDesktop)return Promise.resolve(true);
+  if(!q('#v1221WebCss')){var l=document.createElement('link');l.id='v1221WebCss';l.rel='stylesheet';l.href='./css/v1221-web.css?v=12.23';document.head.appendChild(l)}
+  return loadScript('./js/v1221-web.js','v1221-web');
+}
 function loadVendor(local,cdn,test,key){
   if(test())return Promise.resolve(true);
-
   return new Promise(function(resolve){
-    function attempt(src,isFallback){
-      var script=document.createElement('script');
-
-      script.src=src;
-      script.async=true;
-      script.dataset.editorialVendor=key;
-
-      script.onload=function(){
-        if(test()){
-          resolve(true);
-        }else if(!isFallback){
-          attempt(cdn,true);
-        }else{
-          resolve(false);
-        }
-      };
-
-      script.onerror=function(){
-        if(!isFallback){
-          attempt(cdn,true);
-        }else{
-          resolve(false);
-        }
-      };
-
-      document.head.appendChild(script);
-    }
-
+    function attempt(src,fallback){var s=document.createElement('script');s.src=src;s.async=true;s.dataset.editorialVendor=key;s.onload=function(){if(test())resolve(true);else if(!fallback)attempt(cdn,true);else resolve(false)};s.onerror=function(){if(!fallback)attempt(cdn,true);else resolve(false)};document.head.appendChild(s)}
     attempt(local,false);
   });
 }
-
 function loadServices(){
   Promise.allSettled([
-    loadVendor(
-      './vendor/sortable.min.js?v=12.22',
-      'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',
-      function(){return !!window.Sortable},
-      'sortable'
-    ),
-    loadVendor(
-      './vendor/supabase.min.js?v=12.22',
-      'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-      function(){return !!window.supabase},
-      'supabase'
-    )
+    loadVendor('./vendor/sortable.min.js?v=12.23','https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',function(){return !!window.Sortable},'sortable'),
+    loadVendor('./vendor/supabase.min.js?v=12.23','https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',function(){return !!window.supabase},'supabase')
   ]).then(function(){
-    window.dispatchEvent(
-      new CustomEvent(
-        'editorial:services-ready',
-        {
-          detail:{
-            sortable:!!window.Sortable,
-            supabase:!!window.supabase
-          }
-        }
-      )
-    );
-
-    try{
-      if(
-        window.supabase &&
-        window.EDITORIAL_V123_API &&
-        typeof window.EDITORIAL_V123_API.forceSync==='function'
-      ){
-        window.EDITORIAL_V123_API.forceSync();
-      }
-    }catch(error){
-      console.info(
-        'Editorial OS: sync diferido',
-        error
-      );
-    }
+    window.dispatchEvent(new CustomEvent('editorial:services-ready',{detail:{sortable:!!window.Sortable,supabase:!!window.supabase}}));
+    try{if(window.supabase&&window.EDITORIAL_V123_API?.forceSync)window.EDITORIAL_V123_API.forceSync()}catch(e){}
   });
 }
-
-function scheduleServices(){
-  if('requestIdleCallback' in window){
-    requestIdleCallback(
-      loadServices,
-      {timeout:1600}
-    );
-  }else{
-    setTimeout(loadServices,600);
-  }
+function scheduleServices(){if('requestIdleCallback'in window)requestIdleCallback(loadServices,{timeout:1800});else setTimeout(loadServices,700)}
+async function registerSW(){
+  if(nativeDesktop||!('serviceWorker'in navigator))return;
+  try{var reg=await navigator.serviceWorker.register('./sw.js?v=12.23',{scope:'./',updateViaCache:'none'});reg.update?.()}catch(e){console.info('Editorial OS: Service Worker no disponible',e)}
 }
-
-function registerSW(){
-  if(
-    nativeDesktop ||
-    !('serviceWorker' in navigator)
-  ){
-    return;
-  }
-
-  var run=function(){
-    navigator.serviceWorker.register(
-      './sw.js?v=12.22',
-      {
-        scope:'./',
-        updateViaCache:'none'
-      }
-    ).then(function(reg){
-      try{
-        reg.update();
-      }catch(error){}
-    }).catch(function(error){
-      console.info(
-        'Editorial OS: Service Worker no disponible',
-        error
-      );
-    });
-  };
-
-  if('requestIdleCallback' in window){
-    requestIdleCallback(
-      run,
-      {timeout:2200}
-    );
-  }else{
-    setTimeout(run,1000);
-  }
-}
-
 function markReady(){
-  setVersion();
-  clearLegacyBootUI();
-
-  var apiReady=!!window.EDITORIAL_V123_API;
-
-  window.EDITORIAL_BOOT.phase=
-    apiReady ? 'ready' : 'degraded';
-
-  document.documentElement.dataset.editorialBoot=
-    apiReady ? 'ready' : 'degraded';
-
-  window.dispatchEvent(
-    new CustomEvent(
-      apiReady
-        ? 'editorial:boot-ready'
-        : 'editorial:boot-degraded',
-      {
-        detail:{
-          version:VERSION,
-          errors:errors.slice()
-        }
-      }
-    )
-  );
+  setVersion();clearLegacyBootUI();
+  var ok=!!window.EDITORIAL_V123_API;
+  window.EDITORIAL_BOOT.phase=ok?'ready':'degraded';document.documentElement.dataset.editorialBoot=ok?'ready':'degraded';
+  window.dispatchEvent(new CustomEvent(ok?'editorial:boot-ready':'editorial:boot-degraded',{detail:{version:VERSION,errors:errors.slice()}}));
 }
-
 async function boot(){
-  setVersion();
-  clearLegacyBootUI();
-
-  document.documentElement.dataset.editorialBoot=
-    'interactive';
-
-  window.EDITORIAL_BOOT.phase='interactive';
-
-  ensureWebShell();
-
-  scheduleServices();
-
-  await loadCore();
-
-  await loadScript(
-    './js/v12-glass.js',
-    'v12-glass',
-    {module:true}
-  );
-
-  markReady();
-
-  registerSW();
+  setVersion();clearLegacyBootUI();document.documentElement.dataset.editorialBoot='interactive';window.EDITORIAL_BOOT.phase='interactive';
+  if(await cleanDesktopCaches())return;
+  for(var i=0;i<CORE.length;i++){await loadScript(CORE[i][0],CORE[i][1]);clearLegacyBootUI()}
+  if(!window.EDITORIAL_V123_API){errors.push({module:'app-core',reason:'EDITORIAL_V123_API missing'});markReady();return}
+  await ensureWebShell();setVersion();
+  loadScript('./js/v12-glass.js','v12-glass',{module:true});
+  scheduleServices();markReady();registerSW();
+  if(nativeDesktop){window.addEventListener('load',function(){setTimeout(function(){navigator.serviceWorker?.getRegistrations?.().then(function(rs){rs.forEach(function(r){r.unregister()})})},800)},{once:true})}
 }
-
-window.addEventListener(
-  'pageshow',
-  function(){
-    setVersion();
-    clearLegacyBootUI();
-  }
-);
-
-window.addEventListener(
-  'error',
-  function(event){
-    if(
-      window.EDITORIAL_BOOT &&
-      window.EDITORIAL_BOOT.phase!=='ready'
-    ){
-      errors.push({
-        type:'runtime',
-        message:String(
-          event.message||'runtime error'
-        )
-      });
-    }
-  }
-);
-
-if(document.readyState==='loading'){
-  document.addEventListener(
-    'DOMContentLoaded',
-    boot,
-    {once:true}
-  );
-}else{
-  boot();
-}
-
+window.addEventListener('pageshow',function(){setVersion();clearLegacyBootUI()});
+window.addEventListener('error',function(e){if(window.EDITORIAL_BOOT?.phase!=='ready')errors.push({type:'runtime',message:String(e.message||'runtime error')})});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
