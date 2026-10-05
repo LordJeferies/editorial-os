@@ -151,16 +151,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
 
         window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 1360, height: 900),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
         )
         window.title = "Editorial OS"
-        window.minSize = NSSize(width: 920, height: 640)
-        window.center()
-        window.isReleasedWhenClosed = false
+        window.titleVisibility = .hidden
         window.titlebarAppearsTransparent = true
+        window.isMovable = true
+        window.isReleasedWhenClosed = false
+        window.collectionBehavior.insert(.fullScreenPrimary)
+        window.minSize = NSSize(width: 760, height: 560)
+        window.contentMinSize = NSSize(width: 760, height: 560)
         window.contentView = webView
+
+        let restoredFrame = window.setFrameUsingName("EditorialOS.MainWindow")
+        window.setFrameAutosaveName("EditorialOS.MainWindow")
+        if !restoredFrame {
+            window.center()
+        }
 
         buildMenus()
         loadHome()
