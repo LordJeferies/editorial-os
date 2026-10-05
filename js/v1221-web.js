@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const VERSION='12.21';
+const VERSION='12.22';
 const NATIVE_DESKTOP=/EditorialOSDesktop/i.test(navigator.userAgent);
 if(NATIVE_DESKTOP)return;
 const $=(s,r=document)=>r.querySelector(s);
@@ -35,7 +35,7 @@ function setVersion(){
   document.documentElement.dataset.editorialWebshell='1';
   document.title=document.title.replace(/V12\.\d+(?:\.\d+)?/g,`V${VERSION}`);
 }
-function ensureCss(){if($('#v1221WebCss'))return;const l=document.createElement('link');l.id='v1221WebCss';l.rel='stylesheet';l.href='./css/v1221-web.css?v=12.21';document.head.appendChild(l)}
+function ensureCss(){if($('#v1221WebCss'))return;const l=document.createElement('link');l.id='v1221WebCss';l.rel='stylesheet';l.href='./css/v1221-web.css?v=12.22';document.head.appendChild(l)}
 function navigate(view){
   const legacy=$(`.navbtn[data-view="${view}"]`);
   if(legacy)legacy.click();else $$('.view').forEach(v=>v.classList.toggle('active',v.id===view));

@@ -65,16 +65,8 @@ function mount(){
   renderProfiles();return true;
 }
 function patchVersion(){document.documentElement.dataset.editorialVersion=VERSION;document.title=document.title.replace(/V12\.(?:9|10|11|12|13)(?:\.\d+)?/g,`V${VERSION}`);const brand=$('#brandTitle');if(brand)brand.textContent=brand.textContent.replace(/V12\.(?:9|10|11|12|13)(?:\.\d+)?/g,`V${VERSION}`);window.EDITORIAL_OS_VERSION=VERSION;}
-function init(){ensureCss();patchVersion();let tries=0;const timer=setInterval(()=>{tries++;if(mount()||tries>100)clearInterval(timer)},80);new MutationObserver(()=>mount()).observe(document.body,{childList:true,subtree:true});}
+function init(){ensureCss();patchVersion();let tries=0;const timer=setInterval(()=>{tries++;if(mount()||tries>100)clearInterval(timer)},80);const mountObserver=new MutationObserver(()=>{if(mount())mountObserver.disconnect()});mountObserver.observe(document.body,{childList:true,subtree:true});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 
-/* V12.15 additive loader */
-(()=>{
-  if(document.querySelector('script[data-editorial-v1215]'))return;
-  const s=document.createElement('script');
-  s.src='./js/v1215-runtime.js?v=12.15';
-  s.defer=true;
-  s.dataset.editorialV1215='1';
-  document.head.appendChild(s);
-})();
+/* V12.22: carga controlada por v1222-bootstrap.js. */

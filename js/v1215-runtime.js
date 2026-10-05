@@ -116,7 +116,7 @@ function patchVersion(){
   const api=window.EDITORIAL_OS_DIAGNOSTICS?.api;if(api?.diagnostics&&!api.diagnostics.__v1215){const previous=api.diagnostics.bind(api);const wrapped=async()=>({...await previous(),version:VERSION,progressTasks:tasks.size,mcp:{workspace:'editorial-os',supabaseConnected:connected()}});wrapped.__v1215=true;api.diagnostics=wrapped;}
 }
 function init(){
-  ensureCss();mountProgress();showStartupProgress();ensureWelcome();ensureMcp();patchVersion();
+  ensureCss();mountProgress();ensureWelcome();ensureMcp();patchVersion();
   let tries=0;const timer=setInterval(()=>{tries++;wrapAsyncApi();observeSync();observeAuth();mountMcpTriggers();updateMcp();if(tries>120)clearInterval(timer)},100);
   new MutationObserver(()=>{mountMcpTriggers();observeSync();observeAuth();updateMcp()}).observe(document.body,{childList:true,subtree:true});
   setTimeout(()=>openWelcome(false),420);deepLinks();

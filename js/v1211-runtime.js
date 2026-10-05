@@ -153,22 +153,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else init();
 })();
 
-/* V12.12 additive loader */
-(()=>{
-  if(document.querySelector('script[data-editorial-v1212]'))return;
-  const s=document.createElement('script');
-  s.src='./js/v1212-runtime.js?v=12.12';
-  s.defer=true;
-  s.dataset.editorialV1212='1';
-  document.head.appendChild(s);
-})();
-
-/* V12.13 additive loader */
-(()=>{
-  if(document.querySelector('script[data-editorial-v1213]'))return;
-  const s=document.createElement('script');
-  s.src='./js/v1213-runtime.js?v=12.13';
-  s.defer=true;
-  s.dataset.editorialV1213='1';
-  document.head.appendChild(s);
-})();
+/* V12.22: carga controlada por v1222-bootstrap.js. */

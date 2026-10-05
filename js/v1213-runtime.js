@@ -180,12 +180,4 @@ function init(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 
-/* V12.14 additive loader */
-(()=>{
-  if(document.querySelector('script[data-editorial-v1214]'))return;
-  const s=document.createElement('script');
-  s.src='./js/v1214-runtime.js?v=12.14';
-  s.defer=true;
-  s.dataset.editorialV1214='1';
-  document.head.appendChild(s);
-})();
+/* V12.22: carga controlada por v1222-bootstrap.js. */
